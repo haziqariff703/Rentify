@@ -1,7 +1,7 @@
 # 🚗 Rentify: Car Rental Management System
 
 **Program:** Bachelor of Information Science (Hons.) Information System Management (CDIM262)  
-**Course:** Information Systems Development (IMS566)  
+**Course:** Advanced Web Design Development and Content Management (IMS566)  
 **Student Name:** Haziq Ariff, Amirul Rasyid, Zulfadli, Safa Raziq
 
 **Framework:** CakePHP 4.x / 5.x
