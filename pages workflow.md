@@ -17,7 +17,9 @@ These pages require manual coding (`HTML/CSS/PHP`) to ensure a high-quality User
 | **Booking Form**       | `Bookings/add`       | User     | Date selection inputs with **Auto-Price Calculation** logic.                      |
 | **Payment Simulation** | `Payments/add`       | User     | Dummy credit card form. Redirects to success/failure based on logic.              |
 | **The Invoice**        | `Invoices/view/{id}` | User     | HTML receipt styled like a real paper bill. **Must convert to PDF**.              |
-| **Admin Dashboard**    | `Admins/dashboard`   | Admin    | Overview page with **Charts** (Chart.js) and summary statistics cards.            |
+| **Admin Dashboard**    | `Admins/dashboard`\* | Admin    | Overview page with **Charts** (Chart.js) and summary statistics cards.            |
+
+_Note: `AdminsController` here is a custom controller for the dashboard logic, not a database table._
 
 ---
 
@@ -29,22 +31,22 @@ These pages are standard "CRUD" (Create, Read, Update, Delete) interfaces. You w
 
 | View Name       | Controller Action | Purpose                                                       |
 | :-------------- | :---------------- | :------------------------------------------------------------ |
-| **Login**       | `Users/login`     | Standard username/password form.                              |
-| **Sign Up**     | `Users/add`       | Registration form.                                            |
-| **My Profile**  | `Users/edit/{id}` | Form to update address or phone number.                       |
+| **Login**       | `Users/login`     | Standard email/password form.                                 |
+| **Sign Up**     | `Users/add`       | Registration form (Name, Email, **IC Number**).               |
+| **My Profile**  | `Users/view/{id}` | View profile details.                                         |
 | **My Bookings** | `Bookings/index`  | Table showing the user's personal booking history and status. |
 
-### 🛠️ Admin Management Pages
+### 🛠️ Admin Management Pages (RBAC Protected)
 
-| View Name           | Controller Action        | Purpose                                           |
-| :------------------ | :----------------------- | :------------------------------------------------ |
-| **Manage Cars**     | `Cars/index` (Admin)     | Data table to list all fleet vehicles.            |
-| **Add Car**         | `Cars/add`               | Form to upload car images and set specs.          |
-| **Edit Car**        | `Cars/edit/{id}`         | Form to update car details.                       |
-| **Manage Bookings** | `Bookings/index` (Admin) | Master list to approve/reject reservations.       |
-| **Manage Users**    | `Users/index`            | List of registered customers.                     |
-| **Manage Reviews**  | `Reviews/index`          | Moderation list to delete inappropriate comments. |
-| **Manage Invoices** | `Invoices/index`         | List to track unpaid debts.                       |
+| View Name             | Controller Action        | Purpose                                           |
+| :-------------------- | :----------------------- | :------------------------------------------------ |
+| **Manage Cars**       | `Cars/index` (Admin)     | Data table to list all fleet vehicles.            |
+| **Add Car**           | `Cars/add`               | Form to upload car images and set `category_id`.  |
+| **Manage Categories** | `CarCategories/index`    | Add/Edit types of cars (SUV, MPV).                |
+| **Manage Bookings**   | `Bookings/index` (Admin) | Master list to approve/reject reservations.       |
+| **Manage Users**      | `Users/index`            | List of registered customers (Filtered by Role).  |
+| **Manage Reviews**    | `Reviews/index`          | Moderation list to delete inappropriate comments. |
+| **Maintenance Log**   | `Maintenances/index`     | Track repair costs and schedule dates.            |
 
 ---
 
@@ -52,19 +54,22 @@ These pages are standard "CRUD" (Create, Read, Update, Delete) interfaces. You w
 
 **Week 1:**
 
-1.  Run `bin/cake bake` for all tables to create the "Auto-Generated" pages.
-2.  Set up the **Login/Sign Up** pages immediately to handle access control.
+1.  Run `bin/cake bake` for all 8 tables to create the "Auto-Generated" pages.
+2.  **Member D:** Set up the **Login/Sign Up** logic. Ensure the `role` column defaults to 'customer'.
 
 **Week 2:**
 
-1.  Design the **Landing Page** and **Car Catalog** (Make them look good).
-2.  Build the **Booking Form** logic.
+1.  **Member A:** Design the **Landing Page** and **Car Catalog**.
+2.  **Member B:** Build the **Booking Form** logic.
+3.  **Member C:** Set up the **Car Categories** so cars can be added properly.
 
 **Week 3:**
 
-1.  Build the **Payment Simulation** page.
-2.  Design the **Invoice View** and connect the PDF engine.
+1.  **Member B:** Build the **Payment Simulation** page.
+2.  **Member A:** Design the **Invoice View** and connect the PDF engine.
+3.  **Member D:** Implement the `category_id` fix in `CarsTable.php`.
 
 **Week 4:**
 
-1.  Build the **Admin Dashboard** with Charts.
+1.  **Member C:** Build the **Admin Dashboard** with Charts.
+2.  **Member D:** Run Stress Tests (Invalid IC numbers, Overlapping dates).
