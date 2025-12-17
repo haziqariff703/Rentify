@@ -29,7 +29,7 @@ The system operates on strict logic controls to ensure data accuracy. The follow
 ### 2. The Auto-Invoice Logic
 
 -   **Trigger:** Immediately upon a successful booking (Status: _Pending_).
--   **Action:** The system generates a unique record in the `invoices` table.
+-   **Action:** The system generates a unique record in the `invoices` table linked to the Booking ID.
 -   **Status:** The invoice defaults to **'Unpaid'**. This ensures that a financial debt record exists even if the user abandons the payment process.
 
 ### 3. The Payment Logic (Simulated)
@@ -47,15 +47,16 @@ The system operates on strict logic controls to ensure data accuracy. The follow
 
 ## 🗄️ Database Architecture (ERD)
 
-The system utilizes a **9-Table Relational Structure** optimized for data normalization (3NF).
+The system utilizes a **8-Table Relational Structure** optimized for data normalization (3NF).
 
 ### Core Entities
 
--   **`users`**: Stores customer authentication data.
--   **`admins`**: Separate authentication table for staff/managers to ensure role separation.
+-   **`users`**: Stores **BOTH** Customer and Admin data.
+    -   _Logic:_ Role-Based Access Control (RBAC) is handled via a `role` column ('admin' or 'customer').
+    -   _Identity:_ Uses `ic_number` (12-digit) as a unique identifier for Malaysian context.
 -   **`cars`**: The main inventory table containing vehicle specs, status, and image paths.
 -   **`car_categories`**: Categorizes vehicles (e.g., SUV, Economy).
-    -   _Relationship:_ **One-to-Many** (One Category has Many Cars). Allows efficient filtering/searching.
+    -   _Relationship:_ **One-to-Many** (One Category has Many Cars).
 
 ### Transaction Entities
 
@@ -64,12 +65,12 @@ The system utilizes a **9-Table Relational Structure** optimized for data normal
 -   **`invoices`**: The official billing document.
     -   _Relationship:_ **One-to-One** (Structurally linked to one specific Booking ID).
 -   **`payments`**: Records of financial transactions.
-    -   _Relationship:_ **One-to-Many** (One Booking can technically have multiple partial payments, though simulated as one-off here).
+    -   _Relationship:_ **One-to-Many** (One Booking can technically have multiple partial payments).
 
 ### Support Entities
 
 -   **`maintenances`**: Tracks vehicle repairs.
-    -   _Logic:_ Cars listed here with 'Active' status are excluded from search results.
+    -   _Logic:_ Cars listed here with 'Scheduled' status are excluded from search results.
 -   **`reviews`**: Stores user feedback.
     -   _Relationship:_ Links User ID + Car ID to ensure only actual customers can review.
 
@@ -79,14 +80,14 @@ The system utilizes a **9-Table Relational Structure** optimized for data normal
 
 To achieve "Excellent" functionality and UX marks, the following libraries are integrated:
 
-| Library          | Purpose                                                   | Rubric Requirement Met                     |
-| :--------------- | :-------------------------------------------------------- | :----------------------------------------- |
-| **CakePdf**      | Converts Invoice Views to downloadable PDF files.         | _Export to PDF (for at least one dataset)_ |
-| **Bootstrap 5**  | Provides a responsive, mobile-ready Grid layout.          | _User Interface Design / Responsive_       |
-| **SweetAlert2**  | Replaces default browser alerts with professional popups. | _User Interface... Clear, intuitive_       |
-| **FullCalendar** | Visualizes booking schedules on the dashboard.            | _Advanced Features_                        |
-| **FakerPHP**     | Generates realistic test data for presentation.           | _System Functionality_                     |
-| **Toastr**       | Non-blocking "Success/Error" notifications.               | _User Experience (UX)_                     |
+| Library         | Purpose                                                   | Rubric Requirement Met                     |
+| :-------------- | :-------------------------------------------------------- | :----------------------------------------- |
+| **CakePdf**     | Converts Invoice Views to downloadable PDF files.         | _Export to PDF (for at least one dataset)_ |
+| **Bootstrap 5** | Provides a responsive, mobile-ready Grid layout.          | _User Interface Design / Responsive_       |
+| **SweetAlert2** | Replaces default browser alerts with professional popups. | _User Interface... Clear, intuitive_       |
+| **Chart.js**    | Visualizes sales data on the admin dashboard.             | _Advanced Features_                        |
+| **FakerPHP**    | Generates realistic test data for presentation.           | _System Functionality_                     |
+| **Toastr**      | Non-blocking "Success/Error" notifications.               | _User Experience (UX)_                     |
 
 ---
 
@@ -95,7 +96,7 @@ To achieve "Excellent" functionality and UX marks, the following libraries are i
 1.  **Database Configuration:**
 
     -   Create a database named `rentify`.
-    -   Import the `rentify_final_master.sql` script.
+    -   Import the `rentify.sql` script (Final Version).
     -   Update `config/app_local.php` with your DB credentials.
 
 2.  **Installation:**
@@ -105,18 +106,20 @@ To achieve "Excellent" functionality and UX marks, the following libraries are i
     ```
 
 3.  **Generating Code (Bake):**
+    _Run these commands in order:_
 
     ```bash
     bin/cake bake all users
+    bin/cake bake all car_categories
     bin/cake bake all cars
     bin/cake bake all bookings
     bin/cake bake all invoices
     bin/cake bake all payments
-    bin/cake bake all car_categories
     bin/cake bake all reviews
     bin/cake bake all maintenances
-    bin/cake bake all admins
     ```
+
+    _(Note: No need to bake 'admins' as they are now part of the 'users' table)_
 
 4.  **Running the Server:**
     ```bash
@@ -130,19 +133,21 @@ To achieve "Excellent" functionality and UX marks, the following libraries are i
 
 ### Customer (User)
 
--   **Sign Up/Login:** Secure account creation.
--   **Search & Filter:** Find cars by Category or Price range.
+-   **Sign Up/Login:** Secure account creation using Email & Password.
+-   **Identity Verification:** Registration requires a valid Malaysian IC Number.
+-   **Search & Filter:** Find cars by Category (SUV, Sedan) or Price range.
 -   **Book Vehicle:** Select dates and view automated total price.
 -   **My Dashboard:** View booking history and payment status.
--   **Payment Simulation:** Process dummy payments.
+-   **Payment Simulation:** Process dummy payments to confirm bookings.
 -   **Download Invoice:** Export official receipts as PDF.
 
 ### Administrator (Admin)
 
--   **Dashboard:** View total sales and monthly booking stats.
--   **Fleet Management:** Add/Edit/Delete cars and upload images.
--   **Booking Management:** Approve pending bookings or mark cars as returned.
--   **User Oversight:** Manage customer accounts and moderate reviews.
+-   **Admin Dashboard:** View total sales, active bookings, and fleet status charts.
+-   **Fleet Management:** Add/Edit/Delete cars and manage Categories.
+-   **Booking Approval:** Approve pending bookings or mark cars as returned.
+-   **Maintenance Tracking:** Schedule repairs for cars (automatically hides them from customers).
+-   **User Oversight:** Manage customer accounts and view IC details.
 
 ---
 
