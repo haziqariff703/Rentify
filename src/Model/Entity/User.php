@@ -15,6 +15,7 @@ use Cake\ORM\Entity;
  * @property string|null $phone
  * @property string|null $address
  * @property string $password
+ * @property string $role
  * @property string|null $avatar
  * @property \Cake\I18n\DateTime|null $created
  * @property \Cake\I18n\DateTime|null $modified
@@ -40,6 +41,7 @@ class User extends Entity
         'phone' => true,
         'address' => true,
         'password' => true,
+        'role' => true,
         'avatar' => true,
         'created' => true,
         'modified' => true,

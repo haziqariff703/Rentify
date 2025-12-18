@@ -16,6 +16,7 @@
                     <th><?= $this->Paginator->sort('ic_number') ?></th>
                     <th><?= $this->Paginator->sort('email') ?></th>
                     <th><?= $this->Paginator->sort('phone') ?></th>
+                    <th><?= $this->Paginator->sort('role') ?></th>
                     <th><?= $this->Paginator->sort('avatar') ?></th>
                     <th><?= $this->Paginator->sort('created') ?></th>
                     <th><?= $this->Paginator->sort('modified') ?></th>
@@ -30,6 +31,7 @@
                     <td><?= h($user->ic_number) ?></td>
                     <td><?= h($user->email) ?></td>
                     <td><?= h($user->phone) ?></td>
+                    <td><?= h($user->role) ?></td>
                     <td><?= h($user->avatar) ?></td>
                     <td><?= h($user->created) ?></td>
                     <td><?= h($user->modified) ?></td>

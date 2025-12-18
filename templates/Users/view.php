@@ -35,6 +35,10 @@
                     <td><?= h($user->phone) ?></td>
                 </tr>
                 <tr>
+                    <th><?= __('Role') ?></th>
+                    <td><?= h($user->role) ?></td>
+                </tr>
+                <tr>
                     <th><?= __('Avatar') ?></th>
                     <td><?= h($user->avatar) ?></td>
                 </tr>
