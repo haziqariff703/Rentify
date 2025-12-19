@@ -1,0 +1,91 @@
+/* Custom styles for the default layout to match the professional look */
+
+/* Navbar similar to Bootstrap's .navbar-dark .bg-dark */
+.custom-navbar {
+    background-color: #212529;
+    color: #fff;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.custom-navbar a {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.custom-navbar a:hover {
+    color: #fff;
+}
+
+.custom-navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #fff !important;
+}
+
+.custom-navbar-nav {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* Footer similar to home layout */
+.custom-footer {
+    background-color: #212529;
+    color: #fff;
+    padding: 2rem 0;
+    text-align: center;
+    margin-top: auto; /* Push to bottom if using flex column on body */
+}
+
+.custom-footer a {
+    color: #0d6efd; /* Bootstrap primary blue */
+    text-decoration: none;
+}
+
+.custom-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 40px, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+.animate-fade-in-up {
+    animation-duration: 0.8s;
+    animation-fill-mode: both;
+    animation-name: fadeInUp;
+}
+
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+
+/* Enhanced Card Styling for Home */
+.feature-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+}
+
+/* Hero Section Text Shadow */
+.hero-text-shadow {
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}

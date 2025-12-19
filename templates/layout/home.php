@@ -1,6 +1,6 @@
 <?php
 /**
- * Rentify Default Layout (Tailwind CSS)
+ * Rentify Home Layout (Tailwind CSS)
  */
 $cakeDescription = 'Rentify - Premium Car Rental';
 ?>
@@ -26,6 +26,12 @@ $cakeDescription = 'Rentify - Premium Car Rental';
 
     <style>
         body { font-family: 'Inter', sans-serif; }
+        .gradient-text {
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-image: linear-gradient(to right, #3b82f6, #8b5cf6);
+        }
     </style>
 
     <?= $this->fetch('meta') ?>
@@ -38,7 +44,7 @@ $cakeDescription = 'Rentify - Premium Car Rental';
     <?= $this->element('header') ?>
 
     <!-- Main Content -->
-    <main class="flex-grow pt-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+    <main class="flex-grow pt-20">
         <?= $this->Flash->render() ?>
         <?= $this->fetch('content') ?>
     </main>
