@@ -15,8 +15,8 @@ $cakeDescription = 'Rentify - Premium Car Rental';
     </title>
     <?= $this->Html->meta('icon') ?>
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -24,13 +24,24 @@ $cakeDescription = 'Rentify - Premium Car Rental';
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+    <!-- Custom CSS -->
+    <?= $this->Html->css('custom') ?>
+
     <style>
         body { font-family: 'Inter', sans-serif; }
-        .gradient-text {
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            background-image: linear-gradient(to right, #3b82f6, #8b5cf6);
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
         }
     </style>
 
@@ -38,13 +49,13 @@ $cakeDescription = 'Rentify - Premium Car Rental';
     <?= $this->fetch('css') ?>
     <?= $this->fetch('script') ?>
 </head>
-<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
+<body class="bg-light text-dark d-flex flex-column min-vh-100 position-relative pb-4">
 
     <!-- Header Element -->
     <?= $this->element('header') ?>
 
     <!-- Main Content -->
-    <main class="flex-grow pt-20">
+    <main class="flex-grow-1 pt-5">
         <?= $this->Flash->render() ?>
         <?= $this->fetch('content') ?>
     </main>
@@ -52,5 +63,7 @@ $cakeDescription = 'Rentify - Premium Car Rental';
     <!-- Footer Element -->
     <?= $this->element('footer') ?>
 
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

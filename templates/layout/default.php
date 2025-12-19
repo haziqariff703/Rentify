@@ -15,14 +15,17 @@ $cakeDescription = 'Rentify - Premium Car Rental';
     </title>
     <?= $this->Html->meta('icon') ?>
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <?= $this->Html->css('custom') ?>
 
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -32,13 +35,13 @@ $cakeDescription = 'Rentify - Premium Car Rental';
     <?= $this->fetch('css') ?>
     <?= $this->fetch('script') ?>
 </head>
-<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
+<body class="bg-light text-dark d-flex flex-column min-vh-100 position-relative pb-4">
 
     <!-- Header Element -->
     <?= $this->element('header') ?>
 
     <!-- Main Content -->
-    <main class="flex-grow pt-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+    <main class="flex-grow-1 pt-5 container-fluid px-4 px-lg-5 mx-auto w-100" style="max-width: 1320px;">
         <?= $this->Flash->render() ?>
         <?= $this->fetch('content') ?>
     </main>
@@ -46,5 +49,7 @@ $cakeDescription = 'Rentify - Premium Car Rental';
     <!-- Footer Element -->
     <?= $this->element('footer') ?>
 
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
