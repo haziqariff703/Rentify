@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Cake\Event\EventInterface;
+
 /**
  * Users Controller
  *
@@ -10,6 +12,66 @@ namespace App\Controller;
  */
 class UsersController extends AppController
 {
+    /**
+     * @param \Cake\Event\EventInterface $event
+     * @return \Cake\Http\Response|null|void
+     */
+    public function beforeFilter(EventInterface $event)
+    {
+        parent::beforeFilter($event);
+        $this->Authentication->addUnauthenticatedActions(['login', 'add']);
+    }
+
+    /**
+     * Login method
+     *
+     * @return \Cake\Http\Response|null|void
+     */
+    public function login()
+    {
+        $this->request->allowMethod(['get', 'post']);
+        $result = $this->Authentication->getResult();
+
+        // regardless of POST or GET, redirect if user is logged in
+        if ($result && $result->isValid()) {
+            // redirect to /admins/dashboard if admin, else /
+            $identity = $this->request->getAttribute('identity');
+            if ($identity && $identity->role === 'admin') {
+                return $this->redirect(['controller' => 'Admins', 'action' => 'dashboard']);
+            }
+            
+            $redirect = $this->request->getQuery('redirect', [
+                'controller' => 'Pages',
+                'action' => 'display',
+                'home'
+            ]);
+
+            return $this->redirect($redirect);
+        }
+
+        // display error if user submitted and failed
+        if ($this->request->is('post') && !$result->isValid()) {
+            \Cake\Log\Log::error('Login failed: ' . print_r($result->getErrors(), true));
+            \Cake\Log\Log::error('Login status: ' . $result->getStatus());
+            $this->Flash->error(__('Invalid email or password'));
+        }
+    }
+
+    /**
+     * Logout method
+     *
+     * @return \Cake\Http\Response|null|void
+     */
+    public function logout()
+    {
+        $result = $this->Authentication->getResult();
+        // regardless of POST or GET, redirect if user is logged in
+        if ($result && $result->isValid()) {
+            $this->Authentication->logout();
+            return $this->redirect(['controller' => 'Users', 'action' => 'login']);
+        }
+    }
+
     /**
      * Index method
      *
@@ -46,10 +108,13 @@ class UsersController extends AppController
         $user = $this->Users->newEmptyEntity();
         if ($this->request->is('post')) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
+            // Default role is customer
+            $user->role = 'customer';
+            
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'login']);
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
