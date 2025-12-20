@@ -10,8 +10,19 @@ namespace App\Controller;
  */
 class AdminsController extends AppController
 {
+    public function beforeFilter(\Cake\Event\EventInterface $event)
+    {
+        parent::beforeFilter($event);
+        
+        $user = $this->Authentication->getIdentity();
+        if (!$user || $user->role !== 'admin') {
+            $this->Flash->error(__('You are not authorized to access this page.'));
+            return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
+        }
+    }
+
     /**
-     * Dashboard action
+     * Dashboard method
      *
      * @return \Cake\Http\Response|null|void Renders view
      */
@@ -40,6 +51,15 @@ class AdminsController extends AppController
             ->limit(5)
             ->all();
 
-        $this->set(compact('totalCars', 'totalBookings', 'totalUsers', 'totalRevenue', 'recentBookings'));
+        // Additional Stats for Admin Workflow
+        $carCategoriesTable = $this->fetchTable('CarCategories');
+        $maintenancesTable = $this->fetchTable('Maintenances');
+        $reviewsTable = $this->fetchTable('Reviews');
+
+        $totalCategories = $carCategoriesTable->find()->count();
+        $totalMaintenances = $maintenancesTable->find()->count();
+        $totalReviews = $reviewsTable->find()->count();
+
+        $this->set(compact('totalCars', 'totalBookings', 'totalUsers', 'totalRevenue', 'recentBookings', 'totalCategories', 'totalMaintenances', 'totalReviews'));
     }
 }

@@ -44,18 +44,10 @@ class BookingsController extends AppController
      */
     public function add()
     {
-        $booking = $this->Bookings->newEmptyEntity();
-        if ($this->request->is('post')) {
-            $booking = $this->Bookings->patchEntity($booking, $this->request->getData());
-            if ($this->Bookings->save($booking)) {
-                $this->Flash->success(__('The booking has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The booking could not be saved. Please, try again.'));
-        }
         $users = $this->Bookings->Users->find('list', limit: 200)->all();
-        $cars = $this->Bookings->Cars->find('list', limit: 200)->all();
+        $cars = $this->Bookings->Cars->find('list', limit: 200)
+            ->where(['status !=' => 'Maintenance'])
+            ->all();
         $this->set(compact('booking', 'users', 'cars'));
     }
 

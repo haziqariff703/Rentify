@@ -85,6 +85,58 @@
             </div>
         </div>
 
+        <!-- Management Stats Cards -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100 rounded-4">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-secondary-subtle text-secondary p-3 rounded-4 me-3">
+                                <i class="fas fa-tags fs-4"></i>
+                            </div>
+                            <h6 class="card-subtitle text-muted fw-bold mb-0">Car Categories</h6>
+                        </div>
+                        <h2 class="card-title fw-bold mb-0"><?= number_format($totalCategories) ?></h2>
+                        <div class="mt-3">
+                            <a href="<?= $this->Url->build(['controller' => 'CarCategories', 'action' => 'index']) ?>" class="text-decoration-none small text-secondary">Manage Categories <i class="fas fa-chevron-right ms-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100 rounded-4">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-danger-subtle text-danger p-3 rounded-4 me-3">
+                                <i class="fas fa-tools fs-4"></i>
+                            </div>
+                            <h6 class="card-subtitle text-muted fw-bold mb-0">Maintenance Logs</h6>
+                        </div>
+                        <h2 class="card-title fw-bold mb-0"><?= number_format($totalMaintenances) ?></h2>
+                        <div class="mt-3">
+                            <a href="<?= $this->Url->build(['controller' => 'Maintenances', 'action' => 'index']) ?>" class="text-decoration-none small text-danger">Manage Maintenance <i class="fas fa-chevron-right ms-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100 rounded-4">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-purple-subtle text-purple p-3 rounded-4 me-3">
+                                <i class="fas fa-star fs-4"></i>
+                            </div>
+                            <h6 class="card-subtitle text-muted fw-bold mb-0">Customer Reviews</h6>
+                        </div>
+                        <h2 class="card-title fw-bold mb-0"><?= number_format($totalReviews) ?></h2>
+                        <div class="mt-3">
+                            <a href="<?= $this->Url->build(['controller' => 'Reviews', 'action' => 'index']) ?>" class="text-decoration-none small text-purple">Moderate Reviews <i class="fas fa-chevron-right ms-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <!-- Recent Bookings Table -->
             <div class="col-lg-8">
@@ -183,4 +235,8 @@
     .bg-success-subtle { background-color: rgba(25, 135, 84, 0.1); }
     .bg-info-subtle { background-color: rgba(13, 202, 240, 0.1); }
     .bg-warning-subtle { background-color: rgba(255, 193, 7, 0.1); }
+    .bg-secondary-subtle { background-color: rgba(108, 117, 125, 0.1); }
+    .bg-danger-subtle { background-color: rgba(220, 53, 69, 0.1); }
+    .bg-purple-subtle { background-color: rgba(111, 66, 193, 0.1); }
+    .text-purple { color: #6f42c1; }
 </style>

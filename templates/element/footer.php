@@ -4,7 +4,14 @@
         <div class="row gy-4">
             <!-- Brand Column -->
             <div class="col-lg-3 col-md-6">
-                <a href="<?= $this->Url->build('/') ?>" class="d-flex align-items-center gap-2 text-decoration-none text-white mb-3">
+                <?php 
+                $identity = $this->request->getAttribute('identity');
+                $homeLink = $this->Url->build('/');
+                if ($identity && $identity->role === 'admin') {
+                    $homeLink = $this->Url->build(['controller' => 'Admins', 'action' => 'dashboard']);
+                }
+                ?>
+                <a href="<?= $homeLink ?>" class="d-flex align-items-center gap-2 text-decoration-none text-white mb-3">
                     <i class="fas fa-car-side text-primary fs-4"></i>
                     <span class="fw-bold fs-4">RENTIFY</span>
                 </a>

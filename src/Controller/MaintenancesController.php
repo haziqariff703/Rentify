@@ -10,6 +10,17 @@ namespace App\Controller;
  */
 class MaintenancesController extends AppController
 {
+    public function beforeFilter(\Cake\Event\EventInterface $event)
+    {
+        parent::beforeFilter($event);
+        
+        $user = $this->Authentication->getIdentity();
+        if (!$user || $user->role !== 'admin') {
+            $this->Flash->error(__('You are not authorized to access this page.'));
+            return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
+        }
+    }
+
     /**
      * Index method
      *
@@ -48,7 +59,12 @@ class MaintenancesController extends AppController
         if ($this->request->is('post')) {
             $maintenance = $this->Maintenances->patchEntity($maintenance, $this->request->getData());
             if ($this->Maintenances->save($maintenance)) {
-                $this->Flash->success(__('The maintenance has been saved.'));
+                // Update Car Status to 'Maintenance'
+                $car = $this->Maintenances->Cars->get($maintenance->car_id);
+                $car->status = 'Maintenance';
+                $this->Maintenances->Cars->save($car);
+
+                $this->Flash->success(__('The maintenance has been saved and the car status updated to Maintenance.'));
 
                 return $this->redirect(['action' => 'index']);
             }
