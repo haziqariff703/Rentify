@@ -12,24 +12,16 @@ class PaymentsController extends AppController
 {
     /**
      * Index method
-     *
-     * @return \Cake\Http\Response|null|void Renders view
      */
     public function index()
     {
-        $query = $this->Payments->find()
-            ->contain(['Bookings']);
+        $query = $this->Payments->find()->contain(['Bookings']);
         $payments = $this->paginate($query);
-
         $this->set(compact('payments'));
     }
 
     /**
      * View method
-     *
-     * @param string|null $id Payment id.
-     * @return \Cake\Http\Response|null|void Renders view
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null)
     {
@@ -38,54 +30,70 @@ class PaymentsController extends AppController
     }
 
     /**
-     * Add method
-     *
-     * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
+     * Add method - Payment Simulation Logic
      */
-   public function add($invoiceId)
-{
-    $Invoices = $this->fetchTable('Invoices');
-    $Bookings = $this->fetchTable('Bookings');
+    public function add()
+    {
+        $payment = $this->Payments->newEmptyEntity();
 
-    $invoice = $Invoices->get($invoiceId, [
-        'contain' => ['Bookings']
-    ]);
+        // 1. Get Booking Data from URL (sent from the "Pay Now" button)
+        $bookingId = $this->request->getQuery('booking_id');
+        $amount = $this->request->getQuery('amount');
 
-    if ($this->request->is('post')) {
+        if ($this->request->is('post')) {
+            $data = $this->request->getData();
+            $payment = $this->Payments->patchEntity($payment, $data);
+            
+            // 2. SIMULATION LOGIC: Check Card Number
+            $cardInput = str_replace(['-', ' '], '', $data['card_number'] ?? ''); // Remove dashes/spaces
+            
+            // Accept '4242...' OR any 16-digit number
+            if (str_starts_with($cardInput, '4242') || strlen($cardInput) === 16) {
+                
+                $payment->payment_date = date('Y-m-d H:i:s');
+                $payment->payment_status = 'paid'; // Set status to Paid
+                
+                if ($this->Payments->save($payment)) {
+                    
+                    // A. Update INVOICE -> 'paid'
+                    $invoicesTable = $this->fetchTable('Invoices');
+                    $invoice = $invoicesTable->find()
+                        ->where(['booking_id' => $payment->booking_id])
+                        ->first();
+                    
+                    if ($invoice) {
+                        $invoice->status = 'paid'; // Matches your DB Enum
+                        $invoicesTable->save($invoice);
+                    }
 
-        $card = $this->request->getData('card_number');
+                    // B. Update BOOKING -> 'confirmed'
+                    $bookingsTable = $this->fetchTable('Bookings');
+                    $booking = $bookingsTable->get($payment->booking_id);
+                    $booking->booking_status = 'confirmed'; // Matches your DB Enum
+                    $bookingsTable->save($booking);
 
-        if ($card === '4242-4242') {
-
-            // Update invoice
-            $invoice->status = 'Paid';
-            $Invoices->save($invoice);
-
-            // Update booking
-            $booking = $invoice->booking;
-            $booking->status = 'Confirmed';
-            $Bookings->save($booking);
-
-            $this->Flash->success('Payment successful.');
-            return $this->redirect([
-                'controller' => 'Invoices',
-                'action' => 'view',
-                $invoiceId
-            ]);
+                    $this->Flash->success(__('Payment Approved! Booking Confirmed.'));
+                    
+                    // Redirect back to the Invoice so they can download the PDF
+                    return $this->redirect(['controller' => 'Invoices', 'action' => 'view', $invoice->id]);
+                }
+            } else {
+                $this->Flash->error(__('Payment Declined. Please use the test card: 4242-4242-4242-4242'));
+            }
         }
 
-        $this->Flash->error('Payment failed. Invalid card number.');
-    }
+        // Pass variables to the view (Critical for the form to work)
+        // If the form was submitted but failed, we need to re-populate these
+        if (!$bookingId && $payment->booking_id) {
+            $bookingId = $payment->booking_id;
+            $amount = $payment->amount;
+        }
 
-    $this->set(compact('invoice'));
-}
+        $this->set(compact('payment', 'bookingId', 'amount'));
+    }
 
     /**
      * Edit method
-     *
-     * @param string|null $id Payment id.
-     * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function edit($id = null)
     {
@@ -105,10 +113,6 @@ class PaymentsController extends AppController
 
     /**
      * Delete method
-     *
-     * @param string|null $id Payment id.
-     * @return \Cake\Http\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function delete($id = null)
     {
