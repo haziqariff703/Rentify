@@ -5,7 +5,6 @@
  */
 ?>
 <div class="reviews index content">
-    <?= $this->Html->link(__('New Review'), ['action' => 'add'], ['class' => 'button float-right']) ?>
     <h3><?= __('Reviews') ?></h3>
     <div class="table-responsive">
         <table>
