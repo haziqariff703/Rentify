@@ -8,9 +8,23 @@ $user = $booking->user;
 $car = $booking->car;
 ?>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 <div class="row mb-3 no-print">
     <div class="col-md-12 text-end">
         <?= $this->Html->link('Back', ['action' => 'index'], ['class' => 'btn btn-secondary me-2']) ?>
+        <?php if(strtolower($invoice->status) == 'unpaid'): ?>
+            <?= $this->Html->link(
+                '💳 Pay Now', 
+                [
+                    'controller' => 'Payments', 
+                    'action' => 'add', 
+                    // Send Booking ID and Amount to the payment page
+                    '?' => ['booking_id' => $invoice->booking_id, 'amount' => $invoice->amount]
+                ], 
+                ['class' => 'btn btn-success me-2']
+            ) ?>
+        <?php endif; ?>
         <button onclick="window.print()" class="btn btn-danger">
             <i class="fas fa-file-pdf"></i> Download PDF
         </button>
