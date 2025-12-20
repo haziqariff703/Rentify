@@ -23,7 +23,6 @@
                     echo $this->Form->control('phone');
                     echo $this->Form->control('address');
                     echo $this->Form->control('password');
-                    echo $this->Form->control('role');
                     echo $this->Form->control('avatar');
                 ?>
             </fieldset>

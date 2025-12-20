@@ -20,19 +20,21 @@ class AdminsController extends AppController
         $this->viewBuilder()->setLayout('default');
         
         // Fetch some basic statistics for the dashboard
-        $this->loadModel('Cars');
-        $this->loadModel('Bookings');
-        $this->loadModel('Users');
-        $this->loadModel('Payments');
+        $carsTable = $this->fetchTable('Cars');
+        $bookingsTable = $this->fetchTable('Bookings');
+        $usersTable = $this->fetchTable('Users');
+        $paymentsTable = $this->fetchTable('Payments');
 
-        $totalCars = $this->Cars->find()->count();
-        $totalBookings = $this->Bookings->find()->count();
-        $totalUsers = $this->Users->find('all')->where(['role !=' => 'admin'])->count();
+        $totalCars = $carsTable->find()->count();
+        $totalBookings = $bookingsTable->find()->count();
+        $totalUsers = $usersTable->find('all')->where(['role !=' => 'admin'])->count();
         
-        $totalRevenue = $this->Payments->find();
-        $totalRevenue = $totalRevenue->select(['total' => $totalRevenue->func()->sum('amount')])->first()->total ?? 0;
+        // Calculate total revenue safely
+        $query = $paymentsTable->find();
+        $totalRevenue = $query->select(['total' => $query->func()->sum('amount')])->first();
+        $totalRevenue = $totalRevenue->total ?? 0;
 
-        $recentBookings = $this->Bookings->find('all')
+        $recentBookings = $bookingsTable->find('all')
             ->contain(['Cars', 'Users'])
             ->order(['Bookings.created' => 'DESC'])
             ->limit(5)
