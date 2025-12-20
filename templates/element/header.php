@@ -1,8 +1,15 @@
 <!-- Navigation (Bootstrap 5) -->
 <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm" id="navbar">
     <div class="container">
+        <?php 
+        $identity = $this->request->getAttribute('identity');
+        $homeLink = $this->Url->build('/');
+        if ($identity && $identity->role === 'admin') {
+            $homeLink = $this->Url->build(['controller' => 'Admins', 'action' => 'dashboard']);
+        }
+        ?>
         <!-- Logo -->
-        <a class="navbar-brand d-flex align-items-center gap-2" href="<?= $this->Url->build('/') ?>">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="<?= $homeLink ?>">
             <i class="fas fa-car-side text-primary"></i>
             <span class="fw-bold text-dark">RENTIFY</span>
         </a>
@@ -26,7 +33,6 @@
                 </li>
 
                 <?php 
-                $identity = $this->request->getAttribute('identity');
                 if ($identity): 
                 ?>
                     <li class="nav-item dropdown">
