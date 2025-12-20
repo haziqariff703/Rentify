@@ -455,4 +455,13 @@ return [
         'errorLevel' => null,
         'fixtureStrategy' => null,
     ],
+
+    'CakePdf' => [
+    'engine' => 'CakePdf.WkHtmlToPdf',
+    'options' => [
+        'print-media-type' => false,
+        'outline' => true,
+    ],
+],
+
 ];

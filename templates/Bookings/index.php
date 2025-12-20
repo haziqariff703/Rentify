@@ -21,6 +21,7 @@
                     <th><?= $this->Paginator->sort('created') ?></th>
                     <th><?= $this->Paginator->sort('modified') ?></th>
                     <th class="actions"><?= __('Actions') ?></th>
+                    <th class="download"><?= __('Download') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -47,6 +48,21 @@
                             ]
                         ) ?>
                     </td>
+                    <td class="download">
+                        <?php if (!empty($booking->invoices)): ?>
+                        <?php $invoiceId = $booking->invoices[0]->id; ?>
+                        
+                        <?= $this->Html->link(
+                            '📄 Download Invoice', 
+                            ['controller' => 'Invoices', 'action' => 'view', $invoiceId], 
+                            [
+                                'class' => 'btn btn-primary btn-sm', 
+                                'target' => '_blank' // Opens in new tab
+                            ]
+                        ) ?>
+                        <?php else: ?>
+                            <span class="badge bg-warning">Processing</span>
+                        <?php endif; ?>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
