@@ -31,11 +31,22 @@ class InvoicesController extends AppController
      * @return \Cake\Http\Response|null|void Renders view
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
-    {
-        $invoice = $this->Invoices->get($id, contain: ['Bookings']);
-        $this->set(compact('invoice'));
+    public function view($id)
+{
+    $invoice = $this->Invoices->get($id, [
+        'contain' => ['Bookings' => ['Users', 'Cars']]
+    ]);
+
+    if ($this->request->getQuery('pdf')) {
+        $this->viewBuilder()
+            ->setClassName('CakePdf.Pdf')
+            ->setOption('pdfConfig', [
+                'filename' => 'Invoice_' . $invoice->id . '.pdf'
+            ]);
     }
+
+    $this->set(compact('invoice'));
+}
 
     /**
      * Add method

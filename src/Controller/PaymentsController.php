@@ -42,21 +42,43 @@ class PaymentsController extends AppController
      *
      * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
      */
-    public function add()
-    {
-        $payment = $this->Payments->newEmptyEntity();
-        if ($this->request->is('post')) {
-            $payment = $this->Payments->patchEntity($payment, $this->request->getData());
-            if ($this->Payments->save($payment)) {
-                $this->Flash->success(__('The payment has been saved.'));
+   public function add($invoiceId)
+{
+    $Invoices = $this->fetchTable('Invoices');
+    $Bookings = $this->fetchTable('Bookings');
 
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The payment could not be saved. Please, try again.'));
+    $invoice = $Invoices->get($invoiceId, [
+        'contain' => ['Bookings']
+    ]);
+
+    if ($this->request->is('post')) {
+
+        $card = $this->request->getData('card_number');
+
+        if ($card === '4242-4242') {
+
+            // Update invoice
+            $invoice->status = 'Paid';
+            $Invoices->save($invoice);
+
+            // Update booking
+            $booking = $invoice->booking;
+            $booking->status = 'Confirmed';
+            $Bookings->save($booking);
+
+            $this->Flash->success('Payment successful.');
+            return $this->redirect([
+                'controller' => 'Invoices',
+                'action' => 'view',
+                $invoiceId
+            ]);
         }
-        $bookings = $this->Payments->Bookings->find('list', limit: 200)->all();
-        $this->set(compact('payment', 'bookings'));
+
+        $this->Flash->error('Payment failed. Invalid card number.');
     }
+
+    $this->set(compact('invoice'));
+}
 
     /**
      * Edit method
