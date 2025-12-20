@@ -41,6 +41,14 @@
                             <span>My Account</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2" aria-labelledby="userDropdown">
+                            <?php if ($identity->role === 'admin'): ?>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center gap-2 fw-bold text-primary" href="<?= $this->Url->build(['controller' => 'Admins', 'action' => 'dashboard']) ?>">
+                                        <i class="fas fa-chart-line"></i> Admin Dashboard
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                            <?php endif; ?>
                             <li>
                                 <a class="dropdown-item d-flex align-items-center gap-2" href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'view', $identity->getIdentifier()]) ?>">
                                     <i class="fas fa-id-card text-muted"></i> Profile
