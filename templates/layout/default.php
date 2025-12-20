@@ -1,6 +1,6 @@
 <?php
 /**
- * Rentify Default Layout (Tailwind CSS)
+ * Rentify Default Layout (Bootstrap 5 CSS)
  */
 $cakeDescription = 'Rentify - Premium Car Rental';
 ?>
