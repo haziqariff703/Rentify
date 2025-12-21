@@ -29,6 +29,28 @@ $cakeDescription = 'Rentify - Premium Car Rental';
 
     <style>
         body { font-family: 'Inter', sans-serif; }
+        
+        /* Force Glassmorphism on Homepage Sidebar */
+        .glassmorphism-sidebar {
+            background: rgba(15, 23, 42, 0.25) !important;
+            backdrop-filter: blur(20px) saturate(180%) brightness(0.8) !important;
+            -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(0.8) !important;
+            z-index: 1050 !important; /* Higher than hero/video-overlay */
+        }
+        
+        /* Ensure video overlay stays behind sidebar */
+        .video-overlay {
+            z-index: 1 !important;
+        }
+        
+        .hero-section {
+            z-index: 0;
+        }
+        
+        .hero-section .position-relative.z-10 {
+            z-index: 10;
+        }
+        
         /* Custom scrollbar for better aesthetics */
         ::-webkit-scrollbar {
             width: 8px;
@@ -50,6 +72,9 @@ $cakeDescription = 'Rentify - Premium Car Rental';
     <?= $this->fetch('script') ?>
 </head>
 <body class="bg-light text-dark d-flex flex-column min-vh-100 position-relative pb-4">
+
+    <!-- Glassmorphism Sidebar -->
+    <?= $this->element('sidebar') ?>
 
     <!-- Header Element -->
     <?= $this->element('header') ?>

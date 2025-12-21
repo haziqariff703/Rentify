@@ -37,6 +37,9 @@ $cakeDescription = 'Rentify - Premium Car Rental';
 </head>
 <body class="bg-light text-dark d-flex flex-column min-vh-100 position-relative pb-4">
 
+    <!-- Glassmorphism Sidebar -->
+    <?= $this->element('sidebar') ?>
+
     <!-- Header Element -->
     <?= $this->element('header') ?>
 
