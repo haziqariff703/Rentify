@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -20,6 +21,23 @@ class UsersController extends AppController
     {
         parent::beforeFilter($event);
         $this->Authentication->addUnauthenticatedActions(['login', 'add']);
+
+        $user = $this->Authentication->getIdentity();
+        $action = $this->request->getParam('action');
+
+        // Admin-only actions
+        $adminActions = ['index', 'delete'];
+        if (in_array($action, $adminActions)) {
+            if (!$user || $user->role !== 'admin') {
+                $this->Flash->error(__('You are not authorized to access this page.'));
+                return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
+            }
+        }
+
+        // Use admin layout for admin users
+        if ($user && $user->role === 'admin') {
+            $this->viewBuilder()->setLayout('admin');
+        }
     }
 
     /**
@@ -39,7 +57,7 @@ class UsersController extends AppController
             if ($identity && $identity->role === 'admin') {
                 return $this->redirect(['controller' => 'Admins', 'action' => 'dashboard']);
             }
-            
+
             $redirect = $this->request->getQuery('redirect', [
                 'controller' => 'Pages',
                 'action' => 'display',
@@ -110,7 +128,7 @@ class UsersController extends AppController
             $user = $this->Users->patchEntity($user, $this->request->getData());
             // Default role is customer
             $user->role = 'customer';
-            
+
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
 

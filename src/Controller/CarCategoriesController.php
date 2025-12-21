@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -13,16 +14,19 @@ class CarCategoriesController extends AppController
     /**
      * @var \App\Model\Table\CarCategoriesTable $CarCategories
      */
-    
+
     public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         parent::beforeFilter($event);
-        
+
         $user = $this->Authentication->getIdentity();
         if (!$user || $user->role !== 'admin') {
             $this->Flash->error(__('You are not authorized to access this page.'));
             return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
         }
+
+        // Use admin layout for admin users
+        $this->viewBuilder()->setLayout('admin');
     }
 
     /**
