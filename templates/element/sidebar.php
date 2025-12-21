@@ -8,7 +8,7 @@
     /* ========================================
        CRYSTAL GLASS SIDEBAR - Bright & Airy
        ======================================== */
-    
+
     .glassmorphism-sidebar {
         position: fixed;
         left: 0;
@@ -32,7 +32,7 @@
         opacity: 1;
         pointer-events: auto;
     }
-    
+
     /* Sidebar Active State - Slides in */
     .glassmorphism-sidebar.sidebar-active {
         transform: translateX(0);
@@ -59,7 +59,7 @@
         visibility: visible;
         pointer-events: auto;
     }
-    
+
     /* Sidebar Links - Pure White with Text Shadow */
     .sidebar-menu-link {
         color: #FFFFFF !important;
@@ -70,48 +70,48 @@
         align-items: center;
         transition: all 0.3s ease;
     }
-    
+
     /* Sidebar Icons - Pure White */
     .sidebar-menu-icon {
         color: #FFFFFF !important;
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     }
-    
+
     /* Active Link - Soft Blue Glow */
     .sidebar-menu-link.active {
         background: rgba(30, 64, 175, 0.3) !important;
         box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
         border-radius: 12px;
     }
-    
+
     /* Hover Effect */
     .sidebar-menu-link:hover {
         background: rgba(255, 255, 255, 0.1);
         transform: translateX(5px);
     }
-    
+
     /* ========================================
        RESPONSIVE SIDEBAR
        ======================================== */
-    
+
     @media (max-width: 768px) {
         .glassmorphism-sidebar {
             width: 100%;
             max-width: 300px;
         }
     }
-    
+
     @media (max-width: 480px) {
         .glassmorphism-sidebar {
             width: 85%;
             max-width: 280px;
         }
-        
+
         .sidebar-menu-link {
             padding: 12px 16px;
             font-size: 14px;
         }
-        
+
         .sidebar-menu-icon {
             font-size: 18px;
         }
@@ -371,12 +371,12 @@
         </li>
 
         <?php if ($this->request->getAttribute('identity')): ?>
-        <li class="sidebar-menu-item">
-            <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'view', $this->request->getAttribute('identity')->getIdentifier()]) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Users' && $this->request->getParam('action') == 'view') ? 'active' : '' ?>" data-index="3">
-                <i class="bi bi-person-circle sidebar-menu-icon"></i>
-                <span class="sidebar-menu-text">My Account</span>
-            </a>
-        </li>
+            <li class="sidebar-menu-item">
+                <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'view', $this->request->getAttribute('identity')->getIdentifier()]) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Users' && $this->request->getParam('action') == 'view') ? 'active' : '' ?>" data-index="3">
+                    <i class="bi bi-person-circle sidebar-menu-icon"></i>
+                    <span class="sidebar-menu-text">My Account</span>
+                </a>
+            </li>
         <?php endif; ?>
 
         <li class="sidebar-menu-item">
@@ -401,98 +401,98 @@
         </li>
 
         <?php if ($this->request->getAttribute('identity')): ?>
-        <li class="sidebar-menu-item">
-            <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'logout']) ?>" class="sidebar-menu-link" data-index="7">
-                <i class="bi bi-box-arrow-right sidebar-menu-icon"></i>
-                <span class="sidebar-menu-text">Logout</span>
-            </a>
-        </li>
+            <li class="sidebar-menu-item">
+                <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'logout']) ?>" class="sidebar-menu-link" data-index="7">
+                    <i class="bi bi-box-arrow-right sidebar-menu-icon"></i>
+                    <span class="sidebar-menu-text">Logout</span>
+                </a>
+            </li>
         <?php else: ?>
-        <li class="sidebar-menu-item">
-            <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'login']) ?>" class="sidebar-menu-link" data-index="9">
-                <i class="bi bi-box-arrow-in-right sidebar-menu-icon"></i>
-                <span class="sidebar-menu-text">Login</span>
-            </a>
-        </li>
+            <li class="sidebar-menu-item">
+                <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'login']) ?>" class="sidebar-menu-link" data-index="9">
+                    <i class="bi bi-box-arrow-in-right sidebar-menu-icon"></i>
+                    <span class="sidebar-menu-text">Login</span>
+                </a>
+            </li>
         <?php endif; ?>
     </ul>
 
     <!-- Sidebar Footer with User Info -->
     <?php if ($this->request->getAttribute('identity')): ?>
-    <div class="sidebar-footer">
-        <div class="sidebar-user-info">
-            <div class="sidebar-user-avatar">
-                <?= strtoupper(substr($this->request->getAttribute('identity')->get('email'), 0, 1)) ?>
-            </div>
-            <div class="sidebar-user-details">
-                <div class="sidebar-user-name">
-                    <?= h($this->request->getAttribute('identity')->get('email')) ?>
+        <div class="sidebar-footer">
+            <div class="sidebar-user-info">
+                <div class="sidebar-user-avatar">
+                    <?= strtoupper(substr($this->request->getAttribute('identity')->get('email'), 0, 1)) ?>
                 </div>
-                <div class="sidebar-user-role">User</div>
+                <div class="sidebar-user-details">
+                    <div class="sidebar-user-name">
+                        <?= h($this->request->getAttribute('identity')->get('email')) ?>
+                    </div>
+                    <div class="sidebar-user-role">User</div>
+                </div>
             </div>
         </div>
-    </div>
     <?php endif; ?>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const sidebar = document.getElementById('sidebar');
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    const sidebarOverlay = document.getElementById('sidebarOverlay');
-    const menuLinks = document.querySelectorAll('.sidebar-menu-link');
-    
-    // Toggle sidebar slide-out on hamburger click
-    sidebarToggle.addEventListener('click', function() {
-        toggleSidebar();
-    });
-    
-    // Close sidebar when clicking overlay
-    sidebarOverlay.addEventListener('click', function() {
-        closeSidebar();
-    });
-    
-    // Close sidebar when clicking a menu link
-    menuLinks.forEach(function(link) {
-        link.addEventListener('click', function() {
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const menuLinks = document.querySelectorAll('.sidebar-menu-link');
+
+        // Toggle sidebar slide-out on hamburger click
+        sidebarToggle.addEventListener('click', function() {
+            toggleSidebar();
+        });
+
+        // Close sidebar when clicking overlay
+        sidebarOverlay.addEventListener('click', function() {
             closeSidebar();
         });
-    });
-    
-    // Close sidebar on Escape key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && sidebar.classList.contains('sidebar-active')) {
-            closeSidebar();
+
+        // Close sidebar when clicking a menu link
+        menuLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                closeSidebar();
+            });
+        });
+
+        // Close sidebar on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && sidebar.classList.contains('sidebar-active')) {
+                closeSidebar();
+            }
+        });
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('sidebar-active');
+            sidebarOverlay.classList.toggle('active');
+
+            // Update hamburger icon
+            const icon = sidebarToggle.querySelector('i');
+            if (icon) {
+                if (sidebar.classList.contains('sidebar-active')) {
+                    icon.classList.remove('bi-list');
+                    icon.classList.add('bi-x-lg');
+                } else {
+                    icon.classList.remove('bi-x-lg');
+                    icon.classList.add('bi-list');
+                }
+            }
         }
-    });
-    
-    function toggleSidebar() {
-        sidebar.classList.toggle('sidebar-active');
-        sidebarOverlay.classList.toggle('active');
-        
-        // Update hamburger icon
-        const icon = sidebarToggle.querySelector('i');
-        if (icon) {
-            if (sidebar.classList.contains('sidebar-active')) {
-                icon.classList.remove('bi-list');
-                icon.classList.add('bi-x-lg');
-            } else {
+
+        function closeSidebar() {
+            sidebar.classList.remove('sidebar-active');
+            sidebarOverlay.classList.remove('active');
+
+            // Reset hamburger icon
+            const icon = sidebarToggle.querySelector('i');
+            if (icon) {
                 icon.classList.remove('bi-x-lg');
                 icon.classList.add('bi-list');
             }
         }
-    }
-    
-    function closeSidebar() {
-        sidebar.classList.remove('sidebar-active');
-        sidebarOverlay.classList.remove('active');
-        
-        // Reset hamburger icon
-        const icon = sidebarToggle.querySelector('i');
-        if (icon) {
-            icon.classList.remove('bi-x-lg');
-            icon.classList.add('bi-list');
-        }
-    }
-});
+    });
 </script>

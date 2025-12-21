@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -10,6 +11,31 @@ namespace App\Controller;
  */
 class CarsController extends AppController
 {
+    public function beforeFilter(\Cake\Event\EventInterface $event)
+    {
+        parent::beforeFilter($event);
+
+        // Allow public access to index and view
+        $this->Authentication->addUnauthenticatedActions(['index', 'view']);
+
+        $user = $this->Authentication->getIdentity();
+        $action = $this->request->getParam('action');
+
+        // Admin-only actions require admin role
+        $adminActions = ['add', 'edit', 'delete'];
+        if (in_array($action, $adminActions)) {
+            if (!$user || $user->role !== 'admin') {
+                $this->Flash->error(__('You are not authorized to access this page.'));
+                return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
+            }
+        }
+
+        // Use admin layout for admin users
+        if ($user && $user->role === 'admin') {
+            $this->viewBuilder()->setLayout('admin');
+        }
+    }
+
     /**
      * Index method
      *

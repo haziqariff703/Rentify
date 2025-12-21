@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -10,6 +11,34 @@ namespace App\Controller;
  */
 class PaymentsController extends AppController
 {
+    public function beforeFilter(\Cake\Event\EventInterface $event)
+    {
+        parent::beforeFilter($event);
+
+        $user = $this->Authentication->getIdentity();
+        $action = $this->request->getParam('action');
+
+        // Admin-only actions (edit, delete)
+        $adminActions = ['index', 'edit', 'delete'];
+        if (in_array($action, $adminActions)) {
+            if (!$user || $user->role !== 'admin') {
+                $this->Flash->error(__('You are not authorized to access this page.'));
+                return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
+            }
+        }
+
+        // Block admin from creating new payments - only customers can pay
+        if ($action === 'add' && $user && $user->role === 'admin') {
+            $this->Flash->error(__('Admins cannot make payments. Only customers can pay for bookings.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
+        // Use admin layout for admin users
+        if ($user && $user->role === 'admin') {
+            $this->viewBuilder()->setLayout('admin');
+        }
+    }
+
     /**
      * Index method
      */
@@ -43,24 +72,24 @@ class PaymentsController extends AppController
         if ($this->request->is('post')) {
             $data = $this->request->getData();
             $payment = $this->Payments->patchEntity($payment, $data);
-            
+
             // 2. SIMULATION LOGIC: Check Card Number
             $cardInput = str_replace(['-', ' '], '', $data['card_number'] ?? ''); // Remove dashes/spaces
-            
+
             // Accept '4242...' OR any 16-digit number
             if (str_starts_with($cardInput, '4242') || strlen($cardInput) === 16) {
-                
+
                 $payment->payment_date = date('Y-m-d H:i:s');
                 $payment->payment_status = 'paid'; // Set status to Paid
-                
+
                 if ($this->Payments->save($payment)) {
-                    
+
                     // A. Update INVOICE -> 'paid'
                     $invoicesTable = $this->fetchTable('Invoices');
                     $invoice = $invoicesTable->find()
                         ->where(['booking_id' => $payment->booking_id])
                         ->first();
-                    
+
                     if ($invoice) {
                         $invoice->status = 'paid'; // Matches your DB Enum
                         $invoicesTable->save($invoice);
@@ -73,7 +102,7 @@ class PaymentsController extends AppController
                     $bookingsTable->save($booking);
 
                     $this->Flash->success(__('Payment Approved! Booking Confirmed.'));
-                    
+
                     // Redirect back to the Invoice so they can download the PDF
                     return $this->redirect(['controller' => 'Invoices', 'action' => 'view', $invoice->id]);
                 }

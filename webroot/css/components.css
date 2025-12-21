@@ -1,0 +1,231 @@
+/**
+ * Components CSS
+ * Shared styles for header, footer, and common UI elements
+ * Synced with sidebar theme (purple/slate color palette)
+ */
+
+/* =====================================================
+   COLOR VARIABLES (matching sidebar theme)
+   ===================================================== */
+:root {
+    --primary-start: #6366f1;
+    --primary-end: #8b5cf6;
+    --dark-slate: #1e293b;
+    --slate-700: #334155;
+    --slate-500: #64748b;
+    --slate-400: #94a3b8;
+    --slate-200: #e2e8f0;
+    --slate-100: #f1f5f9;
+    --slate-50: #f8fafc;
+}
+
+/* =====================================================
+   HEADER / NAVBAR
+   ===================================================== */
+.navbar {
+    background: #ffffff !important;
+    border-bottom: 1px solid var(--slate-200);
+    padding: 12px 0;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    color: var(--dark-slate) !important;
+}
+
+.navbar-brand i {
+    background: linear-gradient(
+        135deg,
+        var(--primary-start),
+        var(--primary-end)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.navbar .nav-link {
+    color: var(--slate-500) !important;
+    font-weight: 500;
+    padding: 8px 16px !important;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.navbar .nav-link:hover {
+    color: var(--primary-start) !important;
+    background-color: var(--slate-100);
+}
+
+.navbar .dropdown-menu {
+    border: 1px solid var(--slate-200);
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    padding: 8px;
+}
+
+.navbar .dropdown-item {
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.navbar .dropdown-item:hover {
+    background-color: var(--slate-100);
+}
+
+.navbar .dropdown-item.text-danger:hover {
+    background-color: #fee2e2;
+}
+
+/* Primary Button (Gradient) */
+.btn-primary-gradient {
+    background: linear-gradient(
+        135deg,
+        var(--primary-start),
+        var(--primary-end)
+    ) !important;
+    border: none !important;
+    color: #fff !important;
+    font-weight: 500;
+    padding: 10px 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-primary-gradient:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+    color: #fff !important;
+}
+
+/* Outline Button (styled) */
+.btn-outline-styled {
+    border: 1px solid var(--slate-200) !important;
+    color: var(--slate-700) !important;
+    font-weight: 500;
+    padding: 10px 24px;
+    border-radius: 8px;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-styled:hover {
+    border-color: var(--primary-start) !important;
+    color: var(--primary-start) !important;
+    background-color: rgba(99, 102, 241, 0.05);
+}
+
+/* =====================================================
+   FOOTER
+   ===================================================== */
+.site-footer {
+    background: var(--dark-slate) !important;
+    color: var(--slate-400);
+    padding: 60px 0 30px;
+}
+
+.site-footer .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    margin-bottom: 16px;
+}
+
+.site-footer .footer-brand i {
+    font-size: 28px;
+    background: linear-gradient(
+        135deg,
+        var(--primary-start),
+        var(--primary-end)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.site-footer .footer-brand span {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.site-footer .footer-heading {
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+}
+
+.site-footer .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.site-footer .footer-links li {
+    margin-bottom: 10px;
+}
+
+.site-footer .footer-links a {
+    color: var(--slate-400);
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.site-footer .footer-links a:hover {
+    color: #fff;
+    padding-left: 4px;
+}
+
+/* Social Icons */
+.social-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--slate-700);
+    color: var(--slate-400);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+    background: linear-gradient(
+        135deg,
+        var(--primary-start),
+        var(--primary-end)
+    );
+    color: #fff;
+    transform: translateY(-3px);
+}
+
+.site-footer .footer-bottom {
+    border-top: 1px solid var(--slate-700);
+    margin-top: 40px;
+    padding-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.site-footer .footer-bottom a {
+    color: var(--slate-400);
+    text-decoration: none;
+    font-size: 13px;
+    transition: color 0.2s ease;
+}
+
+.site-footer .footer-bottom a:hover {
+    color: #fff;
+}
