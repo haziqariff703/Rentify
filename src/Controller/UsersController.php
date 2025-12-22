@@ -47,6 +47,9 @@ class UsersController extends AppController
      */
     public function login()
     {
+        // Use minimal auth layout without header/footer
+        $this->viewBuilder()->setLayout('auth');
+
         $this->request->allowMethod(['get', 'post']);
         $result = $this->Authentication->getResult();
 
@@ -73,6 +76,10 @@ class UsersController extends AppController
             \Cake\Log\Log::error('Login status: ' . $result->getStatus());
             $this->Flash->error(__('Invalid email or password'));
         }
+
+        // Create empty user entity for the registration form in combined login page
+        $user = $this->Users->newEmptyEntity();
+        $this->set(compact('user'));
     }
 
     /**

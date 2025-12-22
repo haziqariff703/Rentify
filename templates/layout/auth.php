@@ -1,10 +1,3 @@
-<?php
-
-/**
- * Rentify Home Layout (Tailwind CSS)
- */
-$cakeDescription = 'Rentify - Premium Car Rental';
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,13 +5,15 @@ $cakeDescription = 'Rentify - Premium Car Rental';
     <?= $this->Html->charset() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
-        <?= $cakeDescription ?>:
         <?= $this->fetch('title') ?>
     </title>
     <?= $this->Html->meta('icon') ?>
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -27,57 +22,78 @@ $cakeDescription = 'Rentify - Premium Car Rental';
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <?= $this->Html->css('custom') ?>
+    <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/custom.css') ?>?v=<?= time() ?>">
+
+    <!-- Components CSS -->
+    <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/components.css') ?>?v=<?= time() ?>">
 
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        /* Force Glassmorphism on Homepage Sidebar */
-        .glassmorphism-sidebar {
-            background: rgba(15, 23, 42, 0.25) !important;
-            backdrop-filter: blur(20px) saturate(180%) brightness(0.8) !important;
-            -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(0.8) !important;
-            z-index: 1050 !important;
-            /* Higher than hero/video-overlay */
+        /* Force Navbar Dark Styling - Navy Background */
+        .navbar,
+        #navbar {
+            background-color: #0f172a !important;
         }
 
-        /* Ensure video overlay stays behind sidebar */
-        .video-overlay {
-            z-index: 1 !important;
+        .navbar-brand {
+            color: #ffffff !important;
         }
 
-        .hero-section {
-            z-index: 0;
+        .navbar-brand:hover {
+            color: #3b82f6 !important;
         }
 
-        .hero-section .position-relative.z-10 {
-            z-index: 10;
+        .nav-link {
+            color: rgba(255, 255, 255, 0.85) !important;
         }
 
-        /* Custom scrollbar for better aesthetics */
-        ::-webkit-scrollbar {
-            width: 8px;
+        .nav-link:hover {
+            color: #3b82f6 !important;
         }
 
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
+        .btn-outline-light {
+            color: #ffffff !important;
+            border-color: rgba(255, 255, 255, 0.3) !important;
         }
 
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
+        .btn-outline-light:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            border-color: #ffffff !important;
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+        /* Header Positioning */
+        #navbar {
+            position: relative !important;
+            z-index: 1000;
+        }
+
+        /* Main Content Area */
+        .auth-content-wrapper {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            padding: 20px 0;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
         }
 
         /* Footer Enhanced Styling with Grain Texture */
         .site-footer {
+            position: relative !important;
+            z-index: 1000;
+            margin-top: 0;
             padding: 80px 0 40px !important;
-            position: relative;
             overflow: hidden;
         }
 
@@ -116,42 +132,12 @@ $cakeDescription = 'Rentify - Premium Car Rental';
             letter-spacing: 0.8px !important;
         }
 
-        .site-footer .footer-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 20px;
-            font-weight: 700;
-            color: #f8fafc !important;
-            text-decoration: none !important;
-            margin-bottom: 20px;
-        }
-
-        .site-footer .footer-brand i {
-            font-size: 32px;
-            color: #3b82f6;
-        }
-
-        .site-footer .footer-links,
-        .site-footer .footer-contact {
-            list-style: none !important;
-            padding: 0 !important;
-            margin: 0 !important;
-        }
-
         .site-footer .footer-links li {
             margin-bottom: 14px !important;
         }
 
         .site-footer .footer-links a {
             font-size: 15px !important;
-            color: #cbd5e1 !important;
-            text-decoration: none !important;
-            transition: color 0.2s;
-        }
-
-        .site-footer .footer-links a:hover {
-            color: #3b82f6 !important;
         }
 
         .site-footer .footer-contact li {
@@ -160,7 +146,6 @@ $cakeDescription = 'Rentify - Premium Car Rental';
             gap: 12px;
             margin-bottom: 16px;
             font-size: 15px !important;
-            list-style: none;
         }
 
         .site-footer .footer-contact li i {
@@ -173,35 +158,17 @@ $cakeDescription = 'Rentify - Premium Car Rental';
             width: 44px !important;
             height: 44px !important;
             border-radius: 12px !important;
-            background: rgba(255, 255, 255, 0.1) !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            color: #f8fafc !important;
-            text-decoration: none !important;
             font-size: 16px;
-            transition: all 0.3s;
-        }
-
-        .site-footer .social-icon:hover {
-            background: #3b82f6 !important;
-            transform: translateY(-2px);
         }
 
         .site-footer .footer-bottom {
             margin-top: 60px !important;
             padding-top: 30px !important;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex !important;
-            justify-content: space-between !important;
-            align-items: center !important;
-            flex-wrap: wrap;
             gap: 20px !important;
         }
 
         .site-footer .footer-bottom p {
             font-size: 14px !important;
-            color: #94a3b8 !important;
         }
 
         .site-footer .footer-bottom-links {
@@ -211,12 +178,14 @@ $cakeDescription = 'Rentify - Premium Car Rental';
 
         .site-footer .footer-bottom a {
             font-size: 14px !important;
-            color: #94a3b8 !important;
-            text-decoration: none !important;
         }
 
-        .site-footer .footer-bottom a:hover {
-            color: #3b82f6 !important;
+        /* Force Glassmorphism on Auth Sidebar */
+        .glassmorphism-sidebar {
+            background: rgba(15, 23, 42, 0.25) !important;
+            backdrop-filter: blur(20px) saturate(180%) brightness(0.8) !important;
+            -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(0.8) !important;
+            z-index: 1050 !important;
         }
     </style>
 
@@ -225,21 +194,22 @@ $cakeDescription = 'Rentify - Premium Car Rental';
     <?= $this->fetch('script') ?>
 </head>
 
-<body class="bg-light text-dark d-flex flex-column min-vh-100 position-relative pb-4">
-
+<body>
     <!-- Glassmorphism Sidebar -->
     <?= $this->element('sidebar') ?>
 
-    <!-- Header Element -->
+    <!-- Header -->
     <?= $this->element('header') ?>
 
-    <!-- Main Content -->
-    <main class="flex-grow-1 pt-5">
-        <?= $this->Flash->render() ?>
-        <?= $this->fetch('content') ?>
-    </main>
+    <!-- Flash Messages -->
+    <?= $this->Flash->render() ?>
 
-    <!-- Footer Element -->
+    <!-- Main Auth Content -->
+    <div class="auth-content-wrapper">
+        <?= $this->fetch('content') ?>
+    </div>
+
+    <!-- Footer -->
     <?= $this->element('footer') ?>
 
     <!-- Bootstrap Bundle with Popper -->
