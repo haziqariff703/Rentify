@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Car $car
@@ -18,16 +19,19 @@
             <fieldset>
                 <legend><?= __('Add Car') ?></legend>
                 <?php
-                    echo $this->Form->control('category_id', ['options' => $categories, 'empty' => true]);
-                    echo $this->Form->control('car_model');
-                    echo $this->Form->control('plate_number');
-                    echo $this->Form->control('brand');
-                    echo $this->Form->control('year');
-                    echo $this->Form->control('price_per_day');
-                    echo $this->Form->control('status');
-                    echo $this->Form->control('image');
-                    echo $this->Form->control('transmission');
-                    echo $this->Form->control('seats');
+                echo $this->Form->control('category_id', ['options' => $categories, 'empty' => true]);
+                echo $this->Form->control('car_model');
+                echo $this->Form->control('plate_number');
+                echo $this->Form->control('brand');
+                echo $this->Form->control('year');
+                echo $this->Form->control('price_per_day');
+                echo $this->Form->control('status');
+                echo $this->Form->control('image', ['label' => 'Image Filename', 'placeholder' => 'e.g. ferrari-f8.jpg']);
+                echo $this->Form->control('transmission');
+                echo $this->Form->control('seats');
+                echo $this->Form->control('engine', ['placeholder' => 'e.g. 5.2L V10']);
+                echo $this->Form->control('zero_to_sixty', ['label' => '0-60 Time', 'placeholder' => 'e.g. 2.9s']);
+                echo $this->Form->control('badge_color', ['label' => 'Badge Color (Hex)', 'placeholder' => 'e.g. #ef4444']);
                 ?>
             </fieldset>
             <?= $this->Form->button(__('Submit')) ?>

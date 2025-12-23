@@ -1,9 +1,9 @@
-<!-- Footer (Bootstrap 5 - Styled to match Sidebar Theme) -->
+<!-- Footer (Bootstrap 5 - Redesigned for Better Visual Appeal) -->
 <footer class="site-footer">
     <div class="container">
-        <div class="row gy-4">
+        <div class="row gy-5">
             <!-- Brand Column -->
-            <div class="col-lg-3 col-md-6">
+            <div class="col-lg-4 col-md-6">
                 <?php
                 $identity = $this->request->getAttribute('identity');
                 $homeLink = $this->Url->build('/');
@@ -15,18 +15,35 @@
                     <i class="fas fa-car-side"></i>
                     <span>RENTIFY</span>
                 </a>
-                <p class="small mb-0" style="color: #94a3b8; line-height: 1.7;">
+                <p class="footer-description">
                     Experience the freedom of the road with our premium fleet. Reliable, comfortable, and affordable.
                 </p>
+
+                <!-- Social Icons -->
+                <div class="footer-social">
+                    <a href="#" class="social-icon" aria-label="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="social-icon" aria-label="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-icon" aria-label="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="social-icon" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                </div>
             </div>
 
             <!-- Company Links -->
-            <div class="col-lg-3 col-md-6">
+            <div class="col-lg-2 col-md-6">
                 <h6 class="footer-heading">Company</h6>
                 <ul class="footer-links">
                     <li><a href="<?= $this->Url->build('/') ?>#about">About Us</a></li>
                     <li><a href="#">Careers</a></li>
                     <li><a href="#">Blog</a></li>
+                    <li><a href="#">Contact</a></li>
                 </ul>
             </div>
 
@@ -37,24 +54,33 @@
                     <li><a href="#">Help Center</a></li>
                     <li><a href="#">Terms of Service</a></li>
                     <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">FAQs</a></li>
                 </ul>
             </div>
 
-            <!-- Connect -->
+            <!-- Contact Info -->
             <div class="col-lg-3 col-md-6">
-                <h6 class="footer-heading">Connect</h6>
-                <div class="d-flex gap-2 mb-3">
-                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
-                </div>
+                <h6 class="footer-heading">Get in Touch</h6>
+                <ul class="footer-contact">
+                    <li>
+                        <i class="fas fa-envelope"></i>
+                        <span>support@rentify.com</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-phone"></i>
+                        <span>+60 11-1234 5678</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Kuala Lumpur, Malaysia</span>
+                    </li>
+                </ul>
             </div>
         </div>
 
         <div class="footer-bottom">
-            <p class="mb-0 small">&copy; <?= date('Y') ?> Rentify Inc. All rights reserved.</p>
-            <div class="d-flex gap-4">
+            <p class="mb-0">&copy; <?= date('Y') ?> Rentify Inc. All rights reserved.</p>
+            <div class="footer-bottom-links">
                 <a href="#">Privacy</a>
                 <a href="#">Terms</a>
                 <a href="#">Cookies</a>

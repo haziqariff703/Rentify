@@ -15,11 +15,20 @@ class CarsController extends AppController
     {
         parent::beforeFilter($event);
 
-        // Allow public access to index and view
-        $this->Authentication->addUnauthenticatedActions(['index', 'view']);
+        // Allow public access to myCars, index, and view
+        // myCars is the user-facing fleet catalog
+        // index will redirect non-admins to myCars
+        $this->Authentication->addUnauthenticatedActions(['myCars', 'index', 'view']);
 
         $user = $this->Authentication->getIdentity();
         $action = $this->request->getParam('action');
+
+        // For index action: redirect non-admin users to myCars
+        if ($action === 'index') {
+            if (!$user || $user->role !== 'admin') {
+                return $this->redirect(['action' => 'myCars']);
+            }
+        }
 
         // Admin-only actions require admin role
         $adminActions = ['add', 'edit', 'delete'];
@@ -37,7 +46,26 @@ class CarsController extends AppController
     }
 
     /**
-     * Index method
+     * My Cars method - User-facing 3D flip card catalog
+     *
+     * @return \Cake\Http\Response|null|void Renders view
+     */
+    public function myCars()
+    {
+        // Query cars from database with their categories
+        $cars = $this->Cars->find()
+            ->contain(['Categories'])
+            ->where(['status' => 'available'])
+            ->all();
+
+        // Query all categories for filter buttons
+        $categories = $this->Cars->Categories->find()->all();
+
+        $this->set(compact('cars', 'categories'));
+    }
+
+    /**
+     * Index method - Admin view for managing cars
      *
      * @return \Cake\Http\Response|null|void Renders view
      */

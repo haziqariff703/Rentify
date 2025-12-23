@@ -12,31 +12,53 @@
 }
 
 /* Apply animation to all containers */
-.container, .container-fluid, .container-sm, .container-md, .container-lg, .container-xl, .container-xxl {
+.container,
+.container-fluid,
+.container-sm,
+.container-md,
+.container-lg,
+.container-xl,
+.container-xxl {
     animation-name: fadeInUp;
     animation-duration: 0.8s;
     animation-fill-mode: both;
 }
 
 /* Base Button Animation */
-.btn, .button, button, input[type="submit"], input[type="button"], input[type="reset"] {
+.btn,
+.button,
+button,
+input[type="submit"],
+input[type="button"],
+input[type="reset"] {
     transition: all 0.3s ease-in-out !important;
     position: relative;
     overflow: hidden;
 }
 
-.btn:hover, .button:hover, button:hover, input[type="submit"]:hover, input[type="button"]:hover, input[type="reset"]:hover {
+.btn:hover,
+.button:hover,
+button:hover,
+input[type="submit"]:hover,
+input[type="button"]:hover,
+input[type="reset"]:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.btn:active, .button:active, button:active, input[type="submit"]:active, input[type="button"]:active, input[type="reset"]:active {
+.btn:active,
+.button:active,
+button:active,
+input[type="submit"]:active,
+input[type="button"]:active,
+input[type="reset"]:active {
     transform: translateY(0);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* CakePHP Default Button Shim to look like Bootstrap Primary */
-.button, input[type="submit"] {
+.button,
+input[type="submit"] {
     display: inline-block;
     font-weight: 400;
     line-height: 1.5;
@@ -54,7 +76,8 @@
     font-family: inherit;
 }
 
-.button:hover, input[type="submit"]:hover {
+.button:hover,
+input[type="submit"]:hover {
     background-color: #0b5ed7;
     border-color: #0a58ca;
     color: #fff;
@@ -79,11 +102,518 @@ table {
     vertical-align: top;
     border-color: #dee2e6;
 }
-table th, table td {
+table th,
+table td {
     padding: 0.5rem;
     border-bottom: 1px solid #dee2e6;
 }
 table th {
     text-align: inherit;
     font-weight: bold;
+}
+
+/* ========================================
+   RENTIFY COLOR SCHEME
+   "Command Center" Professional Design
+   ======================================== */
+
+/* Main Background - Slate White */
+body {
+    background-color: #f8fafc !important;
+}
+
+/* Header/Navbar - Navy Midnight */
+.navbar {
+    background-color: #0f172a !important;
+}
+
+.navbar-brand {
+    color: #ffffff !important;
+}
+
+.navbar-brand:hover {
+    color: #3b82f6 !important;
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.nav-link:hover {
+    color: #3b82f6 !important;
+}
+
+/* Dropdown Menu Styling */
+.dropdown-menu {
+    background-color: #1e293b;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.dropdown-item {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.dropdown-item:hover {
+    background-color: #0f172a;
+    color: #3b82f6;
+}
+
+/* Footer - Dark Slate */
+footer {
+    background-color: #1e293b !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+footer a {
+    color: #3b82f6 !important;
+}
+
+footer a:hover {
+    color: #60a5fa !important;
+}
+
+/* Sidebar - Crystal Glass Style (Bright & Airy) */
+.glassmorphism-sidebar,
+#sidebar.glassmorphism-sidebar,
+div.glassmorphism-sidebar {
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(25px) !important;
+    -webkit-backdrop-filter: blur(25px) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15) !important;
+    z-index: 9999 !important;
+    pointer-events: auto !important;
+}
+
+/* Sidebar Links - Pure White */
+.sidebar-menu-link {
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Active Link - Soft Blue Glow */
+.sidebar-menu-link.active {
+    background: rgba(30, 64, 175, 0.3) !important;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4) !important;
+}
+
+.sidebar-toggle {
+    background: rgba(15, 23, 42, 0.9) !important;
+    border: 1px solid rgba(59, 130, 246, 0.3) !important;
+    color: #ffffff !important;
+}
+
+.sidebar-toggle:hover {
+    background: rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Card Styling - Make them pop on Slate White background */
+.card {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+}
+
+/* Main Content Area */
+main {
+    background-color: transparent;
+}
+
+/* Primary Button - Electric Blue */
+.btn-primary {
+    background-color: #3b82f6 !important;
+    border-color: #3b82f6 !important;
+}
+
+.btn-primary:hover {
+    background-color: #2563eb !important;
+    border-color: #2563eb !important;
+}
+
+/* Text Colors for better contrast */
+.text-primary {
+    color: #3b82f6 !important;
+}
+
+/* Links */
+a {
+    color: #3b82f6;
+}
+
+a:hover {
+    color: #2563eb;
+}
+
+/* ========================================
+   ABOUT US SECTION - Professional Design
+   ======================================== */
+
+/* Google Fonts - Montserrat */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap");
+
+.about-section-custom {
+    background-color: #f8fafc;
+}
+
+.about-subtitle {
+    display: inline-block;
+    color: #3b82f6;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    padding: 8px 16px;
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 50px;
+}
+
+.about-main-heading {
+    font-family: "Montserrat", sans-serif;
+    font-size: 38px;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.2;
+    margin-bottom: 24px;
+}
+
+.about-text {
+    font-size: 16px;
+    color: #64748b;
+    line-height: 1.8;
+    margin-bottom: 16px;
+}
+
+.about-text strong {
+    color: #0f172a;
+    font-weight: 600;
+}
+
+/* Sleek Icon Boxes - Professional Design */
+.icon-box-sleek {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 16px;
+    background: linear-gradient(145deg, #3b82f6 0%, #1e40af 100%);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: #ffffff;
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.icon-box-sleek:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(59, 130, 246, 0.45);
+}
+
+/* Trust Icon Boxes (Legacy Support) */
+.trust-icon-box {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 12px;
+    background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #ffffff;
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+    transition: transform 0.3s ease;
+}
+
+.trust-icon-box:hover {
+    transform: translateY(-5px);
+}
+
+.trust-icon-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+/* Responsive About Section */
+@media (max-width: 768px) {
+    .about-main-heading {
+        font-size: 28px;
+    }
+
+    .trust-icon-box {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+
+    .trust-icon-label {
+        font-size: 12px;
+    }
+}
+
+/* ========================================
+   INFINITE SCROLLING MARQUEE
+   ======================================== */
+
+/* Marquee Container with Fade Masks */
+.marquee-container {
+    position: relative;
+    overflow: hidden;
+    padding: 20px 0;
+}
+
+.marquee-container::before,
+.marquee-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 150px;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.marquee-container::before {
+    left: 0;
+    background: linear-gradient(to right, #f1f5f9 0%, transparent 100%);
+}
+
+.marquee-container::after {
+    right: 0;
+    background: linear-gradient(to left, #f1f5f9 0%, transparent 100%);
+}
+
+/* Marquee Track - Infinite Scroll Animation */
+.marquee-track {
+    display: flex;
+    gap: 30px;
+    animation: marqueeScroll 25s linear infinite;
+    width: max-content;
+}
+
+.marquee-container:hover .marquee-track {
+    animation-play-state: paused;
+}
+
+@keyframes marqueeScroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* Marquee Card Styling */
+.marquee-card {
+    flex-shrink: 0;
+    width: 350px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.marquee-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* Card Image Container */
+.marquee-card-img {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+
+.marquee-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.marquee-card:hover .marquee-card-img img {
+    transform: scale(1.05);
+}
+
+/* Badge */
+.marquee-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #ffffff;
+    color: #0f172a;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Card Body */
+.marquee-card-body {
+    padding: 20px;
+}
+
+.marquee-card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 10px;
+}
+
+.marquee-card-specs {
+    display: flex;
+    gap: 15px;
+    color: #64748b;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+.marquee-card-specs i {
+    margin-right: 5px;
+    color: #3b82f6;
+}
+
+/* Card Footer */
+.marquee-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.marquee-price .price {
+    font-size: 24px;
+    font-weight: 700;
+    color: #3b82f6;
+}
+
+.marquee-price .period {
+    font-size: 14px;
+    color: #94a3b8;
+    margin-left: 5px;
+}
+
+/* Responsive Marquee */
+@media (max-width: 768px) {
+    .marquee-card {
+        width: 300px;
+    }
+
+    .marquee-container::before,
+    .marquee-container::after {
+        width: 80px;
+    }
+}
+
+/* ========================================
+   HOW IT WORKS SECTION
+   ======================================== */
+
+/* Steps Row Container */
+.hiw-steps-row {
+    position: relative;
+}
+
+/* Connecting Line (Desktop Only) */
+.hiw-connecting-line {
+    position: absolute;
+    top: 100px;
+    left: 20%;
+    right: 20%;
+    height: 2px;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        #3b82f6 10%,
+        #3b82f6 90%,
+        transparent 100%
+    );
+    z-index: 0;
+}
+
+/* Step Card */
+.hiw-step-card {
+    position: relative;
+    z-index: 1;
+    background: #ffffff !important;
+    border-radius: 20px !important;
+    transition: all 0.3s ease;
+}
+
+.hiw-step-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Step Badge */
+.hiw-step-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    padding: 6px 14px;
+    border-radius: 50px;
+    margin-bottom: 20px;
+}
+
+/* Icon Circle */
+.hiw-icon-circle {
+    width: 90px;
+    height: 90px;
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: #3b82f6;
+    transition: all 0.3s ease;
+}
+
+.hiw-step-card:hover .hiw-icon-circle {
+    animation: hiwPulse 0.6s ease;
+    background: rgba(59, 130, 246, 0.15);
+}
+
+/* Pulse Animation */
+@keyframes hiwPulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Responsive How It Works */
+@media (max-width: 768px) {
+    .hiw-connecting-line {
+        display: none;
+    }
+
+    .hiw-icon-circle {
+        width: 70px;
+        height: 70px;
+        font-size: 26px;
+    }
 }

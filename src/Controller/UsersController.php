@@ -26,9 +26,13 @@ class UsersController extends AppController
         $action = $this->request->getParam('action');
 
         // Admin-only actions
-        $adminActions = ['index', 'delete'];
+        $adminActions = ['index', 'delete', 'view'];
         if (in_array($action, $adminActions)) {
             if (!$user || $user->role !== 'admin') {
+                // Redirect customers trying to view users to their own account
+                if ($action === 'view') {
+                    return $this->redirect(['action' => 'myAccount']);
+                }
                 $this->Flash->error(__('You are not authorized to access this page.'));
                 return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
             }
@@ -47,6 +51,9 @@ class UsersController extends AppController
      */
     public function login()
     {
+        // Use minimal auth layout without header/footer
+        $this->viewBuilder()->setLayout('auth');
+
         $this->request->allowMethod(['get', 'post']);
         $result = $this->Authentication->getResult();
 
@@ -73,6 +80,10 @@ class UsersController extends AppController
             \Cake\Log\Log::error('Login status: ' . $result->getStatus());
             $this->Flash->error(__('Invalid email or password'));
         }
+
+        // Create empty user entity for the registration form in combined login page
+        $user = $this->Users->newEmptyEntity();
+        $this->set(compact('user'));
     }
 
     /**
@@ -113,6 +124,56 @@ class UsersController extends AppController
     public function view($id = null)
     {
         $user = $this->Users->get($id, contain: ['Bookings', 'Reviews']);
+        $this->set(compact('user'));
+    }
+
+    /**
+     * My Account method - Customer view: Only their own profile
+     *
+     * @return \Cake\Http\Response|null|void Renders view
+     */
+    public function myAccount()
+    {
+        $userId = $this->Authentication->getIdentity()->getIdentifier();
+        $user = $this->Users->get($userId, contain: ['Bookings', 'Reviews']);
+        $this->set(compact('user'));
+        // Uses default layout (not admin)
+    }
+
+    /**
+     * Edit Profile method - Customer can edit their own profile
+     *
+     * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
+     */
+    public function editProfile()
+    {
+        $userId = $this->Authentication->getIdentity()->getIdentifier();
+        $user = $this->Users->get($userId, contain: []);
+
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $data = $this->request->getData();
+
+            // Only allow customers to update specific fields (not role)
+            $allowedFields = ['name', 'ic_number', 'email', 'phone', 'address', 'avatar'];
+
+            // Only include password if it's not empty
+            if (!empty($data['password'])) {
+                $allowedFields[] = 'password';
+            } else {
+                // Remove empty password from data to avoid validation errors
+                unset($data['password']);
+            }
+
+            $user = $this->Users->patchEntity($user, $data, [
+                'fields' => $allowedFields
+            ]);
+
+            if ($this->Users->save($user)) {
+                $this->Flash->success(__('Your profile has been updated.'));
+                return $this->redirect(['action' => 'myAccount']);
+            }
+            $this->Flash->error(__('Your profile could not be saved. Please, try again.'));
+        }
         $this->set(compact('user'));
     }
 
