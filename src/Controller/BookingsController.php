@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -11,14 +12,14 @@ class BookingsController extends AppController
     {
         parent::beforeFilter($event);
         $this->Authentication->allowUnauthenticated(['getBookedDates']); // Allow JS to fetch dates
-        
+
         // ... (Keep your existing Auth checks for admin/customer here) ...
         $user = $this->Authentication->getIdentity();
         $action = $this->request->getParam('action');
-        
+
         // [Existing Admin/Customer Logic goes here - kept short for brevity]
         if ($action === 'index' && (!$user || $user->role !== 'admin')) {
-             return $this->redirect(['action' => 'myBookings']);
+            return $this->redirect(['action' => 'myBookings']);
         }
     }
 
@@ -56,7 +57,7 @@ class BookingsController extends AppController
 
         if ($this->request->is('post')) {
             $booking = $this->Bookings->patchEntity($booking, $this->request->getData());
-            
+
             // 1. Validation: Overlap Check
             $exists = $this->Bookings->exists([
                 'car_id' => $booking->car_id,
@@ -77,7 +78,7 @@ class BookingsController extends AppController
 
                 $car = $this->Bookings->Cars->get($booking->car_id);
                 $booking->total_price = $days * $car->price_per_day;
-                
+
                 $booking->user_id = $this->Authentication->getIdentity()->getIdentifier();
                 $booking->booking_status = 'pending';
 
@@ -199,7 +200,7 @@ class BookingsController extends AppController
         $booking = $this->Bookings->get($id, [
             'contain' => ['Payments', 'Invoices']
         ]);
-        
+
         $user = $this->Authentication->getIdentity();
 
         // Verify ownership
@@ -215,7 +216,7 @@ class BookingsController extends AppController
         }
 
         // Date Check (Standard PHP comparison as discussed)
-        $today = \Cake\I18n\FrozenDate::now();
+        $today = FrozenDate::now();
         if ($booking->start_date && $booking->start_date <= $today) {
             $this->Flash->error(__('Cannot cancel a booking that has already started.'));
             return $this->redirect(['action' => 'myBookings']);
@@ -252,7 +253,8 @@ class BookingsController extends AppController
                     $car->status = 'available';
                     $this->Bookings->Cars->save($car);
                 }
-            } catch (\Exception $e) { /* Ignore if car missing */ }
+            } catch (\Exception $e) { /* Ignore if car missing */
+            }
         }
         // --- STATUS UPDATE END ---
 

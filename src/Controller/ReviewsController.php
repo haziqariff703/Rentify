@@ -11,55 +11,191 @@ namespace App\Controller;
  */
 class ReviewsController extends AppController
 {
-    /**
-     * @var \App\Model\Table\ReviewsTable $Reviews
-     */
-
     public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         parent::beforeFilter($event);
 
+        $action = $this->request->getParam('action');
         $user = $this->Authentication->getIdentity();
-        if (!$user || $user->role !== 'admin') {
-            $this->Flash->error(__('You are not authorized to access this page.'));
-            return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
+
+        // Public access for carReviews
+        $this->Authentication->allowUnauthenticated(['carReviews']);
+
+        // Customer actions (logged-in users, not admin for addReview)
+        $customerActions = ['myReviews', 'addReview'];
+        if (in_array($action, $customerActions)) {
+            if (!$user) {
+                $this->Flash->error(__('Please login to access this page.'));
+                return $this->redirect(['controller' => 'Users', 'action' => 'login']);
+            }
+            if ($action === 'addReview' && $user->role === 'admin') {
+                $this->Flash->error(__('Admins cannot add reviews.'));
+                return $this->redirect(['controller' => 'Admins', 'action' => 'dashboard']);
+            }
+            // Use default layout for customers
+            return;
         }
 
-        // Use admin layout for admin users
-        $this->viewBuilder()->setLayout('admin');
+        // View action - accessible by any logged-in user
+        if ($action === 'view') {
+            if (!$user) {
+                $this->Flash->error(__('Please login to access this page.'));
+                return $this->redirect(['controller' => 'Users', 'action' => 'login']);
+            }
+            // Use admin layout for admins
+            if ($user->role === 'admin') {
+                $this->viewBuilder()->setLayout('admin');
+            }
+            return;
+        }
+
+        // Admin-only actions
+        $adminActions = ['index', 'add', 'edit', 'delete'];
+        if (in_array($action, $adminActions)) {
+            if (!$user || $user->role !== 'admin') {
+                $this->Flash->error(__('You are not authorized to access this page.'));
+                return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
+            }
+            $this->viewBuilder()->setLayout('admin');
+        }
     }
 
     /**
-     * Index method
-     *
-     * @return \Cake\Http\Response|null|void Renders view
+     * My Reviews - Customer view: Only their own reviews
+     */
+    public function myReviews()
+    {
+        $userId = $this->Authentication->getIdentity()->getIdentifier();
+
+        $query = $this->Reviews->find()
+            ->where(['Reviews.user_id' => $userId])
+            ->contain(['Cars', 'Bookings'])
+            ->order(['Reviews.created' => 'DESC']);
+
+        $reviews = $this->paginate($query);
+
+        // Calculate stats
+        $totalReviews = $this->Reviews->find()
+            ->where(['user_id' => $userId])
+            ->count();
+
+        $avgRating = $this->Reviews->find()
+            ->where(['user_id' => $userId])
+            ->select(['avg_rating' => $this->Reviews->find()->func()->avg('rating')])
+            ->first();
+
+        $this->set(compact('reviews', 'totalReviews'));
+        $this->set('avgRating', ($avgRating && $avgRating->avg_rating !== null) ? round($avgRating->avg_rating, 1) : 0);
+    }
+
+    /**
+     * Car Reviews - Public view: All reviews for a specific car
+     */
+    public function carReviews($carId = null)
+    {
+        if (!$carId) {
+            $this->Flash->error(__('Invalid car.'));
+            return $this->redirect(['controller' => 'Cars', 'action' => 'index']);
+        }
+
+        $car = $this->Reviews->Cars->get($carId);
+
+        $query = $this->Reviews->find()
+            ->where(['Reviews.car_id' => $carId])
+            ->contain(['Users'])
+            ->order(['Reviews.created' => 'DESC']);
+
+        $reviews = $this->paginate($query);
+
+        // Calculate average rating
+        $avgRating = $this->Reviews->find()
+            ->where(['car_id' => $carId])
+            ->select(['avg_rating' => $this->Reviews->find()->func()->avg('rating')])
+            ->first();
+
+        $totalReviews = $this->Reviews->find()
+            ->where(['car_id' => $carId])
+            ->count();
+
+        $this->set(compact('reviews', 'car', 'totalReviews'));
+        $this->set('avgRating', ($avgRating && $avgRating->avg_rating !== null) ? round($avgRating->avg_rating, 1) : 0);
+    }
+
+    /**
+     * Add Review - Customer adds review after payment
+     */
+    public function addReview($bookingId = null)
+    {
+        if (!$bookingId) {
+            $this->Flash->error(__('Invalid booking.'));
+            return $this->redirect(['controller' => 'Bookings', 'action' => 'myBookings']);
+        }
+
+        $bookingsTable = $this->fetchTable('Bookings');
+        $booking = $bookingsTable->get($bookingId, [
+            'contain' => ['Cars']
+        ]);
+
+        // Verify ownership
+        $userId = $this->Authentication->getIdentity()->getIdentifier();
+        if ($booking->user_id != $userId) {
+            $this->Flash->error(__('You are not authorized to review this booking.'));
+            return $this->redirect(['controller' => 'Bookings', 'action' => 'myBookings']);
+        }
+
+        // Check if already reviewed
+        $existingReview = $this->Reviews->find()
+            ->where(['booking_id' => $bookingId])
+            ->first();
+
+        if ($existingReview) {
+            $this->Flash->info(__('You have already reviewed this booking.'));
+            return $this->redirect(['action' => 'myReviews']);
+        }
+
+        $review = $this->Reviews->newEmptyEntity();
+
+        if ($this->request->is('post')) {
+            $data = $this->request->getData();
+            $data['user_id'] = $userId;
+            $data['car_id'] = $booking->car_id;
+            $data['booking_id'] = $bookingId;
+
+            $review = $this->Reviews->patchEntity($review, $data);
+
+            if ($this->Reviews->save($review)) {
+                $this->Flash->success(__('Thank you for your review!'));
+                return $this->redirect(['action' => 'myReviews']);
+            }
+            $this->Flash->error(__('The review could not be saved. Please try again.'));
+        }
+
+        $this->set(compact('review', 'booking'));
+    }
+
+    /**
+     * Index method - Admin only
      */
     public function index()
     {
         $query = $this->Reviews->find()
-            ->contain(['Users', 'Cars']);
+            ->contain(['Users', 'Cars', 'Bookings']);
         $reviews = $this->paginate($query);
 
         $this->set(compact('reviews'));
     }
 
     /**
-     * View method
-     *
-     * @param string|null $id Review id.
-     * @return \Cake\Http\Response|null|void Renders view
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     * View method - Admin only
      */
     public function view($id = null)
     {
-        $review = $this->Reviews->get($id, contain: ['Users', 'Cars']);
+        $review = $this->Reviews->get($id, contain: ['Users', 'Cars', 'Bookings']);
         $this->set(compact('review'));
     }
 
     /**
-     * Add method
-     *
-     * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
+     * Add method - Admin only
      */
     public function add()
     {
@@ -68,22 +204,18 @@ class ReviewsController extends AppController
             $review = $this->Reviews->patchEntity($review, $this->request->getData());
             if ($this->Reviews->save($review)) {
                 $this->Flash->success(__('The review has been saved.'));
-
                 return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error(__('The review could not be saved. Please, try again.'));
         }
         $users = $this->Reviews->Users->find('list', limit: 200)->all();
         $cars = $this->Reviews->Cars->find('list', limit: 200)->all();
-        $this->set(compact('review', 'users', 'cars'));
+        $bookings = $this->Reviews->Bookings->find('list', limit: 200)->all();
+        $this->set(compact('review', 'users', 'cars', 'bookings'));
     }
 
     /**
-     * Edit method
-     *
-     * @param string|null $id Review id.
-     * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     * Edit method - Admin only
      */
     public function edit($id = null)
     {
@@ -92,22 +224,18 @@ class ReviewsController extends AppController
             $review = $this->Reviews->patchEntity($review, $this->request->getData());
             if ($this->Reviews->save($review)) {
                 $this->Flash->success(__('The review has been saved.'));
-
                 return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error(__('The review could not be saved. Please, try again.'));
         }
         $users = $this->Reviews->Users->find('list', limit: 200)->all();
         $cars = $this->Reviews->Cars->find('list', limit: 200)->all();
-        $this->set(compact('review', 'users', 'cars'));
+        $bookings = $this->Reviews->Bookings->find('list', limit: 200)->all();
+        $this->set(compact('review', 'users', 'cars', 'bookings'));
     }
 
     /**
-     * Delete method
-     *
-     * @param string|null $id Review id.
-     * @return \Cake\Http\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     * Delete method - Admin only
      */
     public function delete($id = null)
     {

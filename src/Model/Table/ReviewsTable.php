@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -55,6 +56,10 @@ class ReviewsTable extends Table
         $this->belongsTo('Cars', [
             'foreignKey' => 'car_id',
             'joinType' => 'INNER',
+        ]);
+        $this->belongsTo('Bookings', [
+            'foreignKey' => 'booking_id',
+            'joinType' => 'LEFT',
         ]);
     }
 

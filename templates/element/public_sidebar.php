@@ -228,81 +228,6 @@
         overflow: hidden;
     }
 
-    .sidebar-footer {
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        padding: 20px;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        background: rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-    }
-
-    .glassmorphism-sidebar.collapsed .sidebar-footer {
-        padding: 20px 10px;
-    }
-
-    .sidebar-user-info {
-        display: flex;
-        align-items: center;
-        padding: 10px;
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 12px;
-        transition: all 0.3s ease;
-    }
-
-    .sidebar-user-info:hover {
-        background: rgba(255, 255, 255, 0.1);
-    }
-
-    .sidebar-user-avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: 600;
-        margin-right: 12px;
-        flex-shrink: 0;
-        transition: all 0.3s ease;
-    }
-
-    .glassmorphism-sidebar.collapsed .sidebar-user-avatar {
-        margin-right: 0;
-    }
-
-    .sidebar-user-details {
-        flex: 1;
-        transition: opacity 0.3s ease;
-        overflow: hidden;
-    }
-
-    .glassmorphism-sidebar.collapsed .sidebar-user-details {
-        opacity: 0;
-        width: 0;
-    }
-
-    .sidebar-user-name {
-        font-size: 13px;
-        font-weight: 600;
-        color: rgba(255, 255, 255, 0.9);
-        margin-bottom: 2px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .sidebar-user-role {
-        font-size: 11px;
-        color: rgba(255, 255, 255, 0.6);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        font-weight: 300;
-    }
-
     /* Scrollbar Styling */
     .glassmorphism-sidebar::-webkit-scrollbar {
         width: 6px;
@@ -347,7 +272,7 @@
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
 <div class="glassmorphism-sidebar" id="sidebar">
-    <!-- Sidebar Menu -->
+    <!-- Sidebar Menu - Public Items Only -->
     <ul class="sidebar-menu" id="sidebarMenu">
         <li class="sidebar-menu-item">
             <a href="<?= $this->Url->build(['controller' => 'Pages', 'action' => 'display', 'home']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Pages' && $this->request->getParam('action') == 'display') ? 'active' : '' ?>" data-index="0">
@@ -363,84 +288,13 @@
             </a>
         </li>
 
-        <?php
-        $sidebarIdentity = $this->request->getAttribute('identity');
-        $sidebarIsAdmin = $sidebarIdentity && $sidebarIdentity->get('role') === 'admin';
-        ?>
         <li class="sidebar-menu-item">
-            <a href="<?= $this->Url->build(['controller' => 'Bookings', 'action' => $sidebarIsAdmin ? 'index' : 'myBookings']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Bookings') ? 'active' : '' ?>" data-index="2">
-                <i class="bi bi-calendar-check sidebar-menu-icon"></i>
-                <span class="sidebar-menu-text"><?= $sidebarIsAdmin ? 'Bookings' : 'My Bookings' ?></span>
+            <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'login']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Users' && in_array($this->request->getParam('action'), ['login', 'add'])) ? 'active' : '' ?>" data-index="2">
+                <i class="bi bi-box-arrow-in-right sidebar-menu-icon"></i>
+                <span class="sidebar-menu-text">Login</span>
             </a>
         </li>
-
-        <?php if ($this->request->getAttribute('identity')): ?>
-            <li class="sidebar-menu-item">
-                <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'view', $this->request->getAttribute('identity')->getIdentifier()]) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Users' && $this->request->getParam('action') == 'view') ? 'active' : '' ?>" data-index="3">
-                    <i class="bi bi-person-circle sidebar-menu-icon"></i>
-                    <span class="sidebar-menu-text">My Account</span>
-                </a>
-            </li>
-        <?php endif; ?>
-
-        <li class="sidebar-menu-item">
-            <a href="<?= $this->Url->build(['controller' => 'Invoices', 'action' => 'index']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Invoices') ? 'active' : '' ?>" data-index="4">
-                <i class="bi bi-receipt sidebar-menu-icon"></i>
-                <span class="sidebar-menu-text">Invoices</span>
-            </a>
-        </li>
-
-        <?php
-        $identity = $this->request->getAttribute('identity');
-        $isAdmin = $identity && $identity->get('role') === 'admin';
-        ?>
-        <li class="sidebar-menu-item">
-            <a href="<?= $this->Url->build(['controller' => 'Reviews', 'action' => $isAdmin ? 'index' : 'myReviews']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Reviews') ? 'active' : '' ?>" data-index="5">
-                <i class="bi bi-star sidebar-menu-icon"></i>
-                <span class="sidebar-menu-text"><?= $isAdmin ? 'Reviews' : 'My Reviews' ?></span>
-            </a>
-        </li>
-
-        <li class="sidebar-menu-item">
-            <a href="<?= $this->Url->build(['controller' => 'Payments', 'action' => $isAdmin ? 'index' : 'myPayments']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Payments') ? 'active' : '' ?>" data-index="6">
-                <i class="bi bi-credit-card sidebar-menu-icon"></i>
-                <span class="sidebar-menu-text"><?= $isAdmin ? 'Payments' : 'My Payments' ?></span>
-            </a>
-        </li>
-
-        <?php if ($this->request->getAttribute('identity')): ?>
-            <li class="sidebar-menu-item">
-                <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'logout']) ?>" class="sidebar-menu-link" data-index="7">
-                    <i class="bi bi-box-arrow-right sidebar-menu-icon"></i>
-                    <span class="sidebar-menu-text">Logout</span>
-                </a>
-            </li>
-        <?php else: ?>
-            <li class="sidebar-menu-item">
-                <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'login']) ?>" class="sidebar-menu-link" data-index="9">
-                    <i class="bi bi-box-arrow-in-right sidebar-menu-icon"></i>
-                    <span class="sidebar-menu-text">Login</span>
-                </a>
-            </li>
-        <?php endif; ?>
     </ul>
-
-    <!-- Sidebar Footer with User Info -->
-    <?php if ($this->request->getAttribute('identity')): ?>
-        <div class="sidebar-footer">
-            <div class="sidebar-user-info">
-                <div class="sidebar-user-avatar">
-                    <?= strtoupper(substr($this->request->getAttribute('identity')->get('email'), 0, 1)) ?>
-                </div>
-                <div class="sidebar-user-details">
-                    <div class="sidebar-user-name">
-                        <?= h($this->request->getAttribute('identity')->get('email')) ?>
-                    </div>
-                    <div class="sidebar-user-role">User</div>
-                </div>
-            </div>
-        </div>
-    <?php endif; ?>
 </div>
 
 <script>

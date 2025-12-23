@@ -195,8 +195,13 @@
 </head>
 
 <body>
-    <!-- Glassmorphism Sidebar -->
-    <?= $this->element('sidebar') ?>
+
+    <!-- Glassmorphism Sidebar - Conditional based on authentication -->
+    <?php if ($this->request->getAttribute('identity')): ?>
+        <?= $this->element('sidebar') ?>
+    <?php else: ?>
+        <?= $this->element('public_sidebar') ?>
+    <?php endif; ?>
 
     <!-- Header -->
     <?= $this->element('header') ?>
