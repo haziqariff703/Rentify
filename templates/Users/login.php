@@ -140,7 +140,8 @@
                     <div class="overlay-content">
                         <i class="fas fa-car-side overlay-icon"></i>
                         <h2>Welcome Back!</h2>
-                        <p>Already have an account? Login to access your dashboard and continue your journey with us.</p>
+                        <p>Already have an account? Login to access your dashboard and continue your journey with us.
+                        </p>
                         <button class="ghost-btn" id="login">Login</button>
                     </div>
                 </div>
@@ -614,7 +615,7 @@
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const registerButton = document.getElementById('register');
         const loginButton = document.getElementById('login');
         const container = document.getElementById('container');
