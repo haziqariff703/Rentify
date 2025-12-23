@@ -59,69 +59,6 @@ class PaymentsController extends AppController
     }
 
     /**
-     * Add method - Payment Simulation Logic
-     */
-    public function add()
-    {
-        $payment = $this->Payments->newEmptyEntity();
-
-        // 1. Get Booking Data from URL (sent from the "Pay Now" button)
-        $bookingId = $this->request->getQuery('booking_id');
-        $amount = $this->request->getQuery('amount');
-
-        if ($this->request->is('post')) {
-            $data = $this->request->getData();
-            $payment = $this->Payments->patchEntity($payment, $data);
-
-            // 2. SIMULATION LOGIC: Check Card Number
-            $cardInput = str_replace(['-', ' '], '', $data['card_number'] ?? ''); // Remove dashes/spaces
-
-            // Accept '4242...' OR any 16-digit number
-            if (str_starts_with($cardInput, '4242') || strlen($cardInput) === 16) {
-
-                $payment->payment_date = date('Y-m-d H:i:s');
-                $payment->payment_status = 'paid'; // Set status to Paid
-
-                if ($this->Payments->save($payment)) {
-
-                    // A. Update INVOICE -> 'paid'
-                    $invoicesTable = $this->fetchTable('Invoices');
-                    $invoice = $invoicesTable->find()
-                        ->where(['booking_id' => $payment->booking_id])
-                        ->first();
-
-                    if ($invoice) {
-                        $invoice->status = 'paid'; // Matches your DB Enum
-                        $invoicesTable->save($invoice);
-                    }
-
-                    // B. Update BOOKING -> 'confirmed'
-                    $bookingsTable = $this->fetchTable('Bookings');
-                    $booking = $bookingsTable->get($payment->booking_id);
-                    $booking->booking_status = 'confirmed'; // Matches your DB Enum
-                    $bookingsTable->save($booking);
-
-                    $this->Flash->success(__('Payment Approved! Booking Confirmed.'));
-
-                    // Redirect back to the Invoice so they can download the PDF
-                    return $this->redirect(['controller' => 'Invoices', 'action' => 'view', $invoice->id]);
-                }
-            } else {
-                $this->Flash->error(__('Payment Declined. Please use the test card: 4242-4242-4242-4242'));
-            }
-        }
-
-        // Pass variables to the view (Critical for the form to work)
-        // If the form was submitted but failed, we need to re-populate these
-        if (!$bookingId && $payment->booking_id) {
-            $bookingId = $payment->booking_id;
-            $amount = $payment->amount;
-        }
-
-        $this->set(compact('payment', 'bookingId', 'amount'));
-    }
-
-    /**
      * Edit method
      */
     public function edit($id = null)
@@ -154,5 +91,86 @@ class PaymentsController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    /**
+     * My Payments - For Users
+     */
+    public function myPayments()
+    {
+        $user = $this->Authentication->getIdentity();
+        if (!$user) {
+            return $this->redirect(['controller' => 'Users', 'action' => 'login']);
+        }
+
+        $query = $this->Payments->find()
+            ->contain(['Bookings' => ['Cars']])
+            ->matching('Bookings', function ($q) use ($user) {
+                return $q->where(['Bookings.user_id' => $user->id]);
+            })
+            ->order(['Payments.created' => 'DESC']);
+
+        $payments = $this->paginate($query);
+        $this->set(compact('payments'));
+    }
+
+    /**
+     * Add Payment (Simulation)
+     */
+    public function add()
+    {
+        $payment = $this->Payments->newEmptyEntity();
+        $bookingId = $this->request->getQuery('booking_id');
+        $amount = $this->request->getQuery('amount');
+
+        if ($this->request->is('post')) {
+            $data = $this->request->getData();
+            $payment = $this->Payments->patchEntity($payment, $data);
+            $isValid = false;
+
+            // --- PAYMENT METHOD LOGIC ---
+            if ($data['payment_method'] === 'card') {
+                // Remove dashes and check for '4242' or 16 digits
+                $cardInput = str_replace(['-', ' '], '', $data['card_number'] ?? '');
+                if (str_starts_with($cardInput, '4242') || strlen($cardInput) === 16) {
+                    $isValid = true;
+                } else {
+                    $this->Flash->error(__('Card Declined. Use Test Code: 4242-4242-4242-4242'));
+                }
+            } else {
+                // Cash & Online Transfer are automatically "Approved" for simulation
+                $isValid = true;
+            }
+
+            if ($isValid) {
+                $payment->payment_date = date('Y-m-d H:i:s');
+                $payment->payment_status = 'paid';
+
+                if ($this->Payments->save($payment)) {
+                    // Update Invoice -> Paid
+                    $invoicesTable = $this->fetchTable('Invoices');
+                    $invoice = $invoicesTable->find()->where(['booking_id' => $payment->booking_id])->first();
+                    if ($invoice) {
+                        $invoice->status = 'paid';
+                        $invoicesTable->save($invoice);
+                    }
+
+                    // Update Booking -> Confirmed
+                    $bookingsTable = $this->fetchTable('Bookings');
+                    $booking = $bookingsTable->get($payment->booking_id);
+                    $booking->booking_status = 'confirmed';
+                    $bookingsTable->save($booking);
+
+                    $this->Flash->success(__('Payment Successful! Booking Confirmed.'));
+                    return $this->redirect(['controller' => 'Invoices', 'action' => 'view', $invoice->id]);
+                }
+            }
+        }
+
+        if (!$bookingId && $payment->booking_id) {
+            $bookingId = $payment->booking_id;
+            $amount = $payment->amount;
+        }
+        $this->set(compact('payment', 'bookingId', 'amount'));
     }
 }

@@ -15,12 +15,39 @@ class InvoicesController extends AppController
      *
      * @return \Cake\Http\Response|null|void Renders view
      */
-    public function index()
+public function index()
     {
-        $query = $this->Invoices->find()
-            ->contain(['Bookings']);
-        $invoices = $this->paginate($query);
+        // 1. Check User Role
+        $user = $this->Authentication->getIdentity();
+        
+        // If not admin, force them to their own page
+        if ($user && $user->role !== 'admin') {
+            return $this->redirect(['action' => 'myInvoices']);
+        }
 
+        // Admin Logic (Shows everything)
+        $query = $this->Invoices->find()->contain(['Bookings']);
+        $invoices = $this->paginate($query);
+        $this->set(compact('invoices'));
+    }
+
+    /**
+     * My Invoices - CUSTOMER VIEW
+     * Shows only their own invoices, beautifully.
+     */
+    public function myInvoices()
+    {
+        $user = $this->Authentication->getIdentity();
+
+        // Fetch invoices belonging to this user
+        $query = $this->Invoices->find()
+            ->contain(['Bookings' => ['Cars']]) // Get Car details
+            ->matching('Bookings', function ($q) use ($user) {
+                return $q->where(['Bookings.user_id' => $user->getIdentifier()]);
+            })
+            ->order(['Invoices.created' => 'DESC']);
+
+        $invoices = $this->paginate($query);
         $this->set(compact('invoices'));
     }
 
@@ -111,4 +138,5 @@ class InvoicesController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+
 }

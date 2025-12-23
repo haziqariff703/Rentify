@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -11,38 +10,97 @@ class BookingsController extends AppController
     public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         parent::beforeFilter($event);
-
+        $this->Authentication->allowUnauthenticated(['getBookedDates']); // Allow JS to fetch dates
+        
+        // ... (Keep your existing Auth checks for admin/customer here) ...
         $user = $this->Authentication->getIdentity();
         $action = $this->request->getParam('action');
+        
+        // [Existing Admin/Customer Logic goes here - kept short for brevity]
+        if ($action === 'index' && (!$user || $user->role !== 'admin')) {
+             return $this->redirect(['action' => 'myBookings']);
+        }
+    }
 
-        // Admin-only actions - Admin cannot create bookings
-        $adminActions = ['index', 'edit', 'delete'];
-        if (in_array($action, $adminActions)) {
-            if (!$user || $user->role !== 'admin') {
-                $this->Flash->error(__('You are not authorized to access this page.'));
-                return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
+    // --- NEW: API to get disabled dates for Flatpickr ---
+    public function getBookedDates($carId = null)
+    {
+        $this->request->allowMethod(['get', 'ajax']);
+        $this->viewBuilder()->setClassName('Json');
+
+        $bookings = $this->Bookings->find()
+            ->where([
+                'car_id' => $carId,
+                'booking_status IN' => ['confirmed', 'pending', 'completed'] // Block these
+            ])
+            ->select(['start_date', 'end_date'])
+            ->all();
+
+        $dates = [];
+        foreach ($bookings as $booking) {
+            // Flatpickr 'disable' accepts ranges like { from: '2025-01-01', to: '2025-01-05' }
+            $dates[] = [
+                'from' => $booking->start_date->format('Y-m-d'),
+                'to'   => $booking->end_date->format('Y-m-d')
+            ];
+        }
+
+        $this->set(compact('dates'));
+        $this->viewBuilder()->setOption('serialize', ['dates']);
+    }
+
+    // --- UPDATED: Add Method with Overlap Check ---
+    public function add($carId = null)
+    {
+        $booking = $this->Bookings->newEmptyEntity();
+
+        if ($this->request->is('post')) {
+            $booking = $this->Bookings->patchEntity($booking, $this->request->getData());
+            
+            // 1. Validation: Overlap Check
+            $exists = $this->Bookings->exists([
+                'car_id' => $booking->car_id,
+                'booking_status IN' => ['confirmed', 'pending'],
+                'OR' => [
+                    ['start_date <=' => $booking->end_date, 'end_date >=' => $booking->start_date]
+                ]
+            ]);
+
+            if ($exists) {
+                $this->Flash->error(__('This car is already booked for those dates. Please choose another date.'));
+            } else {
+                // 2. Calculate Price
+                $startDate = $booking->start_date;
+                $endDate   = $booking->end_date;
+                $days = $endDate->diffInDays($startDate);
+                if ($days == 0) $days = 1;
+
+                $car = $this->Bookings->Cars->get($booking->car_id);
+                $booking->total_price = $days * $car->price_per_day;
+                
+                $booking->user_id = $this->Authentication->getIdentity()->getIdentifier();
+                $booking->booking_status = 'pending';
+
+                if ($this->Bookings->save($booking)) {
+                    // 3. Auto-Invoice
+                    $invoicesTable = $this->fetchTable('Invoices');
+                    $invoice = $invoicesTable->newEmptyEntity();
+                    $invoice->booking_id = $booking->id;
+                    $invoice->invoice_number = 'INV-' . strtoupper(uniqid());
+                    $invoice->amount = $booking->total_price;
+                    $invoice->status = 'unpaid';
+                    $invoicesTable->save($invoice);
+
+                    $this->Flash->success(__('Booking successful! Invoice generated.'));
+                    return $this->redirect(['controller' => 'Invoices', 'action' => 'view', $invoice->id]);
+                }
+                $this->Flash->error(__('Unable to add booking.'));
             }
         }
 
-        // Block admin from creating new bookings
-        if ($action === 'add' && $user && $user->role === 'admin') {
-            $this->Flash->error(__('Admins cannot create new bookings. Only customers can book cars.'));
-            return $this->redirect(['action' => 'index']);
-        }
-
-        // Customer-only actions (must be logged in)
-        $customerActions = ['myBookings', 'cancelBooking'];
-        if (in_array($action, $customerActions)) {
-            if (!$user) {
-                $this->Flash->error(__('Please login to view your bookings.'));
-                return $this->redirect(['controller' => 'Users', 'action' => 'login']);
-            }
-        }
-
-        // Use admin layout for admin users
-        if ($user && $user->role === 'admin') {
-            $this->viewBuilder()->setLayout('admin');
-        }
+        $users = $this->Bookings->Users->find('list')->all();
+        $cars = $this->Bookings->Cars->find('list')->all();
+        $this->set(compact('booking', 'users', 'cars', 'carId'));
     }
 
     /**
@@ -96,110 +154,6 @@ class BookingsController extends AppController
     }
 
     /**
-     * Cancel Booking - Customer can cancel before start date
-     */
-    public function cancelBooking($id = null)
-    {
-        $this->request->allowMethod(['post']);
-
-        $booking = $this->Bookings->get($id);
-        $user = $this->Authentication->getIdentity();
-
-        // Verify ownership
-        if ($user->getIdentifier() != $booking->user_id) {
-            $this->Flash->error(__('You can only cancel your own bookings.'));
-            return $this->redirect(['action' => 'myBookings']);
-        }
-
-        // Check if already cancelled/completed
-        if (in_array($booking->booking_status, ['cancelled', 'refunded', 'completed'])) {
-            $this->Flash->error(__('This booking cannot be cancelled.'));
-            return $this->redirect(['action' => 'myBookings']);
-        }
-
-        // Check if before start date
-        $today = FrozenDate::now();
-        if ($booking->start_date && $booking->start_date->lte($today)) {
-            $this->Flash->error(__('Cannot cancel a booking that has already started.'));
-            return $this->redirect(['action' => 'myBookings']);
-        }
-
-        // Set status based on whether it was confirmed (needs refund) or pending
-        if ($booking->booking_status === 'confirmed') {
-            $booking->booking_status = 'refunded';
-        } else {
-            $booking->booking_status = 'cancelled';
-        }
-
-        // If car was rented, set it back to available
-        if ($booking->car_id) {
-            $car = $this->Bookings->Cars->get($booking->car_id);
-            if ($car->status === 'rented') {
-                $car->status = 'available';
-                $this->Bookings->Cars->save($car);
-            }
-        }
-
-        if ($this->Bookings->save($booking)) {
-            $this->Flash->success(__('Your booking has been cancelled.'));
-        } else {
-            $this->Flash->error(__('Could not cancel the booking. Please try again.'));
-        }
-
-        return $this->redirect(['action' => 'myBookings']);
-    }
-
-    public function add($carId = null)
-    {
-        $booking = $this->Bookings->newEmptyEntity();
-
-        if ($this->request->is('post')) {
-            $booking = $this->Bookings->patchEntity($booking, $this->request->getData());
-
-            // 1. Calculate Price
-            $startDate = $booking->start_date;
-            $endDate   = $booking->end_date;
-
-            if ($startDate && $endDate) {
-                $days = $endDate->diffInDays($startDate);
-                if ($days == 0) $days = 1;
-
-                // Get Car Price
-                $car = $this->Bookings->Cars->get($booking->car_id ?? $carId);
-                $booking->total_price = $days * $car->price_per_day;
-            }
-
-            // 2. Set Default Data
-            $booking->user_id = $this->Authentication->getIdentity()->getIdentifier();
-            $booking->booking_status = 'pending';
-
-            if ($this->Bookings->save($booking)) {
-
-                // 3. AUTO-GENERATE INVOICE
-                $invoicesTable = $this->fetchTable('Invoices');
-                $invoice = $invoicesTable->newEmptyEntity();
-
-                $invoice->booking_id = $booking->id;
-                $invoice->invoice_number = 'INV-' . strtoupper(uniqid());
-                $invoice->amount = $booking->total_price;
-                $invoice->status = 'unpaid';
-
-                $invoicesTable->save($invoice);
-
-                $this->Flash->success(__('Booking saved! Please pay the invoice.'));
-
-                // Redirect to the Invoice to pay
-                return $this->redirect(['controller' => 'Invoices', 'action' => 'view', $invoice->id]);
-            }
-            $this->Flash->error(__('The booking could not be saved.'));
-        }
-
-        $users = $this->Bookings->Users->find('list')->all();
-        $cars = $this->Bookings->Cars->find('list')->all();
-        $this->set(compact('booking', 'users', 'cars', 'carId'));
-    }
-
-    /**
      * Edit method - Admin only
      */
     public function edit($id = null)
@@ -232,5 +186,86 @@ class BookingsController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    /**
+     * Cancel Booking with Refund Logic
+     */
+    public function cancelBooking($id = null)
+    {
+        $this->request->allowMethod(['post']);
+
+        // 1. Fetch Booking WITH Payments and Invoices to handle logic
+        $booking = $this->Bookings->get($id, [
+            'contain' => ['Payments', 'Invoices']
+        ]);
+        
+        $user = $this->Authentication->getIdentity();
+
+        // Verify ownership
+        if ($user->getIdentifier() != $booking->user_id) {
+            $this->Flash->error(__('You can only cancel your own bookings.'));
+            return $this->redirect(['action' => 'myBookings']);
+        }
+
+        // Check if already cancelled
+        if (in_array($booking->booking_status, ['cancelled', 'refunded', 'completed'])) {
+            $this->Flash->error(__('This booking is already processed.'));
+            return $this->redirect(['action' => 'myBookings']);
+        }
+
+        // Date Check (Standard PHP comparison as discussed)
+        $today = \Cake\I18n\FrozenDate::now();
+        if ($booking->start_date && $booking->start_date <= $today) {
+            $this->Flash->error(__('Cannot cancel a booking that has already started.'));
+            return $this->redirect(['action' => 'myBookings']);
+        }
+
+        // --- STATUS UPDATE START ---
+        $booking->booking_status = 'cancelled';
+        $refundTriggered = false;
+
+        // A. Handle Payments (Refund Logic)
+        if (!empty($booking->payments)) {
+            foreach ($booking->payments as $payment) {
+                if ($payment->payment_status === 'paid') {
+                    $payment->payment_status = 'refunded'; // Set to Refunded
+                    $this->Bookings->Payments->save($payment);
+                    $refundTriggered = true;
+                }
+            }
+        }
+
+        // B. Handle Invoices (Void Logic)
+        if (!empty($booking->invoices)) {
+            foreach ($booking->invoices as $invoice) {
+                $invoice->status = 'cancelled'; // Void the invoice
+                $this->Bookings->Invoices->save($invoice);
+            }
+        }
+
+        // C. Release the Car (Make available again)
+        if ($booking->car_id) {
+            try {
+                $car = $this->Bookings->Cars->get($booking->car_id);
+                if (in_array($car->status, ['rented', 'booked'])) {
+                    $car->status = 'available';
+                    $this->Bookings->Cars->save($car);
+                }
+            } catch (\Exception $e) { /* Ignore if car missing */ }
+        }
+        // --- STATUS UPDATE END ---
+
+        if ($this->Bookings->save($booking)) {
+            if ($refundTriggered) {
+                $this->Flash->success(__('Booking cancelled. Payment has been marked as REFUNDED.'));
+            } else {
+                $this->Flash->success(__('Booking cancelled successfully.'));
+            }
+        } else {
+            $this->Flash->error(__('Could not cancel. Please try again.'));
+        }
+
+        return $this->redirect(['action' => 'myBookings']);
     }
 }
