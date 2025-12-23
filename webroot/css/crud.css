@@ -1,0 +1,387 @@
+/**
+ * CRUD Pages Styles
+ * Shared styles for CRUD pages (index, add, edit, view)
+ * Including 3D flip card animations
+ */
+
+/* =====================================================
+   3D FLIP CARD STYLES
+   ===================================================== */
+
+.flip-card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+@media (max-width: 992px) {
+    .flip-card-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .flip-card-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.flip-card {
+    background-color: transparent;
+    height: 450px;
+    perspective: 1000px;
+    cursor: pointer;
+}
+
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-style: preserve-3d;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.flip-card:hover .flip-card-inner {
+    transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+/* Front of card - Car image and basic info */
+.flip-card-front {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    color: white;
+}
+
+.flip-card-front .card-image {
+    width: 100%;
+    height: 65%;
+    object-fit: cover;
+}
+
+.flip-card-front .card-image-placeholder {
+    width: 100%;
+    height: 65%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+}
+
+.flip-card-front .card-image-placeholder i {
+    font-size: 4rem;
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.flip-card-front .card-content {
+    padding: 16px 20px;
+    text-align: left;
+    height: 35%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.flip-card-front .card-category {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #f97316;
+    margin-bottom: 4px;
+}
+
+.flip-card-front .card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #f8fafc;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.flip-card-front .card-subtitle {
+    font-size: 13px;
+    color: #94a3b8;
+    margin: 0;
+}
+
+.flip-card-front .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flip-card-front .card-price {
+    font-size: 20px;
+    font-weight: 700;
+    color: #3b82f6;
+}
+
+.flip-card-front .card-price span {
+    font-size: 12px;
+    font-weight: 400;
+    color: #94a3b8;
+}
+
+.flip-card-front .card-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.flip-card-front .card-action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    color: #f8fafc;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.flip-card-front .card-action-btn:hover {
+    background: #f97316;
+    transform: translateY(-2px);
+}
+
+/* Back of card - Details */
+.flip-card-back {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    color: #1e293b;
+    transform: rotateY(180deg);
+    display: flex;
+    flex-direction: column;
+}
+
+.flip-card-back .back-header {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    padding: 14px 20px;
+    text-align: left;
+}
+
+.flip-card-back .back-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+}
+
+.flip-card-back .back-subtitle {
+    font-size: 13px;
+    opacity: 0.9;
+    margin: 0;
+}
+
+.flip-card-back .back-content {
+    padding: 12px 20px;
+    flex: 1;
+    text-align: left;
+}
+
+.flip-card-back .detail-item {
+    display: flex;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.flip-card-back .detail-item:last-child {
+    border-bottom: none;
+}
+
+.flip-card-back .detail-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eff6ff;
+    color: #3b82f6;
+    margin-right: 12px;
+    font-size: 14px;
+}
+
+.flip-card-back .detail-label {
+    font-size: 12px;
+    color: #64748b;
+    margin: 0;
+}
+
+.flip-card-back .detail-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+.flip-card-back .back-footer {
+    padding: 10px 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.flip-card-back .btn-view {
+    flex: 1;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.2s;
+    background: #e2e8f0;
+    color: #475569;
+    border: none;
+    cursor: pointer;
+}
+
+.flip-card-back .btn-view:hover {
+    background: #cbd5e1;
+    transform: translateY(-2px);
+}
+
+.flip-card-back .btn-book {
+    flex: 1;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.2s;
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.flip-card-back .btn-book:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-badge.available {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-badge.rented {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.status-badge.maintenance {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+/* Admin Actions on Back */
+.flip-card-back .admin-actions {
+    display: flex;
+    gap: 8px;
+    padding: 0 20px 16px;
+}
+
+.flip-card-back .btn-admin {
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.flip-card-back .btn-edit {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+.flip-card-back .btn-edit:hover {
+    background: #bae6fd;
+}
+
+.flip-card-back .btn-delete {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.flip-card-back .btn-delete:hover {
+    background: #fecaca;
+}
+
+/* Page Header Styles */
+.crud-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.crud-page-header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+.crud-page-header p {
+    font-size: 15px;
+    color: #64748b;
+    margin: 4px 0 0 0;
+}
+
+.crud-page-header .btn-add {
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.crud-page-header .btn-add:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
