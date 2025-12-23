@@ -26,8 +26,10 @@ $cakeDescription = 'Rentify - Premium Car Rental';
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Custom CSS -->
-    <?= $this->Html->css('custom') ?>
+    <!-- CSS with cache-busting -->
+    <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/components.css') ?>?v=<?= time() ?>">
+    <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/shared.css') ?>?v=<?= time() ?>">
+    <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/custom.css') ?>?v=<?= time() ?>">
 
     <style>
         body {
@@ -73,151 +75,6 @@ $cakeDescription = 'Rentify - Premium Car Rental';
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
-
-        /* Footer Enhanced Styling with Grain Texture */
-        .site-footer {
-            padding: 80px 0 40px !important;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .site-footer::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .site-footer>* {
-            position: relative;
-            z-index: 2;
-        }
-
-        .site-footer .footer-description {
-            font-size: 15px !important;
-            line-height: 1.8 !important;
-            margin-bottom: 24px !important;
-        }
-
-        .site-footer .footer-social {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-        }
-
-        .site-footer .footer-heading {
-            font-size: 14px !important;
-            margin-bottom: 24px !important;
-            letter-spacing: 0.8px !important;
-        }
-
-        .site-footer .footer-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 20px;
-            font-weight: 700;
-            color: #f8fafc !important;
-            text-decoration: none !important;
-            margin-bottom: 20px;
-        }
-
-        .site-footer .footer-brand i {
-            font-size: 32px;
-            color: #3b82f6;
-        }
-
-        .site-footer .footer-links,
-        .site-footer .footer-contact {
-            list-style: none !important;
-            padding: 0 !important;
-            margin: 0 !important;
-        }
-
-        .site-footer .footer-links li {
-            margin-bottom: 14px !important;
-        }
-
-        .site-footer .footer-links a {
-            font-size: 15px !important;
-            color: #cbd5e1 !important;
-            text-decoration: none !important;
-            transition: color 0.2s;
-        }
-
-        .site-footer .footer-links a:hover {
-            color: #3b82f6 !important;
-        }
-
-        .site-footer .footer-contact li {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-            font-size: 15px !important;
-            list-style: none;
-        }
-
-        .site-footer .footer-contact li i {
-            width: 20px;
-            font-size: 16px;
-            color: #3b82f6;
-        }
-
-        .site-footer .social-icon {
-            width: 44px !important;
-            height: 44px !important;
-            border-radius: 12px !important;
-            background: rgba(255, 255, 255, 0.1) !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            color: #f8fafc !important;
-            text-decoration: none !important;
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-
-        .site-footer .social-icon:hover {
-            background: #3b82f6 !important;
-            transform: translateY(-2px);
-        }
-
-        .site-footer .footer-bottom {
-            margin-top: 60px !important;
-            padding-top: 30px !important;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex !important;
-            justify-content: space-between !important;
-            align-items: center !important;
-            flex-wrap: wrap;
-            gap: 20px !important;
-        }
-
-        .site-footer .footer-bottom p {
-            font-size: 14px !important;
-            color: #94a3b8 !important;
-        }
-
-        .site-footer .footer-bottom-links {
-            display: flex;
-            gap: 24px;
-        }
-
-        .site-footer .footer-bottom a {
-            font-size: 14px !important;
-            color: #94a3b8 !important;
-            text-decoration: none !important;
-        }
-
-        .site-footer .footer-bottom a:hover {
-            color: #3b82f6 !important;
-        }
     </style>
 
     <?= $this->fetch('meta') ?>
@@ -227,8 +84,12 @@ $cakeDescription = 'Rentify - Premium Car Rental';
 
 <body class="bg-light text-dark d-flex flex-column min-vh-100 position-relative pb-4">
 
-    <!-- Glassmorphism Sidebar -->
-    <?= $this->element('sidebar') ?>
+    <!-- Glassmorphism Sidebar - Conditional based on authentication -->
+    <?php if ($this->request->getAttribute('identity')): ?>
+        <?= $this->element('sidebar') ?>
+    <?php else: ?>
+        <?= $this->element('public_sidebar') ?>
+    <?php endif; ?>
 
     <!-- Header Element -->
     <?= $this->element('header') ?>

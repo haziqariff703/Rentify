@@ -18,7 +18,16 @@ class PaymentsController extends AppController
         $user = $this->Authentication->getIdentity();
         $action = $this->request->getParam('action');
 
-        // Admin-only actions (edit, delete)
+        // Actions that require login but not admin
+        $userActions = ['myPayments', 'view', 'add'];
+        if (in_array($action, $userActions)) {
+            if (!$user) {
+                $this->Flash->error(__('Please login to access this page.'));
+                return $this->redirect(['controller' => 'Users', 'action' => 'login']);
+            }
+        }
+
+        // Admin-only actions
         $adminActions = ['index', 'edit', 'delete'];
         if (in_array($action, $adminActions)) {
             if (!$user || $user->role !== 'admin') {
@@ -161,8 +170,8 @@ class PaymentsController extends AppController
                     $booking->booking_status = 'confirmed';
                     $bookingsTable->save($booking);
 
-                    $this->Flash->success(__('Payment Successful! Booking Confirmed.'));
-                    return $this->redirect(['controller' => 'Invoices', 'action' => 'view', $invoice->id]);
+                    $this->Flash->success(__('Payment Successful! Booking Confirmed. Please leave a review!'));
+                    return $this->redirect(['controller' => 'Reviews', 'action' => 'addReview', $payment->booking_id]);
                 }
             }
         }

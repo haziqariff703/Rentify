@@ -27,31 +27,24 @@ $cakeDescription = 'Rentify - Admin Panel';
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Admin CSS -->
-    <?= $this->Html->css('components') ?>
-    <?= $this->Html->css('sidebar') ?>
-    <?= $this->Html->css('dashboard') ?>
-    <?= $this->Html->css('custom') ?>
+    <!-- Admin CSS with cache-busting -->
+    <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/components.css') ?>?v=<?= time() ?>">
+    <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/sidebar.css') ?>?v=<?= time() ?>">
+    <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/dashboard.css') ?>?v=<?= time() ?>">
+    <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/shared.css') ?>?v=<?= time() ?>">
+    <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/custom.css') ?>?v=<?= time() ?>">
 
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            padding-top: 70px;
-            /* Space for fixed navbar */
-        }
-
-        /* Adjust sidebar to start below navbar */
-        .admin-sidebar {
-            top: 70px;
-            height: calc(100vh - 70px);
+            background-color: #f8fafc;
         }
 
         /* Admin content wrapper - includes main + footer */
         .admin-content-wrapper {
-            margin-left: 260px;
             display: flex;
             flex-direction: column;
-            min-height: calc(100vh - 70px);
+            min-height: 100vh;
         }
 
         /* Main content takes available space */
@@ -84,24 +77,24 @@ $cakeDescription = 'Rentify - Admin Panel';
     <?= $this->fetch('script') ?>
 </head>
 
-<body class="bg-light text-dark">
+<body>
     <!-- Header -->
     <?= $this->element('header') ?>
 
     <!-- Sidebar (fixed position) -->
     <?= $this->element('sidebar') ?>
 
-    <!-- Content Wrapper (main + footer) -->
+    <!-- Content Wrapper (main only) -->
     <div class="admin-content-wrapper">
         <!-- Main Content -->
         <main class="admin-main">
             <?= $this->Flash->render() ?>
             <?= $this->fetch('content') ?>
         </main>
-
-        <!-- Footer -->
-        <?= $this->element('footer') ?>
     </div>
+
+    <!-- Footer (full width, outside wrapper) -->
+    <?= $this->element('footer') ?>
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
