@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Entity;
@@ -49,6 +50,9 @@ class Car extends Entity
         'image' => true,
         'transmission' => true,
         'seats' => true,
+        'engine' => true,
+        'zero_to_sixty' => true,
+        'badge_color' => true,
         'created' => true,
         'modified' => true,
         'category' => true,

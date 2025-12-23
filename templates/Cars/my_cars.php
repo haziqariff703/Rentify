@@ -64,7 +64,7 @@ $this->assign('title', 'The Garage');
         padding: 20px;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     }
-    
+
     .filter-header {
         display: flex;
         align-items: center;
@@ -73,10 +73,19 @@ $this->assign('title', 'The Garage');
         border-bottom: 1px solid #e5e7eb;
         margin-bottom: 15px;
     }
-    
-    .filter-header i { color: #6b7280; font-size: 1rem; }
-    .filter-header h5 { font-size: 1.1rem; font-weight: 700; color: #1f2937; margin: 0; }
-    
+
+    .filter-header i {
+        color: #6b7280;
+        font-size: 1rem;
+    }
+
+    .filter-header h5 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin: 0;
+    }
+
     .filter-accordion-header {
         display: flex;
         align-items: center;
@@ -84,7 +93,7 @@ $this->assign('title', 'The Garage');
         padding: 12px 0;
         cursor: pointer;
     }
-    
+
     .filter-accordion-title {
         font-size: 0.85rem;
         font-weight: 600;
@@ -93,19 +102,28 @@ $this->assign('title', 'The Garage');
         color: #6b7280;
         margin: 0;
     }
-    
-    .filter-accordion-toggle { font-size: 0.8rem; color: #9ca3af; }
-    
+
+    .filter-accordion-toggle {
+        font-size: 0.8rem;
+        color: #9ca3af;
+    }
+
     .filter-accordion-content {
         max-height: 0;
         overflow: hidden;
         transition: max-height 0.3s ease;
     }
-    
-    .filter-accordion-content.expanded { max-height: 400px; }
-    
-    .filter-list { list-style: none; padding: 0; margin: 0; }
-    
+
+    .filter-accordion-content.expanded {
+        max-height: 400px;
+    }
+
+    .filter-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
     .filter-list-item {
         display: flex;
         align-items: center;
@@ -117,11 +135,29 @@ $this->assign('title', 'The Garage');
         border-radius: 8px;
         transition: all 0.2s ease;
     }
-    
-    .filter-list-item:hover { background: #f9fafb; color: #111827; }
-    .filter-list-item.active { background: #eff6ff; color: #3b82f6; font-weight: 500; }
-    .filter-list-item i { width: 24px; text-align: center; margin-right: 12px; font-size: 0.9rem; color: #9ca3af; }
-    .filter-list-item.active i { color: #3b82f6; }
+
+    .filter-list-item:hover {
+        background: #f9fafb;
+        color: #111827;
+    }
+
+    .filter-list-item.active {
+        background: #eff6ff;
+        color: #3b82f6;
+        font-weight: 500;
+    }
+
+    .filter-list-item i {
+        width: 24px;
+        text-align: center;
+        margin-right: 12px;
+        font-size: 0.9rem;
+        color: #9ca3af;
+    }
+
+    .filter-list-item.active i {
+        color: #3b82f6;
+    }
 
     /* 3D Flip Card */
     .flip-card {
@@ -272,18 +308,11 @@ $this->assign('title', 'The Garage');
                                     <li class="filter-list-item active" data-filter="all" onclick="filterFleet('all', this)">
                                         <i class="fas fa-th-large"></i> All Vehicles
                                     </li>
-                                    <li class="filter-list-item" data-filter="Supercar" onclick="filterFleet('Supercar', this)">
-                                        Supercars
-                                    </li>
-                                    <li class="filter-list-item" data-filter="SUV" onclick="filterFleet('SUV', this)">
-                                        Luxury SUV
-                                    </li>
-                                    <li class="filter-list-item" data-filter="Sports" onclick="filterFleet('Sports', this)">
-                                        Sports & GT
-                                    </li>
-                                    <li class="filter-list-item" data-filter="TheKing" onclick="filterFleet('TheKing', this)">
-                                        The King
-                                    </li>
+                                    <?php foreach ($categories as $category): ?>
+                                        <li class="filter-list-item" data-filter="<?= h($category->name) ?>" onclick="filterFleet('<?= h($category->name) ?>', this)">
+                                            <?= h($category->name) ?>
+                                        </li>
+                                    <?php endforeach; ?>
                                 </ul>
                             </div>
                         </div>
@@ -295,73 +324,52 @@ $this->assign('title', 'The Garage');
             <div class="col-lg-10">
                 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="fleetGrid">
 
-                    <?php
-                    // FULL DATABASE WITH REAL OFFICIAL LINKS
-                    $fleet = [
-                        // THE ORIGINALS
-                        ['name' => 'Chevrolet Camaro', 'price' => 120, 'img' => 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'type' => 'Sports', 'category' => 'Sports', 'engine' => '2.0L Turbo', 'zero60' => '5.4s', 'color' => '#f97316', 'url' => 'https://www.chevrolet.com/performance/camaro'],
-                        ['name' => 'BMW 5 Series', 'price' => 150, 'img' => 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'type' => 'Luxury', 'category' => 'Sports', 'engine' => '2.0L Diesel', 'zero60' => '7.2s', 'color' => '#3b82f6', 'url' => 'https://www.bmw.com/en/all-models/5-series.html'],
-                        ['name' => 'Audi Q7', 'price' => 180, 'img' => 'audi-q7.jpg', 'type' => 'SUV', 'category' => 'SUV', 'engine' => '3.0L V6', 'zero60' => '5.9s', 'color' => '#0ea5e9', 'url' => 'https://www.audi.com/en/models/q7.html'],
 
-                        // THE SUPERCARS
-                        ['name' => 'Lamborghini Huracán', 'price' => 1200, 'img' => 'lambo-huracan.jpg', 'type' => 'Supercar', 'category' => 'Supercar', 'engine' => '5.2L V10', 'zero60' => '2.9s', 'color' => '#ef4444', 'url' => 'https://www.lamborghini.com/en-en/models/huracan'],
-                        ['name' => 'Ferrari F8 Tributo', 'price' => 1350, 'img' => 'ferrari-f8.jpg', 'type' => 'Exotic', 'category' => 'Supercar', 'engine' => '3.9L V8 TT', 'zero60' => '2.9s', 'color' => '#dc2626', 'url' => 'https://www.ferrari.com/en-EN/auto/f8-tributo'],
-                        ['name' => 'McLaren 720S', 'price' => 1400, 'img' => 'mclaren-720s.jpg', 'type' => 'Hyper', 'category' => 'Supercar', 'engine' => '4.0L V8 TT', 'zero60' => '2.8s', 'color' => '#f59e0b', 'url' => 'https://cars.mclaren.com/en/super-series/720s'],
-
-                        // THE SPECIALS
-                        ['name' => 'Porsche 911 GT3 RS', 'price' => 950, 'img' => 'porsche-gt3.jpg', 'type' => 'Track', 'category' => 'Sports', 'engine' => '4.0L Flat-6', 'zero60' => '3.0s', 'color' => '#64748b', 'url' => 'https://www.porsche.com/international/models/911/911-gt3-rs/'],
-                        ['name' => 'Aston Martin DBS', 'price' => 1100, 'img' => 'aston-dbs.jpg', 'type' => 'GT', 'category' => 'Sports', 'engine' => '5.2L V12', 'zero60' => '3.2s', 'color' => '#0d9488', 'url' => 'https://www.astonmartin.com/en/models/dbs'],
-
-                        // THE KING
-                        ['name' => 'Perodua Myvi 2025', 'price' => 40, 'img' => 'myvi.jpg', 'type' => 'The King', 'category' => 'TheKing', 'engine' => '1.5L Inline-4', 'zero60' => 'Eventually', 'color' => '#fbbf24', 'url' => 'https://www.perodua.com.my/our-models/myvi.html']
-                    ];
-                    ?>
-
-                    <?php foreach ($fleet as $car): ?>
-                        <div class="col car-item" data-category="<?= $car['category'] ?>">
+                    <?php foreach ($cars as $car): ?>
+                        <div class="col car-item" data-category="<?= h($car->category ? $car->category->name : 'Uncategorized') ?>">
                             <div class="flip-card">
                                 <div class="flip-card-inner">
 
                                     <!-- FRONT: Image + Name + Price -->
                                     <div class="flip-card-front shadow-sm">
-                                        <?php
-                                        // Handle both external URLs and local images
-                                        if (strpos($car['img'], 'http') === 0): ?>
-                                            <img src="<?= $car['img'] ?>" class="w-100 h-100 object-fit-cover" alt="<?= $car['name'] ?>">
+                                        <?php if ($car->image): ?>
+                                            <?= $this->Html->image($car->image, ['class' => 'w-100 h-100 object-fit-cover', 'alt' => $car->car_model]) ?>
                                         <?php else: ?>
-                                            <?= $this->Html->image($car['img'], ['class' => 'w-100 h-100 object-fit-cover', 'alt' => $car['name']]) ?>
+                                            <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-secondary">
+                                                <i class="fas fa-car fa-4x text-white opacity-50"></i>
+                                            </div>
                                         <?php endif; ?>
                                         <div class="front-overlay">
-                                            <span class="badge rounded-pill mb-2" style="background: <?= $car['color'] ?>"><?= $car['type'] ?></span>
-                                            <h4 class="text-white fw-bold mb-0 text-shadow"><?= $car['name'] ?></h4>
-                                            <div class="price-tag">$<?= $car['price'] ?> <small>/ day</small></div>
+                                            <span class="badge rounded-pill mb-2" style="background: <?= h($car->badge_color ?: '#3b82f6') ?>"><?= h($car->category ? $car->category->name : 'Car') ?></span>
+                                            <h4 class="text-white fw-bold mb-0 text-shadow"><?= h($car->brand . ' ' . $car->car_model) ?></h4>
+                                            <div class="price-tag">$<?= h($car->price_per_day) ?> <small>/ day</small></div>
                                         </div>
                                     </div>
 
                                     <!-- BACK: Specs + Buttons -->
                                     <div class="flip-card-back shadow-lg">
-                                        <h4 class="fw-bold mb-4 text-white"><?= $car['name'] ?></h4>
+                                        <h4 class="fw-bold mb-4 text-white"><?= h($car->brand . ' ' . $car->car_model) ?></h4>
 
                                         <!-- Specs Grid -->
                                         <div class="specs-grid mb-4">
                                             <div class="spec-item">
                                                 <i class="fas fa-tachometer-alt text-primary"></i>
-                                                <span><?= $car['engine'] ?></span>
+                                                <span><?= h($car->engine ?: 'N/A') ?></span>
                                             </div>
                                             <div class="spec-item">
                                                 <i class="fas fa-stopwatch text-primary"></i>
-                                                <span><?= $car['zero60'] ?></span>
+                                                <span><?= h($car->zero_to_sixty ?: 'N/A') ?></span>
                                             </div>
                                             <div class="spec-item">
                                                 <i class="fas fa-cogs text-primary"></i>
-                                                <span>Auto</span>
+                                                <span><?= h($car->transmission ?: 'Auto') ?></span>
                                             </div>
                                         </div>
 
                                         <!-- Buttons -->
                                         <div class="d-grid gap-3 w-100 px-4">
                                             <a href="<?= $this->Url->build(['controller' => 'Bookings', 'action' => 'add']) ?>" class="btn btn-primary rounded-pill fw-bold">Book Now</a>
-                                            <a href="<?= $car['url'] ?>" target="_blank" class="btn btn-outline-light rounded-pill btn-sm">Full Specs <i class="fas fa-external-link-alt ms-1" style="font-size: 0.8em;"></i></a>
+                                            <button type="button" class="btn btn-outline-light rounded-pill btn-sm" onclick="showCarModal(<?= $car->id ?>)">Full Specs <i class="fas fa-info-circle ms-1"></i></button>
                                         </div>
                                     </div>
                                 </div>
@@ -375,14 +383,243 @@ $this->assign('title', 'The Garage');
     </div>
 </section>
 
+<!-- Car Details Modal -->
+<div id="carModal" class="car-modal" onclick="closeModalOutside(event)">
+    <div class="car-modal-content">
+        <button class="car-modal-close" onclick="closeCarModal()">&times;</button>
+        <div class="car-modal-body">
+            <div class="car-modal-image" id="modalImage"></div>
+            <div class="car-modal-details">
+                <span class="badge rounded-pill mb-2" id="modalBadge">Category</span>
+                <h2 class="car-modal-title" id="modalTitle">Car Name</h2>
+                <div class="car-modal-price" id="modalPrice">$0 / day</div>
+
+                <div class="car-modal-specs">
+                    <div class="spec-row">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span id="modalEngine">Engine</span>
+                    </div>
+                    <div class="spec-row">
+                        <i class="fas fa-stopwatch"></i>
+                        <span id="modalZeroSixty">0-60</span>
+                    </div>
+                    <div class="spec-row">
+                        <i class="fas fa-cogs"></i>
+                        <span id="modalTransmission">Transmission</span>
+                    </div>
+                    <div class="spec-row">
+                        <i class="fas fa-chair"></i>
+                        <span id="modalSeats">Seats</span>
+                    </div>
+                    <div class="spec-row">
+                        <i class="fas fa-calendar"></i>
+                        <span id="modalYear">Year</span>
+                    </div>
+                </div>
+
+                <div class="car-modal-actions">
+                    <a href="#" id="modalBookBtn" class="btn btn-primary rounded-pill fw-bold">Book This Car</a>
+                    <a href="#" id="modalReviewBtn" class="btn btn-outline-secondary rounded-pill">View Reviews</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Car Details Modal Styles */
+    .car-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(8px);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .car-modal.show {
+        display: flex;
+    }
+
+    .car-modal-content {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 24px;
+        max-width: 800px;
+        width: 90%;
+        max-height: 90vh;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    }
+
+    .car-modal-close {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        font-size: 2rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #64748b;
+        z-index: 10;
+    }
+
+    .car-modal-close:hover {
+        color: #ef4444;
+    }
+
+    .car-modal-body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    @media (min-width: 768px) {
+        .car-modal-body {
+            flex-direction: row;
+        }
+    }
+
+    .car-modal-image {
+        flex: 1;
+        min-height: 250px;
+        background-size: cover;
+        background-position: center;
+        background-color: #1e293b;
+    }
+
+    .car-modal-details {
+        flex: 1;
+        padding: 30px;
+    }
+
+    .car-modal-title {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 1.8rem;
+        color: #1e293b;
+        margin-bottom: 5px;
+    }
+
+    .car-modal-price {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #3b82f6;
+        margin-bottom: 20px;
+    }
+
+    .car-modal-specs {
+        display: grid;
+        gap: 12px;
+        margin-bottom: 25px;
+    }
+
+    .spec-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #475569;
+    }
+
+    .spec-row i {
+        width: 24px;
+        color: #3b82f6;
+    }
+
+    .car-modal-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    @media (min-width: 768px) {
+        .car-modal-actions {
+            flex-direction: row;
+        }
+    }
+</style>
+
+<!-- Cars Data for Modal -->
+<script>
+    const carsData = <?= json_encode(array_map(function ($car) {
+                            return [
+                                'id' => $car->id,
+                                'brand' => $car->brand,
+                                'car_model' => $car->car_model,
+                                'price_per_day' => $car->price_per_day,
+                                'image' => $car->image,
+                                'engine' => $car->engine,
+                                'zero_to_sixty' => $car->zero_to_sixty,
+                                'transmission' => $car->transmission,
+                                'seats' => $car->seats,
+                                'year' => $car->year,
+                                'badge_color' => $car->badge_color,
+                                'category' => $car->category ? $car->category->name : 'Car'
+                            ];
+                        }, $cars->toArray())) ?>;
+
+    const imageBasePath = '<?= $this->Url->image('') ?>';
+    const bookingUrl = '<?= $this->Url->build(['controller' => 'Bookings', 'action' => 'add']) ?>';
+    const reviewsBaseUrl = '<?= $this->Url->build(['controller' => 'Reviews', 'action' => 'carReviews']) ?>';
+
+    function showCarModal(carId) {
+        const car = carsData.find(c => c.id === carId);
+        if (!car) return;
+
+        document.getElementById('modalTitle').textContent = car.brand + ' ' + car.car_model;
+        document.getElementById('modalPrice').textContent = '$' + car.price_per_day + ' / day';
+        document.getElementById('modalEngine').textContent = car.engine || 'N/A';
+        document.getElementById('modalZeroSixty').textContent = car.zero_to_sixty || 'N/A';
+        document.getElementById('modalTransmission').textContent = car.transmission || 'Auto';
+        document.getElementById('modalSeats').textContent = (car.seats || 'N/A') + ' Seats';
+        document.getElementById('modalYear').textContent = car.year || 'N/A';
+
+        const badge = document.getElementById('modalBadge');
+        badge.textContent = car.category;
+        badge.style.background = car.badge_color || '#3b82f6';
+
+        const imageDiv = document.getElementById('modalImage');
+        if (car.image) {
+            imageDiv.style.backgroundImage = 'url(' + imageBasePath + car.image + ')';
+        } else {
+            imageDiv.style.backgroundImage = 'none';
+        }
+
+        document.getElementById('modalBookBtn').href = bookingUrl;
+        document.getElementById('modalReviewBtn').href = reviewsBaseUrl + '/' + carId;
+
+        document.getElementById('carModal').classList.add('show');
+    }
+
+    function closeCarModal() {
+        document.getElementById('carModal').classList.remove('show');
+    }
+
+    function closeModalOutside(event) {
+        if (event.target.id === 'carModal') {
+            closeCarModal();
+        }
+    }
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeCarModal();
+    });
+</script>
+
 <script>
     // Toggle Accordion (expand/collapse with +/- icon)
     function toggleAccordion(header) {
         var content = header.nextElementSibling;
         var icon = header.querySelector('.filter-accordion-toggle');
-        
+
         content.classList.toggle('expanded');
-        
+
         if (content.classList.contains('expanded')) {
             icon.classList.remove('fa-plus');
             icon.classList.add('fa-minus');
@@ -391,7 +628,7 @@ $this->assign('title', 'The Garage');
             icon.classList.add('fa-plus');
         }
     }
-    
+
     // Filter Fleet by Category
     function filterFleet(category, clickedItem) {
         var cards = document.querySelectorAll('.car-item');

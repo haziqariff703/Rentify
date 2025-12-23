@@ -52,8 +52,16 @@ class CarsController extends AppController
      */
     public function myCars()
     {
-        // This renders the my_cars.php template with the premium 3D flip card design
-        // No database query needed - uses hardcoded demo data
+        // Query cars from database with their categories
+        $cars = $this->Cars->find()
+            ->contain(['Categories'])
+            ->where(['status' => 'available'])
+            ->all();
+
+        // Query all categories for filter buttons
+        $categories = $this->Cars->Categories->find()->all();
+
+        $this->set(compact('cars', 'categories'));
     }
 
     /**
