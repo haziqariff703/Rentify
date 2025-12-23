@@ -26,9 +26,13 @@ class UsersController extends AppController
         $action = $this->request->getParam('action');
 
         // Admin-only actions
-        $adminActions = ['index', 'delete'];
+        $adminActions = ['index', 'delete', 'view'];
         if (in_array($action, $adminActions)) {
             if (!$user || $user->role !== 'admin') {
+                // Redirect customers trying to view users to their own account
+                if ($action === 'view') {
+                    return $this->redirect(['action' => 'myAccount']);
+                }
                 $this->Flash->error(__('You are not authorized to access this page.'));
                 return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
             }
@@ -121,6 +125,19 @@ class UsersController extends AppController
     {
         $user = $this->Users->get($id, contain: ['Bookings', 'Reviews']);
         $this->set(compact('user'));
+    }
+
+    /**
+     * My Account method - Customer view: Only their own profile
+     *
+     * @return \Cake\Http\Response|null|void Renders view
+     */
+    public function myAccount()
+    {
+        $userId = $this->Authentication->getIdentity()->getIdentifier();
+        $user = $this->Users->get($userId, contain: ['Bookings', 'Reviews']);
+        $this->set(compact('user'));
+        // Uses default layout (not admin)
     }
 
     /**
