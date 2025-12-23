@@ -54,36 +54,74 @@ $this->assign('title', 'The Garage');
         pointer-events: none;
     }
 
-    /* Filter Sidebar - Premium Redesign */
+    /* ========================================
+       CORPORATE FILTER SIDEBAR
+       ======================================== */
     .filter-card {
-        background: rgba(255, 255, 255, 0.98);
-        backdrop-filter: blur(20px);
-        border-radius: 24px;
-        border: none;
-        /* No borders */
-        box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
-        /* Deep floating shadow */
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     }
-
-    .hover-blue:hover {
-        background-color: #eff6ff !important;
-        color: #3b82f6 !important;
-        transform: translateX(5px);
+    
+    .filter-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #e5e7eb;
+        margin-bottom: 15px;
     }
-
-    .filter-btn {
-        transition: all 0.3s ease;
-        padding: 12px 20px !important;
+    
+    .filter-header i { color: #6b7280; font-size: 1rem; }
+    .filter-header h5 { font-size: 1.1rem; font-weight: 700; color: #1f2937; margin: 0; }
+    
+    .filter-accordion-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 0;
+        cursor: pointer;
+    }
+    
+    .filter-accordion-title {
+        font-size: 0.85rem;
         font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #6b7280;
+        margin: 0;
     }
-
-    .filter-btn.active {
-        /* Blue Gradient for active state */
-        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
-        color: white !important;
-        border: none !important;
-        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    
+    .filter-accordion-toggle { font-size: 0.8rem; color: #9ca3af; }
+    
+    .filter-accordion-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
     }
+    
+    .filter-accordion-content.expanded { max-height: 400px; }
+    
+    .filter-list { list-style: none; padding: 0; margin: 0; }
+    
+    .filter-list-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 12px;
+        margin-bottom: 4px;
+        cursor: pointer;
+        color: #374151;
+        font-size: 0.95rem;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+    }
+    
+    .filter-list-item:hover { background: #f9fafb; color: #111827; }
+    .filter-list-item.active { background: #eff6ff; color: #3b82f6; font-weight: 500; }
+    .filter-list-item i { width: 24px; text-align: center; margin-right: 12px; font-size: 0.9rem; color: #9ca3af; }
+    .filter-list-item.active i { color: #3b82f6; }
 
     /* 3D Flip Card */
     .flip-card {
@@ -212,29 +250,50 @@ $this->assign('title', 'The Garage');
     </div>
 </section>
 
-<!-- Main Content -->
+<!-- Main Content - FULL WIDTH -->
 <section class="py-5" style="background-color: #f3f4f6; background-image: radial-gradient(#d1d5db 1px, transparent 1px); background-size: 20px 20px;">
-    <div class="container">
+    <div class="container-fluid px-3">
         <div class="row">
-            <!-- Filter Sidebar -->
-            <div class="col-lg-3 mb-4">
+            <!-- Filter Sidebar - Corporate Accordion -->
+            <div class="col-lg-2 mb-4">
                 <div class="sticky-top" style="top: 100px; z-index: 10;">
-                    <div class="filter-card shadow-lg p-4">
-                        <h5 class="fw-bold mb-4 text-dark">Filter Fleet</h5>
-                        <div class="d-grid gap-2" id="fleetFilters">
-                            <button onclick="filterFleet('all', this)" class="btn btn-primary rounded-pill text-start ps-4 fw-bold filter-btn active" data-filter="all">All Vehicles</button>
-                            <button onclick="filterFleet('Supercar', this)" class="btn btn-light rounded-pill text-start ps-4 text-secondary hover-blue filter-btn" data-filter="Supercar">Supercars</button>
-                            <button onclick="filterFleet('SUV', this)" class="btn btn-light rounded-pill text-start ps-4 text-secondary hover-blue filter-btn" data-filter="SUV">Luxury SUV</button>
-                            <button onclick="filterFleet('Sports', this)" class="btn btn-light rounded-pill text-start ps-4 text-secondary hover-blue filter-btn" data-filter="Sports">Sports & GT</button>
-                            <button onclick="filterFleet('TheKing', this)" class="btn btn-light rounded-pill text-start ps-4 text-secondary hover-blue filter-btn" data-filter="TheKing">The King 👑</button>
+                    <div class="filter-card">
+                        <div class="filter-header">
+                            <i class="fas fa-filter"></i>
+                            <h5>Filter</h5>
+                        </div>
+                        <div class="filter-accordion">
+                            <div class="filter-accordion-header" onclick="toggleAccordion(this)">
+                                <span class="filter-accordion-title">Vehicle Class</span>
+                                <i class="fas fa-plus filter-accordion-toggle"></i>
+                            </div>
+                            <div class="filter-accordion-content">
+                                <ul class="filter-list">
+                                    <li class="filter-list-item active" data-filter="all" onclick="filterFleet('all', this)">
+                                        <i class="fas fa-th-large"></i> All Vehicles
+                                    </li>
+                                    <li class="filter-list-item" data-filter="Supercar" onclick="filterFleet('Supercar', this)">
+                                        Supercars
+                                    </li>
+                                    <li class="filter-list-item" data-filter="SUV" onclick="filterFleet('SUV', this)">
+                                        Luxury SUV
+                                    </li>
+                                    <li class="filter-list-item" data-filter="Sports" onclick="filterFleet('Sports', this)">
+                                        Sports & GT
+                                    </li>
+                                    <li class="filter-list-item" data-filter="TheKing" onclick="filterFleet('TheKing', this)">
+                                        The King
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Fleet Grid -->
-            <div class="col-lg-9">
-                <div class="row row-cols-1 row-cols-md-2 row-cols-xl-2 g-4" id="fleetGrid">
+            <!-- Fleet Grid - 3 Cards Per Row -->
+            <div class="col-lg-10">
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="fleetGrid">
 
                     <?php
                     // FULL DATABASE WITH REAL OFFICIAL LINKS
@@ -317,11 +376,26 @@ $this->assign('title', 'The Garage');
 </section>
 
 <script>
-    function filterFleet(category, clickedBtn) {
-        // 1. Get all car cards
+    // Toggle Accordion (expand/collapse with +/- icon)
+    function toggleAccordion(header) {
+        var content = header.nextElementSibling;
+        var icon = header.querySelector('.filter-accordion-toggle');
+        
+        content.classList.toggle('expanded');
+        
+        if (content.classList.contains('expanded')) {
+            icon.classList.remove('fa-plus');
+            icon.classList.add('fa-minus');
+        } else {
+            icon.classList.remove('fa-minus');
+            icon.classList.add('fa-plus');
+        }
+    }
+    
+    // Filter Fleet by Category
+    function filterFleet(category, clickedItem) {
         var cards = document.querySelectorAll('.car-item');
 
-        // 2. Loop through and show/hide based on category
         cards.forEach(function(card) {
             if (category === 'all') {
                 card.classList.remove('car-hidden');
@@ -334,15 +408,11 @@ $this->assign('title', 'The Garage');
             }
         });
 
-        // 3. Update Active Button State
-        var btns = document.querySelectorAll('.filter-btn');
-        btns.forEach(function(btn) {
-            btn.classList.remove('active', 'btn-primary');
-            btn.classList.add('btn-light');
+        var items = document.querySelectorAll('.filter-list-item');
+        items.forEach(function(item) {
+            item.classList.remove('active');
         });
 
-        // Highlight clicked button
-        clickedBtn.classList.remove('btn-light');
-        clickedBtn.classList.add('active', 'btn-primary');
+        clickedItem.classList.add('active');
     }
 </script>

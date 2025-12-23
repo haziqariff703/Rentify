@@ -248,58 +248,194 @@ $this->assign('title', 'Welcome to Rentify');
     </div>
 </section>
 
-<!-- How It Works -->
-<section class="py-5 bg-white position-relative overflow-hidden">
+<!-- How It Works - NEON GLOW WITH ARROWS -->
+<section class="py-5 position-relative overflow-hidden" style="background-color: #F3F5F9;">
     <div class="container position-relative z-1 py-5">
-        <!-- Header with Typography Sync -->
+        <!-- Header with Sharp LED Neon Typography -->
         <div class="text-center mb-5">
             <div class="text-primary fw-bold mb-2" style="letter-spacing: 2px; font-size: 0.85rem; text-transform: uppercase;">Simple Process</div>
-            <h2 class="about-main-heading text-center">Rent Your Dream Car in 3 Simple Steps</h2>
+            <h2 style="font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 2.5rem; color: #0F172A;">
+                Rent Your Dream Car in 
+                <span style="color: #00d2ff; text-shadow: 0 0 10px rgba(0, 210, 255, 0.4);">3</span> 
+                <span style="color: #bc13fe; text-shadow: 0 0 10px rgba(188, 19, 254, 0.4);">Simple</span> 
+                <span style="color: #39ff14; text-shadow: 0 0 10px rgba(57, 255, 20, 0.4);">Steps</span>
+            </h2>
         </div>
         
-        <!-- Steps Row with Connecting Lines -->
-        <div class="row g-4 text-center position-relative hiw-steps-row">
-            <!-- Connecting Line (Desktop Only) -->
-            <div class="hiw-connecting-line d-none d-md-block"></div>
+        <!-- Steps Row with Connecting Arrows -->
+        <div class="row g-0 text-center align-items-center justify-content-center">
             
-            <!-- Step 1: Choose Date -->
-            <div class="col-md-4 animate-fade-in-up" style="animation-delay: 0.2s;">
-                <div class="hiw-step-card p-4 rounded-4 bg-light shadow-sm h-100">
-                    <span class="hiw-step-badge">STEP 01</span>
-                    <div class="hiw-icon-circle mx-auto mb-4">
+            <!-- Step 1: Choose Date (CYAN) -->
+            <div class="col-md-3 animate-fade-in-up" style="animation-delay: 0.2s;">
+                <div class="neon-card neon-cyan p-4 h-100">
+                    <span class="neon-badge neon-badge-cyan">STEP 01</span>
+                    <div class="neon-icon neon-icon-cyan mx-auto mb-4">
                         <i class="fas fa-calendar-alt"></i>
                     </div>
                     <h4 class="fw-bold mb-3" style="color: #0F172A;">Choose Date</h4>
-                    <p class="text-muted" style="color: #64748B !important;">Select your preferred pickup and return dates to check real-time availability.</p>
+                    <p style="color: #6b7280;">Select your preferred pickup and return dates to check real-time availability.</p>
                 </div>
             </div>
             
-            <!-- Step 2: Select Car -->
-            <div class="col-md-4 animate-fade-in-up" style="animation-delay: 0.4s;">
-                <div class="hiw-step-card p-4 rounded-4 bg-light shadow-sm h-100">
-                    <span class="hiw-step-badge">STEP 02</span>
-                    <div class="hiw-icon-circle mx-auto mb-4">
+            <!-- Arrow 1 (Desktop Only) -->
+            <div class="col-md-1 d-none d-md-flex align-items-center justify-content-center">
+                <i class="fas fa-chevron-right neon-arrow-icon"></i>
+            </div>
+            
+            <!-- Step 2: Select Car (PURPLE) -->
+            <div class="col-md-3 animate-fade-in-up" style="animation-delay: 0.4s;">
+                <div class="neon-card neon-purple p-4 h-100">
+                    <span class="neon-badge neon-badge-purple">STEP 02</span>
+                    <div class="neon-icon neon-icon-purple mx-auto mb-4">
                         <i class="fas fa-car"></i>
                     </div>
                     <h4 class="fw-bold mb-3" style="color: #0F172A;">Select Car</h4>
-                    <p class="text-muted" style="color: #64748B !important;">Browse our diverse fleet and choose the car that perfectly fits your journey.</p>
+                    <p style="color: #6b7280;">Browse our diverse fleet and choose the car that perfectly fits your journey.</p>
                 </div>
             </div>
             
-            <!-- Step 3: Drive Away -->
-            <div class="col-md-4 animate-fade-in-up" style="animation-delay: 0.6s;">
-                <div class="hiw-step-card p-4 rounded-4 bg-light shadow-sm h-100">
-                    <span class="hiw-step-badge">STEP 03</span>
-                    <div class="hiw-icon-circle mx-auto mb-4">
+            <!-- Arrow 2 (Desktop Only) -->
+            <div class="col-md-1 d-none d-md-flex align-items-center justify-content-center">
+                <i class="fas fa-chevron-right neon-arrow-icon"></i>
+            </div>
+            
+            <!-- Step 3: Drive Away (GREEN) -->
+            <div class="col-md-3 animate-fade-in-up" style="animation-delay: 0.6s;">
+                <div class="neon-card neon-green p-4 h-100">
+                    <span class="neon-badge neon-badge-green">STEP 03</span>
+                    <div class="neon-icon neon-icon-green mx-auto mb-4">
                         <i class="fas fa-key"></i>
                     </div>
                     <h4 class="fw-bold mb-3" style="color: #0F172A;">Drive Away</h4>
-                    <p class="text-muted" style="color: #64748B !important;">Complete your secure booking and pick up your car. It's that simple!</p>
+                    <p style="color: #6b7280;">Complete your secure booking and pick up your car. It's that simple!</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<style>
+/* ========================================
+   NEON GLOW STEP CARDS - WITH ARROWS
+   ======================================== */
+
+/* Base Card - Pod Style */
+.neon-card {
+    background: #ffffff;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    border: 1px solid transparent;
+    border-radius: 20px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+}
+
+/* Lift on Hover */
+.neon-card:hover {
+    transform: translateY(-5px);
+}
+
+/* CYAN Neon - #00d2ff */
+.neon-cyan {
+    border-color: #00d2ff;
+}
+.neon-cyan:hover {
+    box-shadow: 0 20px 50px rgba(0, 210, 255, 0.35), 0 0 40px rgba(0, 210, 255, 0.25);
+}
+
+/* PURPLE Neon - #bc13fe */
+.neon-purple {
+    border-color: #bc13fe;
+}
+.neon-purple:hover {
+    box-shadow: 0 20px 50px rgba(188, 19, 254, 0.35), 0 0 40px rgba(188, 19, 254, 0.25);
+}
+
+/* GREEN Neon - #39ff14 */
+.neon-green {
+    border-color: #39ff14;
+}
+.neon-green:hover {
+    box-shadow: 0 20px 50px rgba(57, 255, 20, 0.35), 0 0 40px rgba(57, 255, 20, 0.25);
+}
+
+/* Neon Badges */
+.neon-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+}
+
+.neon-badge-cyan {
+    background: linear-gradient(135deg, #00d2ff 0%, #00a8cc 100%);
+    color: white;
+}
+
+.neon-badge-purple {
+    background: linear-gradient(135deg, #bc13fe 0%, #9400d3 100%);
+    color: white;
+}
+
+.neon-badge-green {
+    background: linear-gradient(135deg, #39ff14 0%, #00cc00 100%);
+    color: #0F172A;
+}
+
+/* Neon Icons */
+.neon-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    transition: all 0.3s ease;
+}
+
+.neon-icon-cyan {
+    background: rgba(0, 210, 255, 0.15);
+    color: #00a8cc;
+}
+.neon-cyan:hover .neon-icon-cyan {
+    background: #00d2ff;
+    color: white;
+    box-shadow: 0 0 30px rgba(0, 210, 255, 0.6);
+}
+
+.neon-icon-purple {
+    background: rgba(188, 19, 254, 0.15);
+    color: #9400d3;
+}
+.neon-purple:hover .neon-icon-purple {
+    background: #bc13fe;
+    color: white;
+    box-shadow: 0 0 30px rgba(188, 19, 254, 0.6);
+}
+
+.neon-icon-green {
+    background: rgba(57, 255, 20, 0.15);
+    color: #00cc00;
+}
+.neon-green:hover .neon-icon-green {
+    background: #39ff14;
+    color: #0F172A;
+    box-shadow: 0 0 30px rgba(57, 255, 20, 0.6);
+}
+
+/* Connecting Arrow Icons - Gradient Style */
+.neon-arrow-icon {
+    font-size: 2rem;
+    background: linear-gradient(135deg, #00d2ff 0%, #bc13fe 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+</style>
 
 <!-- Call To Action -->
 <section class="py-5 bg-primary position-relative overflow-hidden">
