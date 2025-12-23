@@ -141,6 +141,43 @@ class UsersController extends AppController
     }
 
     /**
+     * Edit Profile method - Customer can edit their own profile
+     *
+     * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
+     */
+    public function editProfile()
+    {
+        $userId = $this->Authentication->getIdentity()->getIdentifier();
+        $user = $this->Users->get($userId, contain: []);
+
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $data = $this->request->getData();
+
+            // Only allow customers to update specific fields (not role)
+            $allowedFields = ['name', 'ic_number', 'email', 'phone', 'address', 'avatar'];
+
+            // Only include password if it's not empty
+            if (!empty($data['password'])) {
+                $allowedFields[] = 'password';
+            } else {
+                // Remove empty password from data to avoid validation errors
+                unset($data['password']);
+            }
+
+            $user = $this->Users->patchEntity($user, $data, [
+                'fields' => $allowedFields
+            ]);
+
+            if ($this->Users->save($user)) {
+                $this->Flash->success(__('Your profile has been updated.'));
+                return $this->redirect(['action' => 'myAccount']);
+            }
+            $this->Flash->error(__('Your profile could not be saved. Please, try again.'));
+        }
+        $this->set(compact('user'));
+    }
+
+    /**
      * Add method
      *
      * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.

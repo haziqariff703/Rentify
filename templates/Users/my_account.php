@@ -1,4 +1,5 @@
 <?php
+
 /**
  * My Account - Customer Profile View
  * @var \App\View\AppView $this
@@ -99,7 +100,7 @@
             <div class="col-auto">
                 <?= $this->Html->link(
                     '<i class="fas fa-edit me-2"></i>Edit Profile',
-                    ['action' => 'edit', $user->id],
+                    ['action' => 'editProfile'],
                     ['class' => 'btn btn-light btn-lg rounded-pill px-4', 'escape' => false]
                 ) ?>
             </div>
