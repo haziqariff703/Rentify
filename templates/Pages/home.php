@@ -20,13 +20,13 @@ $this->assign('title', 'Welcome to Rentify');
 
     <!-- Hero Content -->
     <div class="position-relative z-10 text-center container d-flex flex-column justify-content-center align-items-center" style="max-width: 900px;">
-        <h1 class="hero-headline animate-fade-in-up">
+        <h1 class="hero-headline">
             Luxury Performance.<br><span class="hero-headline-accent">Everyday Value.</span>
         </h1>
-        <p class="hero-subheadline animate-fade-in-up" style="animation-delay: 0.2s;">
+        <p class="hero-subheadline">
             Premium Fleets for Your Every Destination.
         </p>
-        <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center align-items-center animate-fade-in-up" style="animation-delay: 0.4s;">
+        <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center align-items-center">
             <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="hero-btn-primary">
                 <i class="bi bi-compass me-2"></i>Explore Now
             </a>

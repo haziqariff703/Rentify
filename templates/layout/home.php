@@ -58,6 +58,11 @@ $cakeDescription = 'Rentify - Premium Car Rental';
             z-index: 10;
         }
 
+        /* Homepage-only: Override navbar to fixed position (removes gap) */
+        #navbar {
+            position: fixed !important;
+        }
+
         /* Custom scrollbar for better aesthetics */
         ::-webkit-scrollbar {
             width: 8px;
