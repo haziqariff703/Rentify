@@ -1,6 +1,6 @@
 <?php
 /**
- * My Invoices - High-End Corporate Dashboard
+ * My Invoices - Clean Corporate Blue
  * @var \App\View\AppView $this
  * @var iterable<\App\Model\Entity\Invoice> $invoices
  */
@@ -67,12 +67,12 @@
     }
 
     /* ========================================
-       EXECUTIVE DARK HERO WIDGET
+       BRAND BLUE HERO WIDGET
        ======================================== */
     .hero-widget {
-        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
         border-radius: 20px;
-        box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.4);
+        box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.4);
         margin-bottom: 50px;
         padding: 40px;
         text-align: center;
@@ -84,7 +84,7 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 3px;
-        color: #94a3b8;
+        color: rgba(255, 255, 255, 0.8);
         margin-bottom: 10px;
     }
 
@@ -97,13 +97,13 @@
     }
 
     /* ========================================
-       OBSIDIAN TABLE CONTAINER
+       WHITE TABLE CONTAINER
        ======================================== */
-    .obsidian-card {
-        background: radial-gradient(circle at top center, #1e293b 0%, #020617 100%);
+    .white-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
         border-radius: 24px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
         padding: 40px;
         overflow: hidden;
     }
@@ -115,27 +115,27 @@
         border-radius: 12px;
     }
 
-    /* Custom Dark Scrollbar */
+    /* Custom Scrollbar */
     .table-scroll-wrapper::-webkit-scrollbar {
         width: 6px;
     }
 
     .table-scroll-wrapper::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.05);
+        background: #f1f5f9;
         border-radius: 3px;
     }
 
     .table-scroll-wrapper::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.2);
+        background: #cbd5e1;
         border-radius: 3px;
     }
 
     .table-scroll-wrapper::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 255, 255, 0.3);
+        background: #94a3b8;
     }
 
     /* ========================================
-       TABLE STYLING - DARK THEME
+       TABLE STYLING - LIGHT THEME
        ======================================== */
     .invoices-table {
         width: 100%;
@@ -155,20 +155,20 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 2px;
-        color: #cbd5e1;
+        color: #64748b;
         padding: 15px 18px;
         text-align: left;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        background: #020617;
+        border-bottom: 1px solid #e2e8f0;
+        background: #ffffff;
     }
 
     .invoices-table tbody tr {
         transition: background 0.3s ease;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        border-bottom: 1px solid #f1f5f9;
     }
 
     .invoices-table tbody tr:hover {
-        background: rgba(255, 255, 255, 0.03);
+        background: #f8fafc;
     }
 
     .invoices-table tbody tr:last-child {
@@ -177,7 +177,7 @@
 
     .invoices-table tbody td {
         font-family: 'Montserrat', sans-serif;
-        color: #f8fafc;
+        color: #334155;
         padding: 18px;
         font-size: 0.9rem;
         vertical-align: middle;
@@ -185,32 +185,32 @@
 
     /* Invoice Number */
     .invoice-number {
-        color: #60a5fa;
+        color: #2563eb;
         font-weight: 700;
         font-family: 'Courier New', monospace;
     }
 
     /* Date */
     .invoice-date {
-        color: #94a3b8;
+        color: #64748b;
         font-size: 0.85rem;
     }
 
     /* Car Name */
     .invoice-car {
-        color: #ffffff;
+        color: #1e293b;
         font-weight: 600;
     }
 
     .invoice-plate {
         font-family: 'Courier New', monospace;
         font-size: 0.75rem;
-        color: #64748b;
+        color: #94a3b8;
     }
 
     /* Amount */
     .invoice-amount {
-        color: #4ade80;
+        color: #059669;
         font-weight: 700;
     }
 
@@ -229,29 +229,29 @@
 
     .status-badge.paid {
         background: rgba(16, 185, 129, 0.1);
-        color: #34d399;
+        color: #059669;
         border: 1px solid rgba(16, 185, 129, 0.2);
     }
 
     .status-badge.unpaid {
         background: rgba(239, 68, 68, 0.1);
-        color: #f87171;
+        color: #dc2626;
         border: 1px solid rgba(239, 68, 68, 0.2);
     }
 
     .status-badge.cancelled {
         background: rgba(100, 116, 139, 0.1);
-        color: #94a3b8;
+        color: #64748b;
         border: 1px solid rgba(100, 116, 139, 0.2);
     }
 
     /* ========================================
        ACTION BUTTONS
        ======================================== */
-    .ghost-btn {
+    .outlined-btn {
         background: transparent;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        color: #ffffff;
+        border: 1px solid #e2e8f0;
+        color: #64748b;
         border-radius: 50px;
         padding: 8px 18px;
         font-family: 'Montserrat', sans-serif;
@@ -264,15 +264,15 @@
         gap: 6px;
     }
 
-    .ghost-btn:hover {
-        background: #ffffff;
-        color: #0f172a;
-        border-color: #ffffff;
+    .outlined-btn:hover {
+        background: #eff6ff;
+        color: #2563eb;
+        border-color: #bfdbfe;
         text-decoration: none;
     }
 
     .pay-btn {
-        background: #10b981;
+        background: #2563eb;
         border: none;
         color: #ffffff;
         border-radius: 50px;
@@ -288,7 +288,7 @@
     }
 
     .pay-btn:hover {
-        background: #059669;
+        background: #1d4ed8;
         color: #ffffff;
     }
 
@@ -302,26 +302,26 @@
 
     .invoices-empty i {
         font-size: 4rem;
-        color: #334155;
+        color: #cbd5e1;
         margin-bottom: 20px;
     }
 
     .invoices-empty h4 {
         font-family: 'Montserrat', sans-serif;
-        color: #e2e8f0;
+        color: #1e293b;
         font-weight: 600;
         margin-bottom: 10px;
     }
 
     .invoices-empty p {
-        color: #94a3b8;
+        color: #64748b;
     }
 
     /* ========================================
        RESPONSIVE
        ======================================== */
     @media (max-width: 768px) {
-        .obsidian-card {
+        .white-card {
             margin: 0 15px;
             padding: 25px;
             border-radius: 16px;
@@ -343,17 +343,17 @@
         .invoices-table tbody tr {
             display: block;
             margin-bottom: 15px;
-            background: rgba(0, 0, 0, 0.2);
+            background: #f8fafc;
             border-radius: 12px;
             padding: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid #e2e8f0;
         }
 
         .invoices-table tbody td {
             display: flex;
             justify-content: space-between;
             padding: 10px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid #e2e8f0;
         }
 
         .invoices-table tbody td:last-child {
@@ -371,7 +371,7 @@
     }
 </style>
 
-<!-- High-End Corporate Invoices Wrapper -->
+<!-- Clean Corporate Blue Invoices Wrapper -->
 <div class="invoices-corporate-wrapper">
     <div class="container">
         <!-- Page Header -->
@@ -380,7 +380,7 @@
             <h1 class="invoices-title">MY INVOICES</h1>
         </div>
 
-        <!-- Executive Dark Hero Widget -->
+        <!-- Brand Blue Hero Widget -->
         <div class="row justify-content-center">
             <div class="col-md-4">
                 <div class="hero-widget">
@@ -391,8 +391,8 @@
         </div>
 
         <?php if (!empty($invoices) && count($invoices) > 0): ?>
-            <!-- Obsidian Table Card -->
-            <div class="obsidian-card">
+            <!-- White Table Card -->
+            <div class="white-card">
                 <div class="table-scroll-wrapper">
                     <table class="invoices-table">
                         <thead>
@@ -449,13 +449,13 @@
                                             <?= $this->Html->link(
                                                 '<i class="fas fa-file-download"></i> Receipt',
                                                 ['action' => 'view', $invoice->id],
-                                                ['class' => 'ghost-btn', 'escape' => false]
+                                                ['class' => 'outlined-btn', 'escape' => false]
                                             ) ?>
                                         <?php else: ?>
                                             <?= $this->Html->link(
                                                 'View',
                                                 ['action' => 'view', $invoice->id],
-                                                ['class' => 'ghost-btn']
+                                                ['class' => 'outlined-btn']
                                             ) ?>
                                         <?php endif; ?>
                                     </td>
@@ -473,7 +473,7 @@
 
         <?php else: ?>
             <!-- Empty State -->
-            <div class="obsidian-card">
+            <div class="white-card">
                 <div class="invoices-empty">
                     <i class="fas fa-file-invoice-dollar"></i>
                     <h4>No Invoices Found</h4>

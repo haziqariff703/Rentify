@@ -1,6 +1,6 @@
 <?php
 /**
- * My Payment History - High Contrast: White Background + Dark Table
+ * My Payment History - Clean Corporate Blue
  * @var \App\View\AppView $this
  */
 $this->assign('title', 'My Payment History');
@@ -8,17 +8,23 @@ $this->assign('title', 'My Payment History');
 
 <style>
     /* Google Fonts - Montserrat */
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
 
     /* ========================================
-       PLATINUM DOT BACKGROUND (WHITE PAGE)
+       DIAGONAL MICRO-STRIPE BACKGROUND
        ======================================== */
-    .payments-platinum-wrapper {
+    .payments-corporate-wrapper {
         background-color: #f8fafc;
-        background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px);
-        background-size: 24px 24px;
+        background-image: repeating-linear-gradient(
+            135deg,
+            transparent,
+            transparent 10px,
+            rgba(148, 163, 184, 0.05) 10px,
+            rgba(148, 163, 184, 0.05) 11px
+        );
+        background-attachment: fixed;
         min-height: 100vh;
-        padding: 40px 0 60px;
+        padding: 50px 0 80px;
         /* Pull up to cancel layout pt-5 gap */
         margin-top: -3rem;
         /* FORCE FULL VIEWPORT WIDTH */
@@ -31,38 +37,49 @@ $this->assign('title', 'My Payment History');
     }
 
     /* ========================================
-       OBSIDIAN DARK TABLE CONTAINER
-       (Floating on White Background)
+       WHITE PANEL CONTAINER + BLUE GLOW
        ======================================== */
-    .obsidian-panel {
-        background: radial-gradient(circle at top center, #1e293b 0%, #020617 100%);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+    .white-panel {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
         border-radius: 24px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 20px 50px -12px rgba(37, 99, 235, 0.15);
         padding: 50px;
         max-width: 1200px;
         margin: 0 auto;
+        overflow: visible;
     }
 
     /* ========================================
-       HEADER - SILVER/WHITE GRADIENT
+       HEADER - BRAND BLUE
        ======================================== */
     .payments-header {
         font-family: 'Montserrat', sans-serif;
         font-weight: 700;
         font-size: 1.75rem;
-        letter-spacing: 3px;
+        letter-spacing: 2px;
         text-transform: uppercase;
         text-align: center;
-        margin-bottom: 50px;
-        background: linear-gradient(to right, #f8fafc, #94a3b8);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        margin-bottom: 40px;
+        color: #2563eb;
+        position: relative;
+        padding-bottom: 20px;
+    }
+
+    .payments-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, #2563eb, #3b82f6);
+        border-radius: 2px;
     }
 
     /* ========================================
-       TABLE STYLING - DARK THEME
+       SCROLL WRAPPER
        ======================================== */
     .table-scroll-wrapper {
         max-height: 400px;
@@ -70,31 +87,35 @@ $this->assign('title', 'My Payment History');
         border-radius: 12px;
     }
 
-    /* Custom Dark Scrollbar */
+    /* Custom Light Scrollbar */
     .table-scroll-wrapper::-webkit-scrollbar {
         width: 6px;
     }
 
     .table-scroll-wrapper::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.05);
+        background: #f1f5f9;
         border-radius: 3px;
     }
 
     .table-scroll-wrapper::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.2);
+        background: #cbd5e1;
         border-radius: 3px;
     }
 
     .table-scroll-wrapper::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 255, 255, 0.3);
+        background: #94a3b8;
     }
 
+    /* ========================================
+       TABLE STYLING - LIGHT THEME
+       ======================================== */
     .payments-table {
         width: 100%;
-        border-collapse: collapse;
+        border-collapse: separate;
+        border-spacing: 0;
     }
 
-    /* Sticky Header */
+    /* Sticky Header - BRAND BLUE STRIP */
     .payments-table thead {
         position: sticky;
         top: 0;
@@ -107,20 +128,28 @@ $this->assign('title', 'My Payment History');
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 2px;
-        color: #94a3b8;
-        padding: 15px 20px;
+        color: #ffffff;
+        padding: 16px 20px;
         text-align: left;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        background: #020617;
+        background: linear-gradient(90deg, #1e3a8a 0%, #2563eb 100%);
+        border-bottom: none;
+    }
+
+    .payments-table thead th:first-child {
+        border-radius: 12px 0 0 0;
+    }
+
+    .payments-table thead th:last-child {
+        border-radius: 0 12px 0 0;
     }
 
     .payments-table tbody tr {
         transition: background 0.3s ease;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        border-bottom: 1px solid #f1f5f9;
     }
 
     .payments-table tbody tr:hover {
-        background: rgba(255, 255, 255, 0.03);
+        background: #f8fafc;
     }
 
     .payments-table tbody tr:last-child {
@@ -129,7 +158,7 @@ $this->assign('title', 'My Payment History');
 
     .payments-table tbody td {
         font-family: 'Montserrat', sans-serif;
-        color: #f8fafc;
+        color: #334155;
         padding: 20px;
         font-size: 0.9rem;
         vertical-align: middle;
@@ -137,40 +166,39 @@ $this->assign('title', 'My Payment History');
 
     /* Date styling */
     .payment-date {
-        color: #94a3b8;
+        color: #64748b;
         font-size: 0.85rem;
     }
 
-    /* Booking ID */
+    /* Booking ID - Brand Blue */
     .payment-booking-id {
-        color: #60a5fa;
-        font-weight: 600;
+        color: #2563eb;
+        font-weight: 700;
     }
 
     /* Payment Method */
     .payment-method {
-        color: #cbd5e1;
+        color: #475569;
     }
 
     .payment-method i {
         margin-right: 8px;
-        color: #64748b;
+        color: #94a3b8;
     }
 
     /* Amount - Emerald Green */
     .payment-amount {
-        color: #4ade80;
+        color: #059669;
         font-weight: 700;
-        font-size: 0.95rem;
     }
 
     /* ========================================
        SUCCESS BADGE - GREEN PILL
        ======================================== */
     .payment-badge {
-        background: rgba(16, 185, 129, 0.15);
-        color: #34d399;
-        border: 1px solid rgba(16, 185, 129, 0.3);
+        background: rgba(16, 185, 129, 0.1);
+        color: #059669;
+        border: 1px solid rgba(16, 185, 129, 0.2);
         border-radius: 50px;
         padding: 6px 14px;
         font-size: 0.7rem;
@@ -187,29 +215,29 @@ $this->assign('title', 'My Payment History');
     }
 
     .payment-badge.pending {
-        background: rgba(245, 158, 11, 0.15);
-        color: #fbbf24;
-        border-color: rgba(245, 158, 11, 0.3);
+        background: rgba(245, 158, 11, 0.1);
+        color: #d97706;
+        border-color: rgba(245, 158, 11, 0.2);
     }
 
     .payment-badge.failed {
-        background: rgba(239, 68, 68, 0.15);
-        color: #f87171;
-        border-color: rgba(239, 68, 68, 0.3);
+        background: rgba(239, 68, 68, 0.1);
+        color: #dc2626;
+        border-color: rgba(239, 68, 68, 0.2);
     }
 
     /* ========================================
-       GHOST WHITE BUTTON
+       SOFT BLUE BUTTON
        ======================================== */
-    .ghost-btn {
-        background: transparent;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        color: #ffffff;
+    .soft-blue-btn {
+        background: rgba(37, 99, 235, 0.1);
+        border: none;
+        color: #2563eb;
         border-radius: 8px;
         padding: 8px 18px;
         font-family: 'Montserrat', sans-serif;
         font-size: 0.75rem;
-        font-weight: 500;
+        font-weight: 600;
         letter-spacing: 0.5px;
         text-decoration: none;
         transition: all 0.3s ease;
@@ -218,10 +246,9 @@ $this->assign('title', 'My Payment History');
         gap: 6px;
     }
 
-    .ghost-btn:hover {
-        background: #ffffff;
-        color: #0f172a;
-        border-color: #ffffff;
+    .soft-blue-btn:hover {
+        background: #2563eb;
+        color: #ffffff;
         text-decoration: none;
     }
 
@@ -231,26 +258,26 @@ $this->assign('title', 'My Payment History');
     .payments-empty {
         text-align: center;
         padding: 60px 20px;
-        color: #94a3b8;
+        color: #64748b;
     }
 
     .payments-empty i {
         font-size: 4rem;
         margin-bottom: 20px;
-        color: #475569;
+        color: #cbd5e1;
     }
 
     .payments-empty h4 {
         font-family: 'Montserrat', sans-serif;
-        color: #f8fafc;
+        color: #1e293b;
         font-weight: 600;
         margin-bottom: 10px;
     }
 
     .payments-empty .btn-browse {
-        background: transparent;
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: #2563eb;
         color: #ffffff;
+        border: none;
         border-radius: 10px;
         padding: 12px 24px;
         font-family: 'Montserrat', sans-serif;
@@ -263,15 +290,14 @@ $this->assign('title', 'My Payment History');
     }
 
     .payments-empty .btn-browse:hover {
-        background: #ffffff;
-        color: #0f172a;
+        background: #1d4ed8;
     }
 
     /* ========================================
        RESPONSIVE
        ======================================== */
     @media (max-width: 768px) {
-        .obsidian-panel {
+        .white-panel {
             margin: 0 15px;
             padding: 30px 20px;
             border-radius: 16px;
@@ -290,17 +316,17 @@ $this->assign('title', 'My Payment History');
         .payments-table tbody tr {
             display: block;
             margin-bottom: 15px;
-            background: rgba(0, 0, 0, 0.2);
+            background: #f8fafc;
             border-radius: 12px;
             padding: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid #e2e8f0;
         }
         
         .payments-table tbody td {
             display: flex;
             justify-content: space-between;
             padding: 10px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid #e2e8f0;
         }
         
         .payments-table tbody td:last-child {
@@ -318,12 +344,12 @@ $this->assign('title', 'My Payment History');
     }
 </style>
 
-<!-- Platinum Background + Dark Table -->
-<div class="payments-platinum-wrapper">
+<!-- Clean Corporate Blue Payment History Wrapper -->
+<div class="payments-corporate-wrapper">
     <div class="container">
-        <!-- Obsidian Dark Panel -->
-        <div class="obsidian-panel">
-            <!-- Header - Silver Gradient -->
+        <!-- White Panel Container -->
+        <div class="white-panel">
+            <!-- Header - Dark Slate -->
             <h1 class="payments-header">Payment History</h1>
 
             <!-- Table -->
@@ -368,7 +394,7 @@ $this->assign('title', 'My Payment History');
                                 <?= $this->Html->link(
                                     '<i class="fas fa-eye"></i>View',
                                     ['action' => 'view', $payment->id],
-                                    ['class' => 'ghost-btn', 'escape' => false]
+                                    ['class' => 'soft-blue-btn', 'escape' => false]
                                 ) ?>
                             </td>
                         </tr>
