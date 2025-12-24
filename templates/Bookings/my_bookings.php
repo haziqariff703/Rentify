@@ -1,6 +1,6 @@
 <?php
 /**
- * My Bookings - Minimalist Corporate Boarding Pass
+ * My Bookings - High-End Corporate Edition
  * @var \App\View\AppView $this
  * @var iterable<\App\Model\Entity\Booking> $bookings
  */
@@ -8,17 +8,23 @@
 
 <style>
     /* Google Fonts - Montserrat */
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
 
     /* ========================================
-       PLATINUM DOT BACKGROUND
+       DIAGONAL MICRO-STRIPE BACKGROUND
        ======================================== */
     .bookings-corporate-wrapper {
         background-color: #f8fafc;
-        background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px);
-        background-size: 24px 24px;
+        background-image: repeating-linear-gradient(
+            135deg,
+            transparent,
+            transparent 10px,
+            rgba(148, 163, 184, 0.05) 10px,
+            rgba(148, 163, 184, 0.05) 11px
+        );
+        background-attachment: fixed;
         min-height: 100vh;
-        padding: 40px 0 60px;
+        padding: 50px 0 80px;
         /* Pull up to cancel layout pt-5 gap */
         margin-top: -3rem;
         /* FORCE FULL VIEWPORT WIDTH */
@@ -31,74 +37,94 @@
     }
 
     /* ========================================
-       PAGE HEADER
+       EDITORIAL HEADER - COMPACT
        ======================================== */
-    .bookings-page-header {
+    .editorial-header {
         text-align: center;
-        margin-bottom: 50px;
+        margin-bottom: 35px;
     }
 
-    .bookings-page-header h1 {
+    .editorial-subtitle {
         font-family: 'Montserrat', sans-serif;
-        font-weight: 700;
-        font-size: 2.25rem;
-        color: #1e293b;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        color: #94a3b8;
         margin-bottom: 8px;
     }
 
-    .bookings-page-header p {
+    .editorial-title {
         font-family: 'Montserrat', sans-serif;
-        color: #64748b;
-        font-size: 0.95rem;
+        font-weight: 900;
+        font-size: 2.5rem;
+        letter-spacing: -2px;
+        background: linear-gradient(to bottom, #1e293b, #475569);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0;
+        line-height: 1.1;
     }
 
     /* ========================================
-       BOARDING PASS CARD
+       COMPOSITE TICKET CARD - COMPACT
        ======================================== */
-    .boarding-pass {
+    .composite-ticket {
         background: #ffffff;
-        border: none;
-        border-radius: 20px;
-        box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.05);
-        margin-bottom: 30px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.08);
+        border-radius: 18px;
         overflow: hidden;
         display: flex;
         flex-direction: row;
-        transition: all 0.3s ease;
+        margin-bottom: 20px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        min-height: 180px;
     }
 
-    .boarding-pass:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 25px 50px -5px rgba(0, 0, 0, 0.1);
+    .composite-ticket:hover {
+        transform: translateY(-5px) scale(1.005);
+        box-shadow: 0 30px 60px -12px rgba(37, 99, 235, 0.15);
     }
 
-    .boarding-pass.cancelled {
-        opacity: 0.7;
+    .composite-ticket.cancelled {
+        opacity: 0.65;
     }
 
-    .boarding-pass.cancelled .pass-image img {
+    .composite-ticket.cancelled .ticket-image img {
         filter: grayscale(100%);
     }
 
     /* ========================================
-       IMAGE SECTION (LEFT)
+       LEFT - IMAGE SECTION (30%) - COMPACT
        ======================================== */
-    .pass-image {
-        width: 250px;
-        min-width: 250px;
+    .ticket-image {
+        width: 30%;
+        min-width: 200px;
         position: relative;
         overflow: hidden;
     }
 
-    .pass-image img {
+    .ticket-image img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        border-top-left-radius: 20px;
-        border-bottom-left-radius: 20px;
     }
 
-    .pass-image-placeholder {
+    /* Gradient Fade to White */
+    .ticket-image::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 60px;
+        height: 100%;
+        background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+        pointer-events: none;
+    }
+
+    .ticket-image-placeholder {
         width: 100%;
         height: 100%;
         min-height: 180px;
@@ -110,186 +136,210 @@
         color: #94a3b8;
     }
 
-    .pass-image-placeholder i {
-        font-size: 2.5rem;
-        margin-bottom: 10px;
+    .ticket-image-placeholder i {
+        font-size: 2rem;
+        margin-bottom: 8px;
     }
 
-    /* ========================================
-       CONTENT SECTION (RIGHT)
-       ======================================== */
-    .pass-content {
-        flex: 1;
-        padding: 30px;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        gap: 30px;
-    }
-
-    /* Itinerary (Middle) */
-    .pass-itinerary {
-        flex: 1;
-    }
-
-    .pass-car-name {
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 700;
-        font-size: 1.5rem;
-        color: #1e293b;
-        margin-bottom: 4px;
-    }
-
-    .pass-plate {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.8rem;
-        color: #64748b;
-        margin-bottom: 20px;
-    }
-
-    /* Timeline */
-    .pass-timeline {
-        display: flex;
-        align-items: center;
-        gap: 30px;
-    }
-
-    .timeline-item {
-        text-align: left;
-    }
-
-    .timeline-label {
+    /* Refund Badge */
+    .refund-overlay {
+        position: absolute;
+        bottom: 15px;
+        left: 15px;
+        background: rgba(245, 158, 11, 0.95);
+        color: #ffffff;
+        padding: 6px 14px;
+        border-radius: 8px;
         font-family: 'Montserrat', sans-serif;
         font-size: 0.7rem;
         font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: #94a3b8;
-        margin-bottom: 4px;
-    }
-
-    .timeline-date {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 1rem;
-        font-weight: 700;
-        color: #1e293b;
-    }
-
-    .timeline-divider {
-        width: 1px;
-        height: 40px;
-        background: #e2e8f0;
+        z-index: 2;
     }
 
     /* ========================================
-       ACTION ZONE (RIGHT)
+       RIGHT - DETAILS SECTION (70%) - COMPACT
        ======================================== */
-    .pass-actions {
+    .ticket-details {
+        flex: 1;
+        padding: 20px 25px 25px;
         display: flex;
         flex-direction: column;
-        align-items: flex-end;
         justify-content: space-between;
-        min-width: 160px;
     }
 
-    /* Status Badge with Pulse */
-    .pass-status {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 16px;
-        border-radius: 50px;
+    /* Top Section: Car Info + Status */
+    .ticket-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 12px;
+    }
+
+    .ticket-car-info {
+        flex: 1;
+    }
+
+    .ticket-car-name {
         font-family: 'Montserrat', sans-serif;
-        font-size: 0.75rem;
+        font-weight: 800;
+        font-size: 1.4rem;
+        letter-spacing: -0.5px;
+        color: #0f172a;
+        margin-bottom: 6px;
+        line-height: 1.2;
+    }
+
+    /* Code Badge - Plate Number - COMPACT */
+    .ticket-plate {
+        font-family: 'Courier New', monospace;
+        font-size: 0.7rem;
         font-weight: 600;
+        color: #64748b;
+        background: #f1f5f9;
+        padding: 2px 8px;
+        border-radius: 4px;
+        border: 1px solid #e2e8f0;
+        display: inline-block;
+    }
+
+    /* Status Indicator - Minimalist */
+    .ticket-status {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .status-text {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.65rem;
+        font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
 
-    .pass-status.confirmed {
-        background: rgba(16, 185, 129, 0.1);
-        color: #059669;
-    }
+    .status-text.confirmed { color: #065f46; }
+    .status-text.pending { color: #92400e; }
+    .status-text.completed { color: #1e40af; }
+    .status-text.cancelled, .status-text.refunded { color: #991b1b; }
 
-    .pass-status.pending {
-        background: rgba(245, 158, 11, 0.1);
-        color: #d97706;
-    }
-
-    .pass-status.completed {
-        background: rgba(59, 130, 246, 0.1);
-        color: #2563eb;
-    }
-
-    .pass-status.cancelled,
-    .pass-status.refunded {
-        background: rgba(239, 68, 68, 0.1);
-        color: #dc2626;
-    }
-
-    /* Pulse Dot */
-    .pulse-dot {
-        width: 8px;
-        height: 8px;
+    /* Pulsing Dot */
+    .status-dot {
+        width: 10px;
+        height: 10px;
         border-radius: 50%;
-        background: currentColor;
-        animation: pulse 2s infinite;
+        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+        animation: pulse-ring 2s infinite;
     }
 
-    @keyframes pulse {
-        0% { opacity: 1; transform: scale(1); }
-        50% { opacity: 0.5; transform: scale(1.2); }
-        100% { opacity: 1; transform: scale(1); }
+    .status-dot.confirmed { background: #10b981; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2); }
+    .status-dot.pending { background: #f59e0b; box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2); }
+    .status-dot.completed { background: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2); }
+    .status-dot.cancelled, .status-dot.refunded { background: #ef4444; box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2); }
+
+    @keyframes pulse-ring {
+        0% { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
+        50% { box-shadow: 0 0 0 8px transparent; opacity: 0.5; }
+        100% { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
     }
 
-    /* Price */
-    .pass-price {
+    /* ========================================
+       MIDDLE - DATES (WITH TEAR LINE) - COMPACT
+       ======================================== */
+    .ticket-dates {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+        padding: 12px 0;
+        border-top: 1px dashed #e2e8f0;
+        border-bottom: 1px dashed #e2e8f0;
+        margin-bottom: 12px;
+    }
+
+    .date-block {
+        flex: 1;
+    }
+
+    .date-label {
         font-family: 'Montserrat', sans-serif;
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: #2563eb;
-        margin: 15px 0;
+        font-size: 0.55rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #94a3b8;
+        margin-bottom: 3px;
     }
 
-    .pass-price small {
-        font-size: 0.9rem;
-        font-weight: 500;
+    .date-value {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #334155;
+    }
+
+    .date-divider {
+        width: 1px;
+        height: 35px;
+        background: #e2e8f0;
+    }
+
+    /* ========================================
+       BOTTOM - PRICE + ACTIONS - COMPACT
+       ======================================== */
+    .ticket-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .ticket-price {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.6rem;
+        font-weight: 900;
+        letter-spacing: -1px;
+        color: #2563eb;
+    }
+
+    .ticket-price small {
+        font-size: 0.85rem;
+        font-weight: 600;
         color: #64748b;
     }
 
-    /* Action Buttons */
-    .pass-buttons {
+    .ticket-actions {
         display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 8px;
+        align-items: center;
+        gap: 10px;
     }
 
-    .pass-btn-icon {
-        width: 40px;
-        height: 40px;
+    /* Icon Button - COMPACT */
+    .ticket-btn-icon {
+        width: 36px;
+        height: 36px;
         border-radius: 10px;
         background: #f1f5f9;
-        border: none;
+        border: 1px solid #e2e8f0;
         color: #64748b;
         display: flex;
         align-items: center;
         justify-content: center;
         text-decoration: none;
         transition: all 0.2s ease;
+        font-size: 1rem;
     }
 
-    .pass-btn-icon:hover {
+    .ticket-btn-icon:hover {
         background: #2563eb;
+        border-color: #2563eb;
         color: #ffffff;
     }
 
-    .pass-btn-pay {
+    /* Pay Button */
+    .ticket-btn-pay {
         background: #2563eb;
         color: #ffffff;
         border: none;
-        border-radius: 10px;
-        padding: 10px 20px;
+        border-radius: 12px;
+        padding: 12px 24px;
         font-family: 'Montserrat', sans-serif;
         font-size: 0.85rem;
         font-weight: 600;
@@ -297,36 +347,22 @@
         transition: all 0.2s ease;
     }
 
-    .pass-btn-pay:hover {
+    .ticket-btn-pay:hover {
         background: #1d4ed8;
         color: #ffffff;
     }
 
-    .pass-cancel-link {
+    /* Cancel Link */
+    .ticket-cancel-link {
         font-family: 'Montserrat', sans-serif;
         font-size: 0.75rem;
         color: #ef4444;
         text-decoration: none;
-        margin-top: 5px;
     }
 
-    .pass-cancel-link:hover {
+    .ticket-cancel-link:hover {
         text-decoration: underline;
         color: #dc2626;
-    }
-
-    /* Refund Badge */
-    .refund-badge {
-        position: absolute;
-        bottom: 10px;
-        left: 10px;
-        background: rgba(245, 158, 11, 0.9);
-        color: #ffffff;
-        padding: 6px 12px;
-        border-radius: 8px;
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.7rem;
-        font-weight: 600;
     }
 
     /* ========================================
@@ -334,40 +370,42 @@
        ======================================== */
     .bookings-empty {
         text-align: center;
-        padding: 80px 20px;
+        padding: 100px 20px;
         background: #ffffff;
-        border-radius: 20px;
-        box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.05);
+        border-radius: 24px;
+        box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.08);
     }
 
     .bookings-empty i {
-        font-size: 4rem;
+        font-size: 5rem;
         color: #cbd5e1;
-        margin-bottom: 20px;
+        margin-bottom: 25px;
     }
 
     .bookings-empty h4 {
         font-family: 'Montserrat', sans-serif;
-        font-weight: 600;
+        font-weight: 700;
+        font-size: 1.5rem;
         color: #1e293b;
         margin-bottom: 10px;
     }
 
     .bookings-empty p {
         color: #64748b;
-        margin-bottom: 20px;
+        margin-bottom: 25px;
     }
 
     .bookings-empty .btn-book {
         background: #2563eb;
         color: #ffffff;
         border: none;
-        border-radius: 12px;
-        padding: 14px 30px;
+        border-radius: 14px;
+        padding: 16px 36px;
         font-family: 'Montserrat', sans-serif;
-        font-weight: 600;
+        font-weight: 700;
         text-decoration: none;
         transition: all 0.2s ease;
+        display: inline-block;
     }
 
     .bookings-empty .btn-book:hover {
@@ -378,49 +416,61 @@
        RESPONSIVE
        ======================================== */
     @media (max-width: 991px) {
-        .boarding-pass {
+        .composite-ticket {
             flex-direction: column;
         }
 
-        .pass-image {
+        .ticket-image {
             width: 100%;
-            height: 200px;
+            height: 220px;
         }
 
-        .pass-image img {
-            border-radius: 20px 20px 0 0;
+        .ticket-image::after {
+            display: none;
         }
 
-        .pass-content {
+        .ticket-details {
+            padding: 25px;
+        }
+
+        .editorial-title {
+            font-size: 2.5rem;
+        }
+
+        .ticket-car-name {
+            font-size: 1.5rem;
+        }
+
+        .ticket-price {
+            font-size: 1.8rem;
+        }
+
+        .ticket-bottom {
             flex-direction: column;
             gap: 20px;
+            align-items: flex-start;
         }
 
-        .pass-actions {
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-            min-width: auto;
-        }
-
-        .pass-buttons {
-            flex-direction: row;
+        .ticket-actions {
+            width: 100%;
+            justify-content: flex-start;
         }
     }
 
     @media (max-width: 576px) {
-        .pass-timeline {
+        .ticket-dates {
             flex-direction: column;
+            gap: 20px;
             align-items: flex-start;
-            gap: 15px;
         }
 
-        .timeline-divider {
+        .date-divider {
             display: none;
         }
 
-        .pass-price {
-            font-size: 1.5rem;
+        .ticket-top {
+            flex-direction: column;
+            gap: 15px;
         }
     }
 
@@ -433,13 +483,13 @@
     }
 </style>
 
-<!-- Minimalist Corporate Bookings Wrapper -->
+<!-- High-End Corporate Bookings Wrapper -->
 <div class="bookings-corporate-wrapper">
     <div class="container">
-        <!-- Page Header -->
-        <div class="bookings-page-header">
-            <h1>My Reservations</h1>
-            <p>Manage your trips and transactions</p>
+        <!-- Editorial Header -->
+        <div class="editorial-header">
+            <div class="editorial-subtitle">Manage Your Trips</div>
+            <h1 class="editorial-title">MY RESERVATIONS</h1>
         </div>
 
         <!-- Flash Messages -->
@@ -452,7 +502,7 @@
         <?php if (!empty($bookings) && count($bookings) > 0): ?>
             <!-- Bookings List -->
             <div class="row justify-content-center">
-                <div class="col-md-10">
+                <div class="col-lg-10">
                     <?php foreach ($bookings as $booking): ?>
                         <?php 
                             $isCancelled = in_array($booking->booking_status, ['cancelled', 'refunded']);
@@ -486,76 +536,72 @@
                             };
                         ?>
 
-                        <!-- Boarding Pass Card -->
-                        <div class="boarding-pass <?= $cardClass ?>">
-                            <!-- Image Section -->
-                            <div class="pass-image">
+                        <!-- Composite Ticket Card -->
+                        <div class="composite-ticket <?= $cardClass ?>">
+                            <!-- Left - Image -->
+                            <div class="ticket-image">
                                 <?php if (!empty($booking->car->image) && file_exists(WWW_ROOT . 'img' . DS . $booking->car->image)): ?>
                                     <img src="<?= $this->Url->webroot('img/' . $booking->car->image) ?>" alt="Car">
                                 <?php else: ?>
-                                    <div class="pass-image-placeholder">
+                                    <div class="ticket-image-placeholder">
                                         <i class="fas fa-car"></i>
                                         <span>No Image</span>
                                     </div>
                                 <?php endif; ?>
 
                                 <?php if ($isRefunded): ?>
-                                    <div class="refund-badge">
+                                    <div class="refund-overlay">
                                         <i class="fas fa-money-bill-wave me-1"></i>Refund Processed
                                     </div>
                                 <?php endif; ?>
                             </div>
 
-                            <!-- Content Section -->
-                            <div class="pass-content">
-                                <!-- Itinerary -->
-                                <div class="pass-itinerary">
-                                    <h3 class="pass-car-name">
-                                        <?= h($booking->car->brand ?? '') ?> <?= h($booking->car->car_model ?? 'Vehicle') ?>
-                                    </h3>
-                                    <div class="pass-plate">
-                                        <?= h($booking->car->plate_number ?? 'N/A') ?>
+                            <!-- Right - Details -->
+                            <div class="ticket-details">
+                                <!-- Top: Car Info + Status -->
+                                <div class="ticket-top">
+                                    <div class="ticket-car-info">
+                                        <h3 class="ticket-car-name">
+                                            <?= h($booking->car->brand ?? '') ?> <?= h($booking->car->car_model ?? 'Vehicle') ?>
+                                        </h3>
+                                        <span class="ticket-plate">
+                                            <?= h($booking->car->plate_number ?? 'N/A') ?>
+                                        </span>
                                     </div>
+                                    <div class="ticket-status">
+                                        <span class="status-dot <?= $statusClass ?>"></span>
+                                        <span class="status-text <?= $statusClass ?>"><?= $statusLabel ?></span>
+                                    </div>
+                                </div>
 
-                                    <!-- Timeline -->
-                                    <div class="pass-timeline">
-                                        <div class="timeline-item">
-                                            <div class="timeline-label">Pick Up</div>
-                                            <div class="timeline-date">
-                                                <?= $booking->start_date ? $booking->start_date->format('d M Y') : '-' ?>
-                                            </div>
+                                <!-- Middle: Dates -->
+                                <div class="ticket-dates">
+                                    <div class="date-block">
+                                        <div class="date-label">Pick Up</div>
+                                        <div class="date-value">
+                                            <?= $booking->start_date ? $booking->start_date->format('d M Y') : '-' ?>
                                         </div>
-                                        <div class="timeline-divider"></div>
-                                        <div class="timeline-item">
-                                            <div class="timeline-label">Return</div>
-                                            <div class="timeline-date">
-                                                <?= $booking->end_date ? $booking->end_date->format('d M Y') : '-' ?>
-                                            </div>
+                                    </div>
+                                    <div class="date-divider"></div>
+                                    <div class="date-block">
+                                        <div class="date-label">Return</div>
+                                        <div class="date-value">
+                                            <?= $booking->end_date ? $booking->end_date->format('d M Y') : '-' ?>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Action Zone -->
-                                <div class="pass-actions">
-                                    <!-- Status Badge -->
-                                    <div class="pass-status <?= $statusClass ?>">
-                                        <?php if ($statusClass === 'confirmed'): ?>
-                                            <span class="pulse-dot"></span>
-                                        <?php endif; ?>
-                                        <?= $statusLabel ?>
-                                    </div>
-
-                                    <!-- Price -->
-                                    <div class="pass-price">
+                                <!-- Bottom: Price + Actions -->
+                                <div class="ticket-bottom">
+                                    <div class="ticket-price">
                                         <small>RM</small> <?= number_format((float)$booking->total_price, 2) ?>
                                     </div>
 
-                                    <!-- Buttons -->
-                                    <div class="pass-buttons">
+                                    <div class="ticket-actions">
                                         <?= $this->Html->link(
                                             '<i class="fas fa-file-invoice"></i>',
                                             ['action' => 'view', $booking->id],
-                                            ['class' => 'pass-btn-icon', 'escape' => false, 'title' => 'View Receipt']
+                                            ['class' => 'ticket-btn-icon', 'escape' => false, 'title' => 'View Receipt']
                                         ) ?>
 
                                         <?php
@@ -572,27 +618,27 @@
                                             <?= $this->Html->link(
                                                 'Pay Now',
                                                 ['controller' => 'Invoices', 'action' => 'view', $unpaidInvoice->id],
-                                                ['class' => 'pass-btn-pay']
+                                                ['class' => 'ticket-btn-pay']
                                             ) ?>
+                                        <?php endif; ?>
+
+                                        <?php if (!$isCancelled && $booking->booking_status !== 'completed'): ?>
+                                            <?php 
+                                                $today = date('Y-m-d');
+                                                $startDate = $booking->start_date ? $booking->start_date->format('Y-m-d') : '';
+                                            ?>
+                                            <?php if ($startDate > $today): ?>
+                                                <?= $this->Form->postLink(
+                                                    'Cancel',
+                                                    ['action' => 'cancelBooking', $booking->id],
+                                                    [
+                                                        'class' => 'ticket-cancel-link',
+                                                        'confirm' => __('Are you sure? If you have paid, a refund request will be sent to the Admin.')
+                                                    ]
+                                                ) ?>
+                                            <?php endif; ?>
                                         <?php endif; ?>
                                     </div>
-
-                                    <?php if (!$isCancelled && $booking->booking_status !== 'completed'): ?>
-                                        <?php 
-                                            $today = date('Y-m-d');
-                                            $startDate = $booking->start_date ? $booking->start_date->format('Y-m-d') : '';
-                                        ?>
-                                        <?php if ($startDate > $today): ?>
-                                            <?= $this->Form->postLink(
-                                                'Cancel Booking',
-                                                ['action' => 'cancelBooking', $booking->id],
-                                                [
-                                                    'class' => 'pass-cancel-link',
-                                                    'confirm' => __('Are you sure? If you have paid, a refund request will be sent to the Admin.')
-                                                ]
-                                            ) ?>
-                                        <?php endif; ?>
-                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -608,7 +654,7 @@
         <?php else: ?>
             <!-- Empty State -->
             <div class="row justify-content-center">
-                <div class="col-md-8">
+                <div class="col-lg-8">
                     <div class="bookings-empty">
                         <i class="fas fa-calendar-alt"></i>
                         <h4>No Reservations Yet</h4>
