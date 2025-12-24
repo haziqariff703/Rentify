@@ -91,7 +91,7 @@
                 </div>
             </div>
             <div style="height: 280px;">
-                <canvas id="highlightChart"></canvas>
+                <div id="highlightChart"></div>
             </div>
         </div>
     </div>
@@ -105,7 +105,7 @@
                 <span class="side-widget-value"><?= number_format($totalBookings) ?></span>
             </div>
             <div style="height: 60px;">
-                <canvas id="ordersChart"></canvas>
+                <div id="ordersChart"></div>
             </div>
         </div>
 
@@ -116,7 +116,7 @@
             </div>
             <div class="earnings-amount">$<?= number_format($totalRevenue, 2) ?></div>
             <div style="height: 50px; margin-top: 8px;">
-                <canvas id="earningsChart"></canvas>
+                <div id="earningsChart"></div>
             </div>
         </div>
 
@@ -126,7 +126,7 @@
                 <span class="side-widget-title">Fleet Status</span>
             </div>
             <div style="height: 120px; display: flex; align-items: center; justify-content: center;">
-                <canvas id="fleetChart"></canvas>
+                <div id="fleetChart"></div>
             </div>
         </div>
     </div>
@@ -187,186 +187,217 @@
     </table>
 </div>
 
-<!-- Chart.js Initialization -->
+<!-- ApexCharts Initialization -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        Chart.defaults.font.family = "'Inter', sans-serif";
-        Chart.defaults.color = '#64748b';
-
-        // 1. Highlight Chart (Area Chart)
-        const ctxHighlight = document.getElementById('highlightChart').getContext('2d');
-
-        let gradientBlue = ctxHighlight.createLinearGradient(0, 0, 0, 280);
-        gradientBlue.addColorStop(0, 'rgba(99, 102, 241, 0.3)');
-        gradientBlue.addColorStop(1, 'rgba(99, 102, 241, 0)');
-
-        let gradientGreen = ctxHighlight.createLinearGradient(0, 0, 0, 280);
-        gradientGreen.addColorStop(0, 'rgba(34, 197, 94, 0.3)');
-        gradientGreen.addColorStop(1, 'rgba(34, 197, 94, 0)');
-
-        new Chart(ctxHighlight, {
-            type: 'line',
-            data: {
-                labels: <?= json_encode($revenueLabels ?? []) ?>,
-                datasets: [{
-                    label: 'Revenue',
-                    data: <?= json_encode($revenueData ?? []) ?>,
-                    borderColor: '#6366f1',
-                    backgroundColor: gradientBlue,
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 0,
-                    pointHoverRadius: 6,
-                    pointHoverBackgroundColor: '#6366f1'
-                }, {
-                    label: 'Bookings',
-                    data: <?= json_encode(array_map(fn($v) => $v * 0.6, $revenueData ?? [])) ?>,
-                    borderColor: '#22c55e',
-                    backgroundColor: gradientGreen,
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 0,
-                    pointHoverRadius: 6,
-                    pointHoverBackgroundColor: '#22c55e'
-                }]
+        // 1. Highlight Chart (Spline Area Chart for Revenue & Bookings)
+        const highlightOptions = {
+            series: [{
+                name: 'Revenue',
+                data: <?= json_encode($revenueData ?? []) ?>
+            }, {
+                name: 'Bookings',
+                data: <?= json_encode(array_map(fn($v) => $v * 0.6, $revenueData ?? [])) ?>
+            }],
+            chart: {
+                type: 'area',
+                height: 280,
+                fontFamily: "'Inter', sans-serif",
+                toolbar: {
+                    show: false
+                },
+                zoom: {
+                    enabled: false
+                }
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        backgroundColor: '#1e293b',
-                        padding: 12,
-                        cornerRadius: 8
+            colors: ['#6366f1', '#22c55e'],
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'smooth',
+                width: 2
+            },
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 0.4,
+                    opacityTo: 0.05,
+                    stops: [0, 100]
+                }
+            },
+            xaxis: {
+                categories: <?= json_encode($revenueLabels ?? []) ?>,
+                labels: {
+                    style: {
+                        colors: '#64748b',
+                        fontFamily: "'Inter', sans-serif"
                     }
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: '#f1f5f9',
-                            drawBorder: false
-                        },
-                        ticks: {
-                            callback: (v) => '$' + v.toLocaleString()
-                        }
+                axisBorder: {
+                    show: false
+                },
+                axisTicks: {
+                    show: false
+                }
+            },
+            yaxis: {
+                labels: {
+                    style: {
+                        colors: '#64748b',
+                        fontFamily: "'Inter', sans-serif"
                     },
-                    x: {
-                        grid: {
-                            display: false
+                    formatter: function(val) {
+                        return '$' + val.toLocaleString();
+                    }
+                }
+            },
+            grid: {
+                borderColor: '#f1f5f9',
+                strokeDashArray: 0
+            },
+            legend: {
+                show: false
+            },
+            tooltip: {
+                theme: 'dark',
+                y: {
+                    formatter: function(val, opts) {
+                        if (opts.seriesIndex === 0) {
+                            return '$' + val.toLocaleString();
                         }
+                        return val.toLocaleString() + ' bookings';
                     }
                 }
             }
-        });
+        };
+
+        const highlightChart = new ApexCharts(document.querySelector("#highlightChart"), highlightOptions);
+        highlightChart.render();
 
         // 2. Orders Bar Chart
-        const ctxOrders = document.getElementById('ordersChart').getContext('2d');
-        new Chart(ctxOrders, {
-            type: 'bar',
-            data: {
-                labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
-                datasets: [{
-                    data: [65, 59, 80, 81, 56, 55, 40],
-                    backgroundColor: '#6366f1',
-                    borderRadius: 4,
-                    barThickness: 8
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    y: {
-                        display: false
-                    },
-                    x: {
-                        display: false
-                    }
+        const ordersOptions = {
+            series: [{
+                data: [65, 59, 80, 81, 56, 55, 40]
+            }],
+            chart: {
+                type: 'bar',
+                height: 60,
+                sparkline: {
+                    enabled: true
                 }
-            }
-        });
-
-        // 3. Earnings Sparkline
-        const ctxEarnings = document.getElementById('earningsChart').getContext('2d');
-        let earningsGradient = ctxEarnings.createLinearGradient(0, 0, 0, 50);
-        earningsGradient.addColorStop(0, 'rgba(34, 197, 94, 0.3)');
-        earningsGradient.addColorStop(1, 'rgba(34, 197, 94, 0)');
-
-        new Chart(ctxEarnings, {
-            type: 'line',
-            data: {
-                labels: ['', '', '', '', '', '', ''],
-                datasets: [{
-                    data: [30, 45, 35, 50, 40, 60, 55],
-                    borderColor: '#22c55e',
-                    backgroundColor: earningsGradient,
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 0
-                }]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    y: {
-                        display: false
-                    },
-                    x: {
-                        display: false
-                    }
+            colors: ['#6366f1'],
+            plotOptions: {
+                bar: {
+                    columnWidth: '60%',
+                    borderRadius: 4
                 }
-            }
-        });
-
-        // 4. Fleet Status Donut
-        const ctxFleet = document.getElementById('fleetChart').getContext('2d');
-        new Chart(ctxFleet, {
-            type: 'doughnut',
-            data: {
-                labels: <?= json_encode($carStatusLabels ?? []) ?>,
-                datasets: [{
-                    data: <?= json_encode($carStatusCounts ?? []) ?>,
-                    backgroundColor: ['#22c55e', '#f97316', '#ef4444', '#6366f1', '#64748b'],
-                    borderWidth: 0,
-                    hoverOffset: 4
-                }]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'right',
-                        labels: {
-                            usePointStyle: true,
-                            boxWidth: 6,
-                            padding: 12,
-                            font: {
-                                size: 11
-                            }
+            tooltip: {
+                theme: 'dark',
+                fixed: {
+                    enabled: false
+                },
+                y: {
+                    title: {
+                        formatter: function() {
+                            return '';
                         }
                     }
-                },
-                cutout: '70%'
+                }
             }
-        });
+        };
+
+        const ordersChart = new ApexCharts(document.querySelector("#ordersChart"), ordersOptions);
+        ordersChart.render();
+
+        // 3. Earnings Sparkline (Area)
+        const earningsOptions = {
+            series: [{
+                data: [30, 45, 35, 50, 40, 60, 55]
+            }],
+            chart: {
+                type: 'area',
+                height: 50,
+                sparkline: {
+                    enabled: true
+                }
+            },
+            colors: ['#22c55e'],
+            stroke: {
+                curve: 'smooth',
+                width: 2
+            },
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 0.4,
+                    opacityTo: 0,
+                    stops: [0, 100]
+                }
+            },
+            tooltip: {
+                theme: 'dark',
+                fixed: {
+                    enabled: false
+                },
+                y: {
+                    title: {
+                        formatter: function() {
+                            return '$';
+                        }
+                    }
+                }
+            }
+        };
+
+        const earningsChart = new ApexCharts(document.querySelector("#earningsChart"), earningsOptions);
+        earningsChart.render();
+
+        // 4. Fleet Status Donut
+        const fleetOptions = {
+            series: <?= json_encode($carStatusCounts ?? []) ?>,
+            chart: {
+                type: 'donut',
+                height: 120
+            },
+            labels: <?= json_encode($carStatusLabels ?? []) ?>,
+            colors: ['#22c55e', '#f97316', '#ef4444', '#6366f1', '#64748b'],
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: '70%'
+                    }
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            legend: {
+                position: 'right',
+                fontSize: '11px',
+                fontFamily: "'Inter', sans-serif",
+                markers: {
+                    width: 8,
+                    height: 8,
+                    radius: 12
+                },
+                itemMargin: {
+                    vertical: 4
+                }
+            },
+            stroke: {
+                width: 0
+            },
+            tooltip: {
+                theme: 'dark'
+            }
+        };
+
+        const fleetChart = new ApexCharts(document.querySelector("#fleetChart"), fleetOptions);
+        fleetChart.render();
     });
 </script>
