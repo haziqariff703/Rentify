@@ -55,7 +55,7 @@ class CarsController extends AppController
         // Query cars from database with their categories
         $cars = $this->Cars->find()
             ->contain(['Categories'])
-            ->where(['status' => 'available'])
+            ->where(['status !=' => 'maintenance'])
             ->all();
 
         // Query all categories for filter buttons
@@ -72,7 +72,12 @@ class CarsController extends AppController
     public function index()
     {
         $query = $this->Cars->find()
-            ->contain(['Categories']);
+            ->contain([
+                'Categories',
+                'Bookings' => function ($q) {
+                    return $q->order(['start_date' => 'ASC']);
+                }
+            ]);
         $cars = $this->paginate($query);
 
         $this->set(compact('cars'));
@@ -100,7 +105,27 @@ class CarsController extends AppController
     {
         $car = $this->Cars->newEmptyEntity();
         if ($this->request->is('post')) {
-            $car = $this->Cars->patchEntity($car, $this->request->getData());
+            $data = $this->request->getData();
+
+            // Handle file upload
+            $imageFile = $this->request->getData('image_file');
+            if ($imageFile && $imageFile->getSize() > 0 && $imageFile->getError() === UPLOAD_ERR_OK) {
+                // Generate unique filename
+                $extension = pathinfo($imageFile->getClientFilename(), PATHINFO_EXTENSION);
+                $filename = strtolower(str_replace(' ', '-', $data['brand'] . '-' . $data['car_model'])) . '-' . time() . '.' . $extension;
+
+                // Move uploaded file to webroot/img/
+                $targetPath = WWW_ROOT . 'img' . DS . $filename;
+                $imageFile->moveTo($targetPath);
+
+                // Set the image field
+                $data['image'] = $filename;
+            }
+
+            // Remove file upload field before patching entity
+            unset($data['image_file']);
+
+            $car = $this->Cars->patchEntity($car, $data);
             if ($this->Cars->save($car)) {
                 $this->Flash->success(__('The car has been saved.'));
 
@@ -123,7 +148,31 @@ class CarsController extends AppController
     {
         $car = $this->Cars->get($id, contain: []);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $car = $this->Cars->patchEntity($car, $this->request->getData());
+            $data = $this->request->getData();
+
+            // Handle file upload
+            $imageFile = $this->request->getData('image_file');
+            if ($imageFile && $imageFile->getSize() > 0 && $imageFile->getError() === UPLOAD_ERR_OK) {
+                // Generate unique filename
+                $extension = pathinfo($imageFile->getClientFilename(), PATHINFO_EXTENSION);
+                $filename = strtolower(str_replace(' ', '-', $data['brand'] . '-' . $data['car_model'])) . '-' . time() . '.' . $extension;
+
+                // Move uploaded file to webroot/img/
+                $targetPath = WWW_ROOT . 'img' . DS . $filename;
+                $imageFile->moveTo($targetPath);
+
+                // Update the image field with new filename
+                $data['image'] = $filename;
+            } else {
+                // Keep existing image if no new upload
+                $data['image'] = $data['existing_image'] ?? $car->image;
+            }
+
+            // Remove file upload fields before patching entity
+            unset($data['image_file']);
+            unset($data['existing_image']);
+
+            $car = $this->Cars->patchEntity($car, $data);
             if ($this->Cars->save($car)) {
                 $this->Flash->success(__('The car has been saved.'));
 

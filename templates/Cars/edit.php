@@ -5,42 +5,468 @@
  * @var \App\Model\Entity\Car $car
  * @var string[]|\Cake\Collection\CollectionInterface $categories
  */
+
+$statusOptions = [
+    'available' => 'Available',
+    'maintenance' => 'Maintenance'
+];
+
+$transmissionOptions = [
+    'Automatic' => 'Automatic',
+    'Manual' => 'Manual'
+];
 ?>
-<div class="row">
-    <aside class="column">
-        <div class="side-nav">
-            <h4 class="heading"><?= __('Actions') ?></h4>
-            <?= $this->Form->postLink(
-                __('Delete'),
-                ['action' => 'delete', $car->id],
-                ['confirm' => __('Are you sure you want to delete # {0}?', $car->id), 'class' => 'side-nav-item']
-            ) ?>
-            <?= $this->Html->link(__('List Cars'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
+
+<div class="edit-car-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div>
+            <h2><?= __('Edit Car') ?></h2>
+            <p class="text-muted"><?= h($car->brand) ?> <?= h($car->car_model) ?> (<?= h($car->plate_number) ?>)</p>
         </div>
-    </aside>
-    <div class="column column-80">
-        <div class="cars form content">
-            <?= $this->Form->create($car) ?>
-            <fieldset>
-                <legend><?= __('Edit Car') ?></legend>
-                <?php
-                echo $this->Form->control('category_id', ['options' => $categories, 'empty' => true]);
-                echo $this->Form->control('car_model');
-                echo $this->Form->control('plate_number');
-                echo $this->Form->control('brand');
-                echo $this->Form->control('year');
-                echo $this->Form->control('price_per_day');
-                echo $this->Form->control('status');
-                echo $this->Form->control('image', ['label' => 'Image Filename', 'placeholder' => 'e.g. ferrari-f8.jpg']);
-                echo $this->Form->control('transmission');
-                echo $this->Form->control('seats');
-                echo $this->Form->control('engine', ['placeholder' => 'e.g. 5.2L V10']);
-                echo $this->Form->control('zero_to_sixty', ['label' => '0-60 Time', 'placeholder' => 'e.g. 2.9s']);
-                echo $this->Form->control('badge_color', ['label' => 'Badge Color (Hex)', 'placeholder' => 'e.g. #ef4444']);
-                ?>
-            </fieldset>
-            <?= $this->Form->button(__('Submit')) ?>
-            <?= $this->Form->end() ?>
+        <div class="header-actions">
+            <?= $this->Html->link(
+                '<i class="fas fa-arrow-left me-2"></i>' . __('Back to List'),
+                ['action' => 'index'],
+                ['class' => 'btn btn-outline-secondary', 'escape' => false]
+            ) ?>
         </div>
     </div>
+
+    <?= $this->Form->create($car, ['type' => 'file', 'class' => 'edit-form']) ?>
+
+    <div class="form-grid">
+        <!-- Left Column: Car Details -->
+        <div class="form-card">
+            <div class="card-header">
+                <h5><i class="fas fa-car me-2"></i><?= __('Car Information') ?></h5>
+            </div>
+            <div class="card-body">
+                <table class="form-table">
+                    <tr>
+                        <th><?= __('Category') ?></th>
+                        <td><?= $this->Form->control('category_id', [
+                                'options' => $categories,
+                                'empty' => '-- Select Category --',
+                                'label' => false,
+                                'class' => 'form-select'
+                            ]) ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= __('Brand') ?></th>
+                        <td><?= $this->Form->control('brand', [
+                                'label' => false,
+                                'class' => 'form-control',
+                                'placeholder' => 'e.g. Toyota'
+                            ]) ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= __('Model') ?></th>
+                        <td><?= $this->Form->control('car_model', [
+                                'label' => false,
+                                'class' => 'form-control',
+                                'placeholder' => 'e.g. Camry'
+                            ]) ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= __('Year') ?></th>
+                        <td><?= $this->Form->control('year', [
+                                'label' => false,
+                                'class' => 'form-control',
+                                'type' => 'number',
+                                'min' => 1990,
+                                'max' => date('Y') + 1
+                            ]) ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= __('Plate Number') ?></th>
+                        <td><?= $this->Form->control('plate_number', [
+                                'label' => false,
+                                'class' => 'form-control',
+                                'placeholder' => 'e.g. ABC 1234'
+                            ]) ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= __('Price/Day (RM)') ?></th>
+                        <td><?= $this->Form->control('price_per_day', [
+                                'label' => false,
+                                'class' => 'form-control',
+                                'type' => 'number',
+                                'step' => '0.01',
+                                'min' => 0
+                            ]) ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= __('Status') ?></th>
+                        <td><?= $this->Form->control('status', [
+                                'options' => $statusOptions,
+                                'label' => false,
+                                'class' => 'form-select'
+                            ]) ?></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Right Column: Specs & Image -->
+        <div class="form-card">
+            <div class="card-header">
+                <h5><i class="fas fa-cogs me-2"></i><?= __('Specifications') ?></h5>
+            </div>
+            <div class="card-body">
+                <table class="form-table">
+                    <tr>
+                        <th><?= __('Transmission') ?></th>
+                        <td><?= $this->Form->control('transmission', [
+                                'options' => $transmissionOptions,
+                                'label' => false,
+                                'class' => 'form-select'
+                            ]) ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= __('Seats') ?></th>
+                        <td><?= $this->Form->control('seats', [
+                                'label' => false,
+                                'class' => 'form-control',
+                                'type' => 'number',
+                                'min' => 1,
+                                'max' => 12
+                            ]) ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= __('Engine') ?></th>
+                        <td><?= $this->Form->control('engine', [
+                                'label' => false,
+                                'class' => 'form-control',
+                                'placeholder' => 'e.g. 2.5L V6'
+                            ]) ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= __('0-60 Time') ?></th>
+                        <td><?= $this->Form->control('zero_to_sixty', [
+                                'label' => false,
+                                'class' => 'form-control',
+                                'placeholder' => 'e.g. 5.8s'
+                            ]) ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= __('Badge Color') ?></th>
+                        <td>
+                            <div class="color-picker-wrapper">
+                                <?= $this->Form->control('badge_color', [
+                                    'label' => false,
+                                    'type' => 'color',
+                                    'class' => 'form-control form-control-color',
+                                    'value' => $car->badge_color ?? '#3b82f6'
+                                ]) ?>
+                                <span class="color-preview" style="background: <?= h($car->badge_color ?? '#3b82f6') ?>"></span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Full Width: Image Upload -->
+        <div class="form-card full-width">
+            <div class="card-header">
+                <h5><i class="fas fa-image me-2"></i><?= __('Car Image') ?></h5>
+            </div>
+            <div class="card-body">
+                <div class="image-upload-section">
+                    <!-- Current Image Preview -->
+                    <div class="current-image">
+                        <?php if ($car->image): ?>
+                            <img src="<?= $this->Url->webroot('img/' . $car->image) ?>"
+                                alt="<?= h($car->car_model) ?>"
+                                id="imagePreview">
+                            <p class="image-filename">Current: <?= h($car->image) ?></p>
+                        <?php else: ?>
+                            <div class="no-image" id="imagePreview">
+                                <i class="fas fa-car"></i>
+                                <p>No image uploaded</p>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <!-- File Upload -->
+                    <div class="upload-controls">
+                        <label class="file-upload-btn">
+                            <i class="fas fa-upload me-2"></i><?= __('Choose Image') ?>
+                            <?= $this->Form->control('image_file', [
+                                'type' => 'file',
+                                'label' => false,
+                                'class' => 'file-input',
+                                'accept' => 'image/*',
+                                'id' => 'imageInput'
+                            ]) ?>
+                        </label>
+                        <p class="upload-hint">Supported: JPG, PNG, GIF (max 5MB)</p>
+
+                        <!-- Hidden field to keep existing image if no new upload -->
+                        <?= $this->Form->hidden('existing_image', ['value' => $car->image]) ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+        <?= $this->Form->button(
+            '<i class="fas fa-save me-2"></i>' . __('Save Changes'),
+            ['class' => 'btn btn-primary btn-lg', 'escape' => false]
+        ) ?>
+        <?= $this->Form->postLink(
+            '<i class="fas fa-trash me-2"></i>' . __('Delete Car'),
+            ['action' => 'delete', $car->id],
+            [
+                'confirm' => __('Are you sure you want to delete this car?'),
+                'class' => 'btn btn-outline-danger btn-lg',
+                'escape' => false
+            ]
+        ) ?>
+    </div>
+
+    <?= $this->Form->end() ?>
 </div>
+
+<script>
+    // Image preview on file select
+    document.getElementById('imageInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('imagePreview');
+                if (preview.tagName === 'IMG') {
+                    preview.src = e.target.result;
+                } else {
+                    preview.innerHTML = '<img src="' + e.target.result + '" alt="Preview">';
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Color picker preview update
+    document.querySelector('input[type="color"]').addEventListener('input', function(e) {
+        document.querySelector('.color-preview').style.background = e.target.value;
+    });
+</script>
+
+<style>
+    .edit-car-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .page-header h2 {
+        margin: 0;
+        color: #1e293b;
+    }
+
+    .page-header .text-muted {
+        margin: 5px 0 0;
+        color: #64748b;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 30px;
+    }
+
+    .form-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+
+    .form-card.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .form-card .card-header {
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        color: white;
+        padding: 16px 20px;
+    }
+
+    .form-card .card-header h5 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    .form-card .card-body {
+        padding: 20px;
+    }
+
+    .form-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .form-table tr {
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .form-table tr:last-child {
+        border-bottom: none;
+    }
+
+    .form-table th {
+        text-align: left;
+        padding: 12px 16px 12px 0;
+        width: 140px;
+        color: #475569;
+        font-weight: 500;
+        vertical-align: middle;
+    }
+
+    .form-table td {
+        padding: 12px 0;
+    }
+
+    .form-table .form-control,
+    .form-table .form-select {
+        width: 100%;
+    }
+
+    /* Color Picker */
+    .color-picker-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .form-control-color {
+        width: 60px !important;
+        height: 40px;
+        padding: 4px;
+        cursor: pointer;
+    }
+
+    .color-preview {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        border: 2px solid #e2e8f0;
+    }
+
+    /* Image Upload */
+    .image-upload-section {
+        display: flex;
+        gap: 40px;
+        align-items: flex-start;
+    }
+
+    .current-image {
+        flex: 0 0 300px;
+    }
+
+    .current-image img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 12px;
+        border: 2px solid #e2e8f0;
+    }
+
+    .current-image .no-image {
+        width: 100%;
+        height: 200px;
+        background: #f8fafc;
+        border: 2px dashed #e2e8f0;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #94a3b8;
+    }
+
+    .current-image .no-image i {
+        font-size: 3rem;
+        margin-bottom: 10px;
+    }
+
+    .image-filename {
+        margin-top: 10px;
+        font-size: 0.85rem;
+        color: #64748b;
+    }
+
+    .upload-controls {
+        flex: 1;
+    }
+
+    .file-upload-btn {
+        display: inline-flex;
+        align-items: center;
+        padding: 12px 24px;
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .file-upload-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    }
+
+    .file-input {
+        display: none;
+    }
+
+    .upload-hint {
+        margin-top: 12px;
+        font-size: 0.85rem;
+        color: #64748b;
+    }
+
+    /* Form Actions */
+    .form-actions {
+        display: flex;
+        gap: 16px;
+        padding-top: 20px;
+        border-top: 2px solid #e2e8f0;
+    }
+
+    .form-actions .btn-lg {
+        padding: 12px 32px;
+        font-size: 1rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .image-upload-section {
+            flex-direction: column;
+        }
+
+        .current-image {
+            flex: 0 0 auto;
+            width: 100%;
+        }
+    }
+</style>

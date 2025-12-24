@@ -107,8 +107,17 @@ class AdminsController extends AppController
 
         // Fleet Tracking Data
         $availableCars = $carsTable->find()->where(['status' => 'available'])->count();
-        $rentedCars = $carsTable->find()->where(['status' => 'rented'])->count();
         $maintenanceCars = $carsTable->find()->where(['status' => 'maintenance'])->count();
+
+        // Calculate currently rented cars from active bookings (confirmed bookings with today's date in range)
+        $today = new \Cake\I18n\Date();
+        $currentlyRentedCars = $bookingsTable->find()
+            ->where([
+                'booking_status' => 'confirmed',
+                'start_date <=' => $today,
+                'end_date >=' => $today
+            ])
+            ->count();
 
         $this->set(compact(
             'totalCars',
@@ -125,7 +134,7 @@ class AdminsController extends AppController
             'carStatusCounts',
             'pendingBookings',
             'availableCars',
-            'rentedCars',
+            'currentlyRentedCars',
             'maintenanceCars'
         ));
     }
@@ -181,12 +190,7 @@ class AdminsController extends AppController
         $booking->booking_status = 'confirmed';
 
         if ($bookingsTable->save($booking)) {
-            // Update car status to "Rented"
-            $car = $carsTable->get($booking->car_id);
-            $car->status = 'rented';
-            $carsTable->save($car);
-
-            $this->Flash->success(__('Booking #{0} approved! Car status updated to Rented.', $id));
+            $this->Flash->success(__('Booking #{0} approved!', $id));
         } else {
             $this->Flash->error(__('Could not approve the booking. Please try again.'));
         }
