@@ -187,10 +187,11 @@ $this->assign('title', 'The Garage');
        (With Proper 3D Flip)
        ======================================== */
     
-    /* Card Container - Clean Shape */
+    /* Card Container - Landscape 4:3 Shape */
     .flip-card {
         background-color: transparent;
-        height: 400px;
+        width: 100%;
+        aspect-ratio: 4/3;
         border-radius: 24px;
         overflow: visible;
         box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.15);
@@ -239,41 +240,42 @@ $this->assign('title', 'The Garage');
         transform: scale(1.05);
     }
 
-    /* Glass Pill Overlay - Floating at bottom */
+    /* Glass Pill Overlay - Compact Floating at bottom */
     .front-overlay {
         position: absolute;
-        bottom: 20px;
-        left: 20px;
-        right: 20px;
-        padding: 18px 20px;
+        bottom: 10px;
+        left: 10px;
+        right: 10px;
+        padding: 8px 14px;
         /* White Glass Effect */
         background: rgba(255, 255, 255, 0.85);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
-        border-radius: 16px;
+        border-radius: 12px;
         text-align: center;
         /* Subtle shadow */
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
 
-    /* Text styling in Glass Pill */
+    /* Text styling in Glass Pill - Compact */
     .front-overlay .badge {
-        margin-bottom: 8px;
+        margin-bottom: 4px;
+        font-size: 0.65rem;
     }
 
     .front-overlay h4 {
         color: #1e293b !important;
-        font-size: 1.1rem;
+        font-size: 0.95rem;
         font-weight: 700;
-        margin-bottom: 4px;
+        margin-bottom: 2px;
         text-shadow: none !important;
     }
 
     .price-tag {
         color: #4f46e5 !important;
         font-weight: 800;
-        font-size: 1.1rem;
-        margin-top: 4px;
+        font-size: 0.9rem;
+        margin-top: 2px;
     }
 
     .price-tag small {
