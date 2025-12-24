@@ -37,13 +37,17 @@ $this->assign('title', 'My Payment History');
     }
 
     /* ========================================
-       WHITE PANEL CONTAINER + BLUE GLOW
+       WHITE PANEL CONTAINER + DEEP LIFT SHADOW
        ======================================== */
     .white-panel {
         background: #ffffff;
-        border: 1px solid #e2e8f0;
+        border: 1px solid rgba(255, 255, 255, 0.5);
         border-radius: 24px;
-        box-shadow: 0 20px 50px -12px rgba(37, 99, 235, 0.15);
+        box-shadow:
+            /* Layer 1: Tight grey shadow for edge definition */
+            0 4px 6px -1px rgba(0, 0, 0, 0.05),
+            /* Layer 2: Wide blue shadow for lift and brand tint */
+            0 25px 50px -12px rgba(37, 99, 235, 0.2);
         padding: 50px;
         max-width: 1200px;
         margin: 0 auto;
@@ -51,31 +55,34 @@ $this->assign('title', 'My Payment History');
     }
 
     /* ========================================
-       HEADER - BRAND BLUE
+       EDITORIAL HEADER (Match Bookings)
        ======================================== */
-    .payments-header {
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 700;
-        font-size: 1.75rem;
-        letter-spacing: 2px;
-        text-transform: uppercase;
+    .editorial-header {
         text-align: center;
-        margin-bottom: 40px;
-        color: #2563eb;
-        position: relative;
-        padding-bottom: 20px;
+        margin-bottom: 35px;
     }
 
-    .payments-header::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 60px;
-        height: 3px;
-        background: linear-gradient(90deg, #2563eb, #3b82f6);
-        border-radius: 2px;
+    .editorial-subtitle {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        color: #94a3b8;
+        margin-bottom: 8px;
+    }
+
+    .editorial-title {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 2.5rem;
+        letter-spacing: -2px;
+        background: linear-gradient(to bottom, #1e293b, #475569);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0;
+        line-height: 1.1;
     }
 
     /* ========================================
@@ -349,8 +356,11 @@ $this->assign('title', 'My Payment History');
     <div class="container">
         <!-- White Panel Container -->
         <div class="white-panel">
-            <!-- Header - Dark Slate -->
-            <h1 class="payments-header">Payment History</h1>
+            <!-- Editorial Header -->
+            <div class="editorial-header">
+                <div class="editorial-subtitle">Your Transaction History</div>
+                <h1 class="editorial-title">PAYMENT HISTORY</h1>
+            </div>
 
             <!-- Table -->
             <?php if (!empty($payments)): ?>
