@@ -212,11 +212,11 @@ $transmissionOptions = [
     <!-- Form Actions -->
     <div class="form-actions">
         <?= $this->Form->button(
-            '<i class="fas fa-plus me-2"></i>' . __('Add Car'),
+            __('Add Car'),
             ['class' => 'btn btn-success btn-lg', 'escape' => false]
         ) ?>
         <?= $this->Html->link(
-            '<i class="fas fa-times me-2"></i>' . __('Cancel'),
+            __('Cancel'),
             ['action' => 'index'],
             ['class' => 'btn btn-outline-secondary btn-lg', 'escape' => false]
         ) ?>

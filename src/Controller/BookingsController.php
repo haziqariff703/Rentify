@@ -109,6 +109,7 @@ class BookingsController extends AppController
      */
     public function index()
     {
+        $this->viewBuilder()->setLayout('admin');
         $query = $this->Bookings->find()->contain(['Users', 'Cars', 'Invoices']);
         $bookings = $this->paginate($query);
         $this->set(compact('bookings'));
