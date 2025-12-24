@@ -1,5 +1,108 @@
 /* Custom Animations for Rentify */
 
+/* ========================================
+   HERO SECTION - EXECUTIVE TYPOGRAPHY
+   ======================================== */
+
+/* Main Headline - Playfair Display */
+.hero-headline {
+    font-family: "Playfair Display", serif;
+    font-size: 4rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.15;
+    margin-bottom: 32px;
+    letter-spacing: -1px;
+}
+
+/* Accent Text - Italic + Bright Cyan-Blue Gradient + Glow */
+.hero-headline-accent {
+    font-style: italic;
+    background: linear-gradient(135deg, #38bdf8 0%, #3b82f6 50%, #1e40af 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.5));
+}
+
+/* Sub-Headline - Montserrat */
+.hero-subheadline {
+    font-family: "Montserrat", sans-serif;
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 3px;
+    max-width: 700px;
+    margin: 0 auto 48px;
+}
+
+/* Primary Button - Executive Style */
+.hero-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #ffffff;
+    background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+    padding: 16px 36px;
+    border-radius: 50px;
+    text-decoration: none;
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+    transition: all 0.3s ease;
+}
+
+.hero-btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(59, 130, 246, 0.5);
+    color: #ffffff;
+    text-decoration: none;
+}
+
+/* Outline Button - Executive Style */
+.hero-btn-outline {
+    display: inline-flex;
+    align-items: center;
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #ffffff;
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    padding: 14px 36px;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.hero-btn-outline:hover {
+    background: #ffffff;
+    color: #0f172a;
+    border-color: #ffffff;
+    text-decoration: none;
+}
+
+/* Hero Responsive */
+@media (max-width: 768px) {
+    .hero-headline {
+        font-size: 2.5rem;
+    }
+
+    .hero-subheadline {
+        font-size: 1rem;
+    }
+
+    .hero-btn-primary,
+    .hero-btn-outline {
+        padding: 12px 28px;
+        font-size: 0.75rem;
+    }
+}
+
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -258,107 +361,135 @@ a:hover {
 /* Google Fonts - Montserrat */
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap");
 
-.about-section-custom {
-    background-color: #f8fafc;
+/* ========================================
+   ABOUT SECTION - EXECUTIVE PREMIUM
+   ======================================== */
+.about-executive-section {
+    background: #ffffff;
+    padding: 100px 0;
 }
 
-.about-subtitle {
+/* Image Wrapper with Premium Shadow */
+.about-image-wrapper {
+    position: relative;
+}
+
+.about-hero-image {
+    width: 100%;
+    height: 520px;
+    object-fit: cover;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05),
+        0 25px 50px -12px rgba(0, 0, 0, 0.15);
+}
+
+/* Content Wrapper */
+.about-executive-content {
+    padding-left: 40px;
+}
+
+/* Eyebrow Label - Muted Gold/Charcoal */
+.about-eyebrow {
     display: inline-block;
-    color: #3b82f6;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 2px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 3px;
     text-transform: uppercase;
-    margin-bottom: 16px;
-    padding: 8px 16px;
-    background: rgba(59, 130, 246, 0.1);
-    border-radius: 50px;
+    color: #b8860b;
+    margin-bottom: 20px;
 }
 
-.about-main-heading {
-    font-family: "Montserrat", sans-serif;
-    font-size: 38px;
-    font-weight: 800;
+/* Main Title - Playfair Display */
+.about-executive-title {
+    font-family: "Playfair Display", serif;
+    font-size: 2.75rem;
+    font-weight: 700;
+    letter-spacing: -1px;
     color: #0f172a;
     line-height: 1.2;
-    margin-bottom: 24px;
+    margin-bottom: 28px;
 }
 
-.about-text {
-    font-size: 16px;
-    color: #64748b;
-    line-height: 1.8;
-    margin-bottom: 16px;
+/* Body Text */
+.about-executive-text {
+    font-family: "Montserrat", sans-serif;
+    font-size: 1rem;
+    color: #475569;
+    line-height: 1.9;
+    margin-bottom: 20px;
 }
 
-.about-text strong {
+.about-executive-text strong {
     color: #0f172a;
     font-weight: 600;
 }
 
-/* Sleek Icon Boxes - Professional Design */
-.icon-box-sleek {
-    width: 70px;
-    height: 70px;
-    margin: 0 auto 16px;
-    background: linear-gradient(145deg, #3b82f6 0%, #1e40af 100%);
-    border-radius: 20px;
+/* Executive Trust Icons Row */
+.executive-trust-row {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    color: #ffffff;
-    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.35);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    gap: 40px;
+    margin-top: 40px;
 }
 
-.icon-box-sleek:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 40px rgba(59, 130, 246, 0.45);
+.executive-trust-item {
+    text-align: center;
 }
 
-/* Trust Icon Boxes (Legacy Support) */
-.trust-icon-box {
-    width: 60px;
-    height: 60px;
-    margin: 0 auto 12px;
-    background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    color: #ffffff;
-    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
-    transition: transform 0.3s ease;
+/* Minimalist Line Icons */
+.executive-icon {
+    font-size: 2rem;
+    color: #b8860b;
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
 }
 
-.trust-icon-box:hover {
-    transform: translateY(-5px);
+.executive-trust-item:hover .executive-icon {
+    color: #0f172a;
+    transform: translateY(-4px);
 }
 
-.trust-icon-label {
+/* Icon Labels - Playfair Display */
+.executive-icon-label {
     display: block;
-    font-size: 14px;
+    font-family: "Playfair Display", serif;
+    font-size: 0.95rem;
     font-weight: 600;
     color: #0f172a;
+    letter-spacing: -0.25px;
 }
 
-/* Responsive About Section */
-@media (max-width: 768px) {
-    .about-main-heading {
-        font-size: 28px;
+/* Responsive */
+@media (max-width: 991px) {
+    .about-executive-section {
+        padding: 60px 0;
     }
 
-    .trust-icon-box {
-        width: 50px;
-        height: 50px;
-        font-size: 20px;
+    .about-executive-content {
+        padding-left: 0;
+        padding-top: 40px;
     }
 
-    .trust-icon-label {
-        font-size: 12px;
+    .about-executive-title {
+        font-size: 2rem;
+    }
+
+    .about-hero-image {
+        height: 400px;
+    }
+}
+
+@media (max-width: 576px) {
+    .executive-trust-row {
+        gap: 20px;
+    }
+
+    .executive-icon {
+        font-size: 1.5rem;
+    }
+
+    .executive-icon-label {
+        font-size: 0.8rem;
     }
 }
 
@@ -434,7 +565,7 @@ a:hover {
 /* Card Image Container */
 .marquee-card-img {
     position: relative;
-    height: 200px;
+    height: 220px;
     overflow: hidden;
 }
 
@@ -470,10 +601,12 @@ a:hover {
 }
 
 .marquee-card-title {
-    font-size: 18px;
-    font-weight: 700;
+    font-family: "Playfair Display", serif;
+    font-size: 1.4rem;
+    font-weight: 600;
     color: #0f172a;
     margin-bottom: 10px;
+    letter-spacing: -0.5px;
 }
 
 .marquee-card-specs {
@@ -497,13 +630,15 @@ a:hover {
 }
 
 .marquee-price .price {
-    font-size: 24px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 1.5rem;
     font-weight: 700;
-    color: #3b82f6;
+    color: #0f172a;
 }
 
 .marquee-price .period {
-    font-size: 14px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.85rem;
     color: #94a3b8;
     margin-left: 5px;
 }
@@ -518,6 +653,38 @@ a:hover {
     .marquee-container::after {
         width: 80px;
     }
+}
+
+/* ========================================
+   FEATURED FLEET SECTION - EXECUTIVE TYPOGRAPHY
+   ======================================== */
+.fleet-subtitle {
+    font-family: "Playfair Display", serif;
+    font-size: 1rem;
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: 3px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.fleet-title {
+    font-family: "Playfair Display", serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+    color: #0f172a;
+    margin: 0 0 20px;
+}
+
+.fleet-description {
+    font-family: "Montserrat", sans-serif;
+    max-width: 700px;
+    margin: 0 auto 50px;
+    font-size: 1.1rem;
+    color: #64748b;
+    line-height: 1.8;
 }
 
 /* ========================================

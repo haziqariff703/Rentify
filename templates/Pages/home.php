@@ -20,17 +20,17 @@ $this->assign('title', 'Welcome to Rentify');
 
     <!-- Hero Content -->
     <div class="position-relative z-10 text-center container d-flex flex-column justify-content-center align-items-center" style="max-width: 900px;">
-        <h1 class="display-2 fw-bold text-white mb-4 animate-fade-in-up">
-            Luxury Performance.<br><span class="text-primary">Everyday Value.</span>
+        <h1 class="hero-headline animate-fade-in-up">
+            Luxury Performance.<br><span class="hero-headline-accent">Everyday Value.</span>
         </h1>
-        <p class="lead text-light mb-5 mx-auto animate-fade-in-up fs-4" style="animation-delay: 0.2s; max-width: 700px;">
+        <p class="hero-subheadline animate-fade-in-up" style="animation-delay: 0.2s;">
             Premium Fleets for Your Every Destination.
         </p>
         <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center align-items-center animate-fade-in-up" style="animation-delay: 0.4s;">
-            <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="btn btn-primary btn-lg rounded-pill px-5 py-3 shadow-lg">
+            <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="hero-btn-primary">
                 <i class="bi bi-compass me-2"></i>Explore Now
             </a>
-            <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'add']) ?>" class="btn btn-outline-light btn-lg rounded-pill px-5 py-3 shadow-lg">
+            <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'add']) ?>" class="hero-btn-outline">
                 <i class="bi bi-person-plus me-2"></i>Join Now
             </a>
         </div>
@@ -44,59 +44,64 @@ $this->assign('title', 'Welcome to Rentify');
     </div>
 </section>
 
-<!-- About Us Section - Professional Design -->
-<section id="about" class="about-section-custom py-5" style="background-color: #F8FAFC;">
-    <div class="container py-5">
+<!-- About Us Section - Executive Premium Design -->
+<section id="about" class="about-executive-section">
+    <div class="container">
         <div class="row gy-5 align-items-center">
             <!-- Left Column - Image -->
-            <div class="col-lg-6 animate-fade-in-up" style="animation-delay: 0.2s;">
-                <?= $this->Html->image('about-us-hero.jpg', [
-                    'alt' => 'Rentify Premium Fleet',
-                    'class' => 'img-fluid rounded-4 shadow-lg w-100',
-                    'style' => 'height: 500px; object-fit: cover;'
-                ]) ?>
+            <div class="col-lg-6">
+                <div class="about-image-wrapper">
+                    <?= $this->Html->image('about-us-hero.jpg', [
+                        'alt' => 'Rentify Premium Fleet',
+                        'class' => 'about-hero-image'
+                    ]) ?>
+                </div>
             </div>
             
             <!-- Right Column - Content -->
-            <div class="col-lg-6 animate-fade-in-up" style="animation-delay: 0.4s;">
-                <!-- Blue Subtitle -->
-                <span class="about-subtitle">DRIVEN BY EXCELLENCE</span>
-                
-                <!-- Montserrat Heading -->
-                <h2 class="about-main-heading">Redefining Your Road Trip Experience</h2>
-                
-                <!-- Professional Paragraphs -->
-                <p class="about-text">
-                    At Rentify, we are committed to delivering an unparalleled driving experience. Our curated fleet 
-                    features iconic vehicles like the powerful <strong>Chevrolet Camaro</strong>, the sophisticated 
-                    <strong>BMW 5 Series</strong>, and the versatile <strong>Audi Q7</strong> — each meticulously 
-                    maintained to ensure your journey is nothing short of exceptional.
-                </p>
-                <p class="about-text">
-                    Whether you're embarking on a business trip, a family vacation, or a weekend adventure, 
-                    we provide the perfect blend of luxury, comfort, and performance. Our dedication to quality 
-                    and customer satisfaction sets us apart as your trusted partner on the road.
-                </p>
-                
-                <!-- Trust Icons Row -->
-                <div class="row g-4 mt-4">
-                    <div class="col-4 text-center">
-                        <div class="icon-box-sleek">
-                            <i class="bi bi-patch-check-fill"></i>
+            <div class="col-lg-6">
+                <div class="about-executive-content">
+                    <!-- Eyebrow Label -->
+                    <span class="about-eyebrow">Driven by Excellence</span>
+                    
+                    <!-- Main Title - Playfair Display -->
+                    <h2 class="about-executive-title">Redefining Your Road Trip Experience</h2>
+                    
+                    <!-- Professional Paragraphs -->
+                    <p class="about-executive-text">
+                        At Rentify, we are committed to delivering an unparalleled driving experience. Our curated fleet 
+                        features iconic vehicles like the powerful <strong>Chevrolet Camaro</strong>, the sophisticated 
+                        <strong>BMW 5 Series</strong>, and the versatile <strong>Audi Q7</strong> — each meticulously 
+                        maintained to ensure your journey is nothing short of exceptional.
+                    </p>
+                    <p class="about-executive-text">
+                        Whether you're embarking on a business trip, a family vacation, or a weekend adventure, 
+                        we provide the perfect blend of luxury, comfort, and performance. Our dedicated 
+                        <strong>24-hour concierge and support service</strong> ensures complete peace of mind, 
+                        day or night. Our dedication to quality and customer satisfaction sets us apart as your 
+                        trusted partner on the road.
+                    </p>
+                    
+                    <!-- Executive Trust Icons -->
+                    <div class="executive-trust-row">
+                        <div class="executive-trust-item">
+                            <div class="executive-icon">
+                                <i class="bi bi-shield-check"></i>
+                            </div>
+                            <span class="executive-icon-label">Verified Fleet</span>
                         </div>
-                        <span class="trust-icon-label fw-bold">Verified Fleet</span>
-                    </div>
-                    <div class="col-4 text-center">
-                        <div class="icon-box-sleek">
-                            <i class="bi bi-headset"></i>
+                        <div class="executive-trust-item">
+                            <div class="executive-icon">
+                                <i class="bi bi-headset"></i>
+                            </div>
+                            <span class="executive-icon-label">24/7 Support</span>
                         </div>
-                        <span class="trust-icon-label fw-bold">24/7 Support</span>
-                    </div>
-                    <div class="col-4 text-center">
-                        <div class="icon-box-sleek">
-                            <i class="bi bi-shield-lock-fill"></i>
+                        <div class="executive-trust-item">
+                            <div class="executive-icon">
+                                <i class="bi bi-lock"></i>
+                            </div>
+                            <span class="executive-icon-label">Secure Booking</span>
                         </div>
-                        <span class="trust-icon-label fw-bold">Secure Booking</span>
                     </div>
                 </div>
             </div>
@@ -107,9 +112,9 @@ $this->assign('title', 'Welcome to Rentify');
 <!-- Featured Fleet Marquee -->
 <section class="py-5 bg-light overflow-hidden">
     <div class="container text-center mb-5">
-        <div class="text-primary fw-bold mb-2" style="letter-spacing: 2px; font-size: 0.85rem; text-transform: uppercase;">The Rentify Collection</div>
-        <h2 class="about-main-heading text-center">Our Featured Fleet</h2>
-        <p class="text-muted mx-auto" style="max-width: 700px; font-size: 1.1rem; margin-bottom: 50px;">From executive sedans to high-performance sports cars, discover a curated selection of world-class vehicles designed for your ultimate driving pleasure.</p>
+        <div class="fleet-subtitle">The Rentify Collection</div>
+        <h2 class="fleet-title">Our Featured Fleet</h2>
+        <p class="fleet-description">From executive sedans to high-performance sports cars, discover a curated selection of world-class vehicles designed for your ultimate driving pleasure.</p>
     </div>
     
     <!-- Marquee Container with Fade Masks -->
@@ -129,7 +134,7 @@ $this->assign('title', 'Welcome to Rentify');
                         <span><i class="fas fa-tachometer-alt"></i> Fast</span>
                     </div>
                     <div class="marquee-card-footer">
-                        <div class="marquee-price"><span class="price">$120</span><span class="period">/ day</span></div>
+                        <div class="marquee-price"><span class="price">RM 120</span><span class="period">/ day</span></div>
                         <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="btn btn-sm btn-primary rounded-pill">Details</a>
                     </div>
                 </div>
@@ -149,7 +154,7 @@ $this->assign('title', 'Welcome to Rentify');
                         <span><i class="fas fa-gas-pump"></i> Diesel</span>
                     </div>
                     <div class="marquee-card-footer">
-                        <div class="marquee-price"><span class="price">$150</span><span class="period">/ day</span></div>
+                        <div class="marquee-price"><span class="price">RM 150</span><span class="period">/ day</span></div>
                         <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="btn btn-sm btn-primary rounded-pill">Details</a>
                     </div>
                 </div>
@@ -169,7 +174,127 @@ $this->assign('title', 'Welcome to Rentify');
                         <span><i class="fas fa-mountain"></i> AWD</span>
                     </div>
                     <div class="marquee-card-footer">
-                        <div class="marquee-price"><span class="price">$180</span><span class="period">/ day</span></div>
+                        <div class="marquee-price"><span class="price">RM 180</span><span class="period">/ day</span></div>
+                        <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="btn btn-sm btn-primary rounded-pill">Details</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 4: Ferrari F8 Tributo -->
+            <div class="marquee-card">
+                <div class="marquee-card-img">
+                    <?= $this->Html->image('ferrari-f8.jpg', ['class' => 'img-fluid', 'alt' => 'Ferrari F8 Tributo']) ?>
+                    <span class="marquee-badge">Supercar</span>
+                </div>
+                <div class="marquee-card-body">
+                    <h3 class="marquee-card-title">Ferrari F8 Tributo</h3>
+                    <div class="marquee-card-specs">
+                        <span><i class="fas fa-cogs"></i> Auto</span>
+                        <span><i class="fas fa-user"></i> 2 Seats</span>
+                        <span><i class="fas fa-tachometer-alt"></i> V8</span>
+                    </div>
+                    <div class="marquee-card-footer">
+                        <div class="marquee-price"><span class="price">RM 1,200</span><span class="period">/ day</span></div>
+                        <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="btn btn-sm btn-primary rounded-pill">Details</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 5: Lamborghini Huracán -->
+            <div class="marquee-card">
+                <div class="marquee-card-img">
+                    <?= $this->Html->image('lambo-huracan.jpg', ['class' => 'img-fluid', 'alt' => 'Lamborghini Huracán']) ?>
+                    <span class="marquee-badge">Supercar</span>
+                </div>
+                <div class="marquee-card-body">
+                    <h3 class="marquee-card-title">Lamborghini Huracán</h3>
+                    <div class="marquee-card-specs">
+                        <span><i class="fas fa-cogs"></i> Auto</span>
+                        <span><i class="fas fa-user"></i> 2 Seats</span>
+                        <span><i class="fas fa-tachometer-alt"></i> V10</span>
+                    </div>
+                    <div class="marquee-card-footer">
+                        <div class="marquee-price"><span class="price">RM 1,500</span><span class="period">/ day</span></div>
+                        <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="btn btn-sm btn-primary rounded-pill">Details</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 6: McLaren 720S -->
+            <div class="marquee-card">
+                <div class="marquee-card-img">
+                    <?= $this->Html->image('mclaren-720s.jpg', ['class' => 'img-fluid', 'alt' => 'McLaren 720S']) ?>
+                    <span class="marquee-badge">Supercar</span>
+                </div>
+                <div class="marquee-card-body">
+                    <h3 class="marquee-card-title">McLaren 720S</h3>
+                    <div class="marquee-card-specs">
+                        <span><i class="fas fa-cogs"></i> Auto</span>
+                        <span><i class="fas fa-user"></i> 2 Seats</span>
+                        <span><i class="fas fa-tachometer-alt"></i> V8</span>
+                    </div>
+                    <div class="marquee-card-footer">
+                        <div class="marquee-price"><span class="price">RM 1,400</span><span class="period">/ day</span></div>
+                        <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="btn btn-sm btn-primary rounded-pill">Details</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 7: Porsche 911 GT3 -->
+            <div class="marquee-card">
+                <div class="marquee-card-img">
+                    <?= $this->Html->image('porsche-gt3.jpg', ['class' => 'img-fluid', 'alt' => 'Porsche 911 GT3']) ?>
+                    <span class="marquee-badge">Sports</span>
+                </div>
+                <div class="marquee-card-body">
+                    <h3 class="marquee-card-title">Porsche 911 GT3</h3>
+                    <div class="marquee-card-specs">
+                        <span><i class="fas fa-cogs"></i> Manual</span>
+                        <span><i class="fas fa-user"></i> 2 Seats</span>
+                        <span><i class="fas fa-tachometer-alt"></i> Flat-6</span>
+                    </div>
+                    <div class="marquee-card-footer">
+                        <div class="marquee-price"><span class="price">RM 900</span><span class="period">/ day</span></div>
+                        <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="btn btn-sm btn-primary rounded-pill">Details</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 8: Aston Martin DBS -->
+            <div class="marquee-card">
+                <div class="marquee-card-img">
+                    <?= $this->Html->image('aston-dbs.jpg', ['class' => 'img-fluid', 'alt' => 'Aston Martin DBS']) ?>
+                    <span class="marquee-badge">Luxury</span>
+                </div>
+                <div class="marquee-card-body">
+                    <h3 class="marquee-card-title">Aston Martin DBS</h3>
+                    <div class="marquee-card-specs">
+                        <span><i class="fas fa-cogs"></i> Auto</span>
+                        <span><i class="fas fa-user"></i> 4 Seats</span>
+                        <span><i class="fas fa-tachometer-alt"></i> V12</span>
+                    </div>
+                    <div class="marquee-card-footer">
+                        <div class="marquee-price"><span class="price">RM 800</span><span class="period">/ day</span></div>
+                        <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="btn btn-sm btn-primary rounded-pill">Details</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 9: Toyota Hilux -->
+            <div class="marquee-card">
+                <div class="marquee-card-img">
+                    <?= $this->Html->image('hilux.jpg', ['class' => 'img-fluid', 'alt' => 'Toyota Hilux']) ?>
+                    <span class="marquee-badge">Truck</span>
+                </div>
+                <div class="marquee-card-body">
+                    <h3 class="marquee-card-title">Toyota Hilux</h3>
+                    <div class="marquee-card-specs">
+                        <span><i class="fas fa-cogs"></i> Manual</span>
+                        <span><i class="fas fa-user"></i> 5 Seats</span>
+                        <span><i class="fas fa-mountain"></i> 4WD</span>
+                    </div>
+                    <div class="marquee-card-footer">
+                        <div class="marquee-price"><span class="price">RM 150</span><span class="period">/ day</span></div>
                         <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="btn btn-sm btn-primary rounded-pill">Details</a>
                     </div>
                 </div>
@@ -191,7 +316,7 @@ $this->assign('title', 'Welcome to Rentify');
                         <span><i class="fas fa-tachometer-alt"></i> Fast</span>
                     </div>
                     <div class="marquee-card-footer">
-                        <div class="marquee-price"><span class="price">$120</span><span class="period">/ day</span></div>
+                        <div class="marquee-price"><span class="price">RM 120</span><span class="period">/ day</span></div>
                         <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="btn btn-sm btn-primary rounded-pill">Details</a>
                     </div>
                 </div>
@@ -211,7 +336,7 @@ $this->assign('title', 'Welcome to Rentify');
                         <span><i class="fas fa-gas-pump"></i> Diesel</span>
                     </div>
                     <div class="marquee-card-footer">
-                        <div class="marquee-price"><span class="price">$150</span><span class="period">/ day</span></div>
+                        <div class="marquee-price"><span class="price">RM 150</span><span class="period">/ day</span></div>
                         <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="btn btn-sm btn-primary rounded-pill">Details</a>
                     </div>
                 </div>
@@ -220,7 +345,7 @@ $this->assign('title', 'Welcome to Rentify');
             <!-- Card 3: Audi Q7 (Duplicate) -->
             <div class="marquee-card">
                 <div class="marquee-card-img">
-                    <?= $this->Html->image('audi-q7.jpg', ['class' => 'img-fluid object-fit-cover rounded-4', 'style' => 'height: 250px; width: 100%;', 'alt' => 'Audi Q7']) ?>
+                    <?= $this->Html->image('audi-q7.jpg', ['class' => 'img-fluid', 'alt' => 'Audi Q7']) ?>
                     <span class="marquee-badge">SUV</span>
                 </div>
                 <div class="marquee-card-body">
@@ -231,7 +356,7 @@ $this->assign('title', 'Welcome to Rentify');
                         <span><i class="fas fa-mountain"></i> AWD</span>
                     </div>
                     <div class="marquee-card-footer">
-                        <div class="marquee-price"><span class="price">$180</span><span class="period">/ day</span></div>
+                        <div class="marquee-price"><span class="price">RM 180</span><span class="period">/ day</span></div>
                         <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="btn btn-sm btn-primary rounded-pill">Details</a>
                     </div>
                 </div>
@@ -248,60 +373,54 @@ $this->assign('title', 'Welcome to Rentify');
     </div>
 </section>
 
-<!-- How It Works - EDITORIAL LUXURY EXECUTIVE PROCESS -->
-<section class="executive-process-section position-relative overflow-hidden">
-    <div class="container position-relative z-1">
-        <!-- Elegant Header with Serif/Sans Pairing -->
+<!-- How It Works - CORPORATE MINIMALIST WHITE ZIG-ZAG -->
+<section class="how-it-works-section">
+    <div class="container">
+        <!-- Elegant Header -->
         <div class="text-center mb-5 pb-4">
-            <div class="executive-subtitle mb-3">The Executive Process</div>
-            <h2 class="executive-title">How It <span class="metallic-text">Works</span></h2>
+            <div class="how-subtitle">The Executive Process</div>
+            <h2 class="how-title">How It Works</h2>
         </div>
         
-        <!-- Flow Line Behind Cards (Desktop Only) -->
-        <div class="flow-line d-none d-lg-block"></div>
-        
-        <!-- Steps Row -->
-        <div class="row g-4 justify-content-center">
-            <!-- Step 1: Secure Dates -->
-            <div class="col-lg-4">
-                <div class="crystal-card p-5 text-center h-100">
-                    <div class="step-number">01</div>
-                    <div class="executive-icon mb-4">
-                        <i class="far fa-calendar-alt"></i>
-                    </div>
-                    <h4 class="card-title-executive">Secure Dates</h4>
-                    <p class="card-text-executive">Select your preferred timeline to view real-time availability.</p>
-                </div>
+        <!-- Step 1: Secure Dates - Image LEFT, Text RIGHT -->
+        <div class="zigzag-row">
+            <div class="zigzag-image">
+                <img src="<?= $this->Url->webroot('img/secure_dates.jpg') ?>" alt="Secure Dates">
             </div>
-            
-            <!-- Step 2: Select Vehicle -->
-            <div class="col-lg-4">
-                <div class="crystal-card p-5 text-center h-100">
-                    <div class="step-number">02</div>
-                    <div class="executive-icon mb-4">
-                        <i class="far fa-gem"></i>
-                    </div>
-                    <h4 class="card-title-executive">Select Vehicle</h4>
-                    <p class="card-text-executive">Choose from our curated fleet of performance engineering.</p>
-                </div>
-            </div>
-            
-            <!-- Step 3: Take Delivery -->
-            <div class="col-lg-4">
-                <div class="crystal-card p-5 text-center h-100">
-                    <div class="step-number">03</div>
-                    <div class="executive-icon mb-4">
-                        <i class="far fa-compass"></i>
-                    </div>
-                    <h4 class="card-title-executive">Take Delivery</h4>
-                    <p class="card-text-executive">Confirm your reservation and collect your keys. Excellence delivered.</p>
-                </div>
+            <div class="zigzag-content">
+                <div class="step-label">Step 01</div>
+                <h3 class="step-title">Secure Dates</h3>
+                <p class="step-text">Select your preferred timeline to view real-time availability.</p>
             </div>
         </div>
         
-        <!-- Ghost CTA Button -->
+        <!-- Step 2: Select Vehicle - Image RIGHT, Text LEFT -->
+        <div class="zigzag-row zigzag-reverse">
+            <div class="zigzag-image">
+                <img src="<?= $this->Url->webroot('img/select_vehicle.avif') ?>" alt="Select Vehicle">
+            </div>
+            <div class="zigzag-content">
+                <div class="step-label">Step 02</div>
+                <h3 class="step-title">Select Vehicle</h3>
+                <p class="step-text">Choose from our curated fleet of performance engineering.</p>
+            </div>
+        </div>
+        
+        <!-- Step 3: Take Delivery - Image LEFT, Text RIGHT -->
+        <div class="zigzag-row">
+            <div class="zigzag-image">
+                <img src="<?= $this->Url->webroot('img/take_delivery.jpg') ?>" alt="Take Delivery">
+            </div>
+            <div class="zigzag-content">
+                <div class="step-label">Step 03</div>
+                <h3 class="step-title">Take Delivery</h3>
+                <p class="step-text">Confirm your reservation and collect your keys. Excellence delivered.</p>
+            </div>
+        </div>
+        
+        <!-- CTA Button -->
         <div class="text-center mt-5 pt-4">
-            <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="ghost-cta-btn">
+            <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="how-cta-btn">
                 Explore the Collection
             </a>
         </div>
@@ -310,182 +429,188 @@ $this->assign('title', 'Welcome to Rentify');
 
 <style>
 /* ========================================
-   EDITORIAL LUXURY EXECUTIVE PROCESS
-   Vogue-Inspired / Centurion Aesthetic
+   HOW IT WORKS - CORPORATE MINIMALIST WHITE
+   Zig-Zag Layout with Photography
    ======================================== */
 
-/* Google Fonts - Montserrat + Playfair Display */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&display=swap');
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@400;500;600;700&display=swap');
 
-/* Section Container - Vignette Spotlight Background */
-.executive-process-section {
-    background: radial-gradient(circle at center, #1e293b 0%, #020617 100%);
+/* Section Container - Pure White */
+.how-it-works-section {
+    background: #ffffff;
     padding: 100px 0;
     position: relative;
 }
 
-/* Subtle Grain Overlay for Luxury Feel */
-.executive-process-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.02'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
-}
-
-/* Subtitle - Playfair Display Italic Serif */
-.executive-subtitle {
+/* Subtitle */
+.how-subtitle {
     font-family: 'Playfair Display', serif;
     font-size: 1rem;
     font-weight: 400;
     font-style: italic;
     letter-spacing: 3px;
-    background: linear-gradient(to right, #e2e8f0, #94a3b8);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-transform: uppercase;
-}
-
-/* Main Title - Montserrat Bold */
-.executive-title {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 3rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    color: #e2e8f0;
-    margin: 0;
-}
-
-.metallic-text {
-    background: linear-gradient(to right, #e2e8f0, #94a3b8);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-/* Flow Line - Horizontal Connector */
-.flow-line {
-    position: absolute;
-    top: 50%;
-    left: 15%;
-    right: 15%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
-    z-index: 0;
-    margin-top: 60px;
-}
-
-/* Crystal Glass Cards */
-.crystal-card {
-    background: rgba(255, 255, 255, 0.02);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 20px;
-    position: relative;
-    z-index: 1;
-    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.crystal-card:hover {
-    transform: translateY(-10px);
-    border-color: #e2e8f0;
-    box-shadow: 
-        inset 0 0 20px rgba(255, 255, 255, 0.03),
-        0 20px 40px -10px rgba(0, 0, 0, 0.5);
-}
-
-/* Step Number - Subtle */
-.step-number {
-    position: absolute;
-    top: 20px;
-    left: 24px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    color: rgba(255, 255, 255, 0.2);
-}
-
-/* Executive Icons - Large, Thin, White */
-.executive-icon {
-    font-size: 3rem;
-    color: #ffffff;
-    opacity: 0.9;
-    transition: all 0.3s ease;
-    line-height: 1;
-}
-
-.crystal-card:hover .executive-icon {
-    opacity: 1;
-    transform: scale(1.1);
-}
-
-/* Card Title */
-.card-title-executive {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #ffffff;
-    margin-bottom: 16px;
-    letter-spacing: 0.5px;
-}
-
-/* Card Text */
-.card-text-executive {
-    font-size: 0.95rem;
     color: #94a3b8;
-    line-height: 1.7;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+/* Main Title - Serif for Elegance */
+.how-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+    color: #0f172a;
     margin: 0;
 }
 
-/* Ghost CTA Button */
-.ghost-cta-btn {
+/* Zig-Zag Row */
+.zigzag-row {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+    margin-bottom: 80px;
+}
+
+.zigzag-row:last-of-type {
+    margin-bottom: 0;
+}
+
+/* Reverse for alternating rows */
+.zigzag-reverse {
+    flex-direction: row-reverse;
+}
+
+/* Image Container */
+.zigzag-image {
+    flex: 1;
+    max-width: 50%;
+}
+
+.zigzag-image img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 
+        0 4px 6px -1px rgba(0, 0, 0, 0.05),
+        0 20px 40px -12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.4s ease;
+}
+
+.zigzag-row:hover .zigzag-image img {
+    transform: scale(1.02);
+}
+
+/* Content Container */
+.zigzag-content {
+    flex: 1;
+    max-width: 50%;
+    padding: 20px 0;
+}
+
+/* Step Label */
+.step-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #b8860b;
+    margin-bottom: 16px;
+}
+
+/* Step Title */
+.step-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.25rem;
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+}
+
+/* Step Text */
+.step-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.1rem;
+    color: #64748b;
+    line-height: 1.8;
+    max-width: 400px;
+    margin: 0;
+}
+
+/* CTA Button */
+.how-cta-btn {
     display: inline-block;
-    padding: 16px 40px;
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 18px 48px;
+    background: #0f172a;
+    border: 2px solid #0f172a;
     border-radius: 50px;
     color: #ffffff;
     font-family: 'Montserrat', sans-serif;
     font-size: 0.9rem;
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: 1px;
     text-decoration: none;
     text-transform: uppercase;
     transition: all 0.3s ease;
 }
 
-.ghost-cta-btn:hover {
-    background: #ffffff;
+.how-cta-btn:hover {
+    background: transparent;
     color: #0f172a;
-    border-color: #ffffff;
     text-decoration: none;
 }
 
 /* Responsive */
 @media (max-width: 991px) {
-    .executive-process-section {
+    .how-it-works-section {
         padding: 60px 0;
     }
     
-    .executive-title {
-        font-size: 2rem;
+    .how-title {
+        font-size: 2.5rem;
     }
     
-    .crystal-card {
-        margin-bottom: 20px;
+    .zigzag-row,
+    .zigzag-reverse {
+        flex-direction: column;
+        gap: 30px;
+        margin-bottom: 50px;
     }
     
-    .ghost-cta-btn {
-        padding: 14px 32px;
+    .zigzag-image,
+    .zigzag-content {
+        max-width: 100%;
+    }
+    
+    .zigzag-image img {
+        height: 280px;
+    }
+    
+    .step-title {
+        font-size: 1.75rem;
+    }
+    
+    .step-text {
+        max-width: 100%;
+    }
+    
+    .how-cta-btn {
+        padding: 14px 36px;
         font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .zigzag-image img {
+        height: 220px;
+    }
+    
+    .how-title {
+        font-size: 2rem;
     }
 }
 </style>
