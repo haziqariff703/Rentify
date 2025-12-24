@@ -248,192 +248,245 @@ $this->assign('title', 'Welcome to Rentify');
     </div>
 </section>
 
-<!-- How It Works - NEON GLOW WITH ARROWS -->
-<section class="py-5 position-relative overflow-hidden" style="background-color: #F3F5F9;">
-    <div class="container position-relative z-1 py-5">
-        <!-- Header with Sharp LED Neon Typography -->
-        <div class="text-center mb-5">
-            <div class="text-primary fw-bold mb-2" style="letter-spacing: 2px; font-size: 0.85rem; text-transform: uppercase;">Simple Process</div>
-            <h2 style="font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 2.5rem; color: #0F172A;">
-                Rent Your Dream Car in 
-                <span style="color: #00d2ff; text-shadow: 0 0 10px rgba(0, 210, 255, 0.4);">3</span> 
-                <span style="color: #bc13fe; text-shadow: 0 0 10px rgba(188, 19, 254, 0.4);">Simple</span> 
-                <span style="color: #39ff14; text-shadow: 0 0 10px rgba(57, 255, 20, 0.4);">Steps</span>
-            </h2>
+<!-- How It Works - EDITORIAL LUXURY EXECUTIVE PROCESS -->
+<section class="executive-process-section position-relative overflow-hidden">
+    <div class="container position-relative z-1">
+        <!-- Elegant Header with Serif/Sans Pairing -->
+        <div class="text-center mb-5 pb-4">
+            <div class="executive-subtitle mb-3">The Executive Process</div>
+            <h2 class="executive-title">How It <span class="metallic-text">Works</span></h2>
         </div>
         
-        <!-- Steps Row with Connecting Arrows -->
-        <div class="row g-0 text-center align-items-center justify-content-center">
-            
-            <!-- Step 1: Choose Date (CYAN) -->
-            <div class="col-md-3 animate-fade-in-up" style="animation-delay: 0.2s;">
-                <div class="neon-card neon-cyan p-4 h-100">
-                    <span class="neon-badge neon-badge-cyan">STEP 01</span>
-                    <div class="neon-icon neon-icon-cyan mx-auto mb-4">
-                        <i class="fas fa-calendar-alt"></i>
+        <!-- Flow Line Behind Cards (Desktop Only) -->
+        <div class="flow-line d-none d-lg-block"></div>
+        
+        <!-- Steps Row -->
+        <div class="row g-4 justify-content-center">
+            <!-- Step 1: Secure Dates -->
+            <div class="col-lg-4">
+                <div class="crystal-card p-5 text-center h-100">
+                    <div class="step-number">01</div>
+                    <div class="executive-icon mb-4">
+                        <i class="far fa-calendar-alt"></i>
                     </div>
-                    <h4 class="fw-bold mb-3" style="color: #0F172A;">Choose Date</h4>
-                    <p style="color: #6b7280;">Select your preferred pickup and return dates to check real-time availability.</p>
+                    <h4 class="card-title-executive">Secure Dates</h4>
+                    <p class="card-text-executive">Select your preferred timeline to view real-time availability.</p>
                 </div>
             </div>
             
-            <!-- Arrow 1 (Desktop Only) -->
-            <div class="col-md-1 d-none d-md-flex align-items-center justify-content-center">
-                <i class="fas fa-chevron-right neon-arrow-icon"></i>
-            </div>
-            
-            <!-- Step 2: Select Car (PURPLE) -->
-            <div class="col-md-3 animate-fade-in-up" style="animation-delay: 0.4s;">
-                <div class="neon-card neon-purple p-4 h-100">
-                    <span class="neon-badge neon-badge-purple">STEP 02</span>
-                    <div class="neon-icon neon-icon-purple mx-auto mb-4">
-                        <i class="fas fa-car"></i>
+            <!-- Step 2: Select Vehicle -->
+            <div class="col-lg-4">
+                <div class="crystal-card p-5 text-center h-100">
+                    <div class="step-number">02</div>
+                    <div class="executive-icon mb-4">
+                        <i class="far fa-gem"></i>
                     </div>
-                    <h4 class="fw-bold mb-3" style="color: #0F172A;">Select Car</h4>
-                    <p style="color: #6b7280;">Browse our diverse fleet and choose the car that perfectly fits your journey.</p>
+                    <h4 class="card-title-executive">Select Vehicle</h4>
+                    <p class="card-text-executive">Choose from our curated fleet of performance engineering.</p>
                 </div>
             </div>
             
-            <!-- Arrow 2 (Desktop Only) -->
-            <div class="col-md-1 d-none d-md-flex align-items-center justify-content-center">
-                <i class="fas fa-chevron-right neon-arrow-icon"></i>
-            </div>
-            
-            <!-- Step 3: Drive Away (GREEN) -->
-            <div class="col-md-3 animate-fade-in-up" style="animation-delay: 0.6s;">
-                <div class="neon-card neon-green p-4 h-100">
-                    <span class="neon-badge neon-badge-green">STEP 03</span>
-                    <div class="neon-icon neon-icon-green mx-auto mb-4">
-                        <i class="fas fa-key"></i>
+            <!-- Step 3: Take Delivery -->
+            <div class="col-lg-4">
+                <div class="crystal-card p-5 text-center h-100">
+                    <div class="step-number">03</div>
+                    <div class="executive-icon mb-4">
+                        <i class="far fa-compass"></i>
                     </div>
-                    <h4 class="fw-bold mb-3" style="color: #0F172A;">Drive Away</h4>
-                    <p style="color: #6b7280;">Complete your secure booking and pick up your car. It's that simple!</p>
+                    <h4 class="card-title-executive">Take Delivery</h4>
+                    <p class="card-text-executive">Confirm your reservation and collect your keys. Excellence delivered.</p>
                 </div>
             </div>
+        </div>
+        
+        <!-- Ghost CTA Button -->
+        <div class="text-center mt-5 pt-4">
+            <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="ghost-cta-btn">
+                Explore the Collection
+            </a>
         </div>
     </div>
 </section>
 
 <style>
 /* ========================================
-   NEON GLOW STEP CARDS - WITH ARROWS
+   EDITORIAL LUXURY EXECUTIVE PROCESS
+   Vogue-Inspired / Centurion Aesthetic
    ======================================== */
 
-/* Base Card - Pod Style */
-.neon-card {
-    background: #ffffff;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-    border: 1px solid transparent;
-    border-radius: 20px;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+/* Google Fonts - Montserrat + Playfair Display */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&display=swap');
+
+/* Section Container - Vignette Spotlight Background */
+.executive-process-section {
+    background: radial-gradient(circle at center, #1e293b 0%, #020617 100%);
+    padding: 100px 0;
     position: relative;
 }
 
-/* Lift on Hover */
-.neon-card:hover {
-    transform: translateY(-5px);
+/* Subtle Grain Overlay for Luxury Feel */
+.executive-process-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.02'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
 }
 
-/* CYAN Neon - #00d2ff */
-.neon-cyan {
-    border-color: #00d2ff;
-}
-.neon-cyan:hover {
-    box-shadow: 0 20px 50px rgba(0, 210, 255, 0.35), 0 0 40px rgba(0, 210, 255, 0.25);
-}
-
-/* PURPLE Neon - #bc13fe */
-.neon-purple {
-    border-color: #bc13fe;
-}
-.neon-purple:hover {
-    box-shadow: 0 20px 50px rgba(188, 19, 254, 0.35), 0 0 40px rgba(188, 19, 254, 0.25);
-}
-
-/* GREEN Neon - #39ff14 */
-.neon-green {
-    border-color: #39ff14;
-}
-.neon-green:hover {
-    box-shadow: 0 20px 50px rgba(57, 255, 20, 0.35), 0 0 40px rgba(57, 255, 20, 0.25);
-}
-
-/* Neon Badges */
-.neon-badge {
-    display: inline-block;
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    margin-bottom: 20px;
-}
-
-.neon-badge-cyan {
-    background: linear-gradient(135deg, #00d2ff 0%, #00a8cc 100%);
-    color: white;
-}
-
-.neon-badge-purple {
-    background: linear-gradient(135deg, #bc13fe 0%, #9400d3 100%);
-    color: white;
-}
-
-.neon-badge-green {
-    background: linear-gradient(135deg, #39ff14 0%, #00cc00 100%);
-    color: #0F172A;
-}
-
-/* Neon Icons */
-.neon-icon {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.8rem;
-    transition: all 0.3s ease;
-}
-
-.neon-icon-cyan {
-    background: rgba(0, 210, 255, 0.15);
-    color: #00a8cc;
-}
-.neon-cyan:hover .neon-icon-cyan {
-    background: #00d2ff;
-    color: white;
-    box-shadow: 0 0 30px rgba(0, 210, 255, 0.6);
-}
-
-.neon-icon-purple {
-    background: rgba(188, 19, 254, 0.15);
-    color: #9400d3;
-}
-.neon-purple:hover .neon-icon-purple {
-    background: #bc13fe;
-    color: white;
-    box-shadow: 0 0 30px rgba(188, 19, 254, 0.6);
-}
-
-.neon-icon-green {
-    background: rgba(57, 255, 20, 0.15);
-    color: #00cc00;
-}
-.neon-green:hover .neon-icon-green {
-    background: #39ff14;
-    color: #0F172A;
-    box-shadow: 0 0 30px rgba(57, 255, 20, 0.6);
-}
-
-/* Connecting Arrow Icons - Gradient Style */
-.neon-arrow-icon {
-    font-size: 2rem;
-    background: linear-gradient(135deg, #00d2ff 0%, #bc13fe 100%);
+/* Subtitle - Playfair Display Italic Serif */
+.executive-subtitle {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: 3px;
+    background: linear-gradient(to right, #e2e8f0, #94a3b8);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    text-transform: uppercase;
+}
+
+/* Main Title - Montserrat Bold */
+.executive-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #e2e8f0;
+    margin: 0;
+}
+
+.metallic-text {
+    background: linear-gradient(to right, #e2e8f0, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Flow Line - Horizontal Connector */
+.flow-line {
+    position: absolute;
+    top: 50%;
+    left: 15%;
+    right: 15%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+    z-index: 0;
+    margin-top: 60px;
+}
+
+/* Crystal Glass Cards */
+.crystal-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    position: relative;
+    z-index: 1;
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.crystal-card:hover {
+    transform: translateY(-10px);
+    border-color: #e2e8f0;
+    box-shadow: 
+        inset 0 0 20px rgba(255, 255, 255, 0.03),
+        0 20px 40px -10px rgba(0, 0, 0, 0.5);
+}
+
+/* Step Number - Subtle */
+.step-number {
+    position: absolute;
+    top: 20px;
+    left: 24px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.2);
+}
+
+/* Executive Icons - Large, Thin, White */
+.executive-icon {
+    font-size: 3rem;
+    color: #ffffff;
+    opacity: 0.9;
+    transition: all 0.3s ease;
+    line-height: 1;
+}
+
+.crystal-card:hover .executive-icon {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* Card Title */
+.card-title-executive {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 16px;
+    letter-spacing: 0.5px;
+}
+
+/* Card Text */
+.card-text-executive {
+    font-size: 0.95rem;
+    color: #94a3b8;
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* Ghost CTA Button */
+.ghost-cta-btn {
+    display: inline-block;
+    padding: 16px 40px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50px;
+    color: #ffffff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.ghost-cta-btn:hover {
+    background: #ffffff;
+    color: #0f172a;
+    border-color: #ffffff;
+    text-decoration: none;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+    .executive-process-section {
+        padding: 60px 0;
+    }
+    
+    .executive-title {
+        font-size: 2rem;
+    }
+    
+    .crystal-card {
+        margin-bottom: 20px;
+    }
+    
+    .ghost-cta-btn {
+        padding: 14px 32px;
+        font-size: 0.85rem;
+    }
 }
 </style>
 

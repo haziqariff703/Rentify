@@ -95,7 +95,7 @@ $cakeDescription = 'Rentify - Premium Car Rental';
     <?= $this->element('header') ?>
 
     <!-- Main Content -->
-    <main class="flex-grow-1 pt-5">
+    <main class="flex-grow-1">
         <?= $this->Flash->render() ?>
         <?= $this->fetch('content') ?>
     </main>

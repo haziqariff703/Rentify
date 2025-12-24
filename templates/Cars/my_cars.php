@@ -8,7 +8,21 @@ $this->assign('title', 'The Garage');
 
 <style>
     /* Google Fonts - Montserrat */
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap');
+
+    /* ========================================
+       PLATINUM STUDIO BACKGROUND
+       Clean Micro-Dot Pattern
+       ======================================== */
+    
+    /* Page Wrapper - Clean Micro-Dot Pattern */
+    .platinum-studio-wrapper {
+        background-color: #f8fafc;
+        background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px);
+        background-size: 24px 24px;
+        min-height: 100vh;
+        padding: 0 0 60px;
+    }
 
     /* ========================================
    3D FLIP CARD CATALOG STYLES
@@ -38,7 +52,11 @@ $this->assign('title', 'The Garage');
         overflow: hidden;
         /* Clip content to curved corners */
         margin-bottom: 20px;
-        /* Space before next section */
+        /* Pull up to cancel layout pt-5 gap */
+        margin-top: -3rem;
+        /* Shadow for depth - banner casts shadow onto dots */
+        box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
+        z-index: 10;
     }
 
     /* Subtle gradient for depth (optional) */
@@ -55,14 +73,19 @@ $this->assign('title', 'The Garage');
     }
 
     /* ========================================
-       CORPORATE FILTER SIDEBAR
+       SOLID WHITE FILTER SIDEBAR
        ======================================== */
     .filter-card {
         background: #ffffff;
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        position: relative;
+        z-index: 1;
+    }
+        position: relative;
+        z-index: 1;
     }
 
     .filter-header {
@@ -159,10 +182,19 @@ $this->assign('title', 'The Garage');
         color: #3b82f6;
     }
 
-    /* 3D Flip Card */
+    /* ========================================
+       FLOATING GLASS CARD - Modern UI
+       (With Proper 3D Flip)
+       ======================================== */
+    
+    /* Card Container - Clean Shape */
     .flip-card {
         background-color: transparent;
-        height: 350px;
+        height: 400px;
+        border-radius: 24px;
+        overflow: visible;
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.15);
+        position: relative;
         perspective: 1000px;
     }
 
@@ -170,13 +202,12 @@ $this->assign('title', 'The Garage');
         position: relative;
         width: 100%;
         height: 100%;
-        text-align: center;
+        border-radius: 24px;
         transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         transform-style: preserve-3d;
-        border-radius: 24px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     }
 
+    /* Flip on hover */
     .flip-card:hover .flip-card-inner {
         transform: rotateY(180deg);
     }
@@ -186,48 +217,72 @@ $this->assign('title', 'The Garage');
         position: absolute;
         width: 100%;
         height: 100%;
-        -webkit-backface-visibility: hidden;
-        backface-visibility: hidden;
         border-radius: 24px;
         overflow: hidden;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
     }
 
-    /* Front Styling */
+    /* Front Styling - Full Image Coverage */
     .flip-card-front {
         background-color: #1e293b;
-        /* Dark fallback if image fails */
         background-size: cover;
         background-position: center;
     }
 
+    /* Image hover scale effect */
+    .flip-card-front img {
+        transition: transform 0.4s ease;
+    }
+
+    .flip-card:hover .flip-card-front img {
+        transform: scale(1.05);
+    }
+
+    /* Glass Pill Overlay - Floating at bottom */
     .front-overlay {
         position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        padding: 20px;
-        /* Premium Glassmorphism */
-        background: rgba(15, 23, 42, 0.65);
+        bottom: 20px;
+        left: 20px;
+        right: 20px;
+        padding: 18px 20px;
+        /* White Glass Effect */
+        background: rgba(255, 255, 255, 0.85);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
-        /* Glass Edge */
-        border-top: 1px solid rgba(255, 255, 255, 0.15);
-        /* Inherit card's rounded corners at bottom */
-        border-radius: 0 0 24px 24px;
-        text-align: left;
-        /* Ensure text is readable */
-        color: white;
+        border-radius: 16px;
+        text-align: center;
+        /* Subtle shadow */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Text styling in Glass Pill */
+    .front-overlay .badge {
+        margin-bottom: 8px;
+    }
+
+    .front-overlay h4 {
+        color: #1e293b !important;
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+        text-shadow: none !important;
     }
 
     .price-tag {
-        color: #3b82f6;
+        color: #4f46e5 !important;
         font-weight: 800;
-        font-size: 1.2rem;
-        margin-top: 5px;
+        font-size: 1.1rem;
+        margin-top: 4px;
+    }
+
+    .price-tag small {
+        color: #64748b;
+        font-weight: 500;
     }
 
     .text-shadow {
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        text-shadow: none;
     }
 
     /* Back Styling - Glassmorphism (Lighter) */
@@ -286,8 +341,8 @@ $this->assign('title', 'The Garage');
     </div>
 </section>
 
-<!-- Main Content - FULL WIDTH -->
-<section class="py-5" style="background-color: #f3f4f6; background-image: radial-gradient(#d1d5db 1px, transparent 1px); background-size: 20px 20px;">
+<!-- Main Content - PLATINUM STUDIO WRAPPER -->
+<section class="platinum-studio-wrapper">
     <div class="container-fluid px-3">
         <div class="row">
             <!-- Filter Sidebar - Corporate Accordion -->
