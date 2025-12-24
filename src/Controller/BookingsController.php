@@ -245,17 +245,8 @@ class BookingsController extends AppController
             }
         }
 
-        // C. Release the Car (Make available again)
-        if ($booking->car_id) {
-            try {
-                $car = $this->Bookings->Cars->get($booking->car_id);
-                if (in_array($car->status, ['rented', 'booked'])) {
-                    $car->status = 'available';
-                    $this->Bookings->Cars->save($car);
-                }
-            } catch (\Exception $e) { /* Ignore if car missing */
-            }
-        }
+        // C. Note: Car status is no longer updated since availability is 
+        //    determined dynamically from bookings, not a static status field.
         // --- STATUS UPDATE END ---
 
         if ($this->Bookings->save($booking)) {
