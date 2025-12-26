@@ -420,7 +420,7 @@ $greeting = match (true) {
             },
             themeSystem: 'standard',
             height: 600,
-            events: '/rentify/bookings/calendar-data', // JSON Endpoint
+            events: '<?= $this->Url->build(['controller' => 'Bookings', 'action' => 'calendarData']) ?>', // Dynamic URL
             eventClick: function(info) {
                 // Simple alert for now, can be a modal later
                 alert('Booking: ' + info.event.title + '\nPrice: ' + info.event.extendedProps.price + '\nStatus: ' + info.event.extendedProps.status);
