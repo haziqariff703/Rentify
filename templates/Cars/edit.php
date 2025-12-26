@@ -214,11 +214,11 @@ $transmissionOptions = [
     <!-- Form Actions -->
     <div class="form-actions">
         <?= $this->Form->button(
-            '<i class="fas fa-save me-2"></i>' . __('Save Changes'),
+            __('Save Changes'),
             ['class' => 'btn btn-primary btn-lg', 'escape' => false]
         ) ?>
         <?= $this->Form->postLink(
-            '<i class="fas fa-trash me-2"></i>' . __('Delete Car'),
+            __('Delete Car'),
             ['action' => 'delete', $car->id],
             [
                 'confirm' => __('Are you sure you want to delete this car?'),
