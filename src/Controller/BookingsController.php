@@ -11,7 +11,7 @@ class BookingsController extends AppController
     public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         parent::beforeFilter($event);
-        $this->Authentication->allowUnauthenticated(['getBookedDates']); // Allow JS to fetch dates
+        $this->Authentication->allowUnauthenticated(['getBookedDates', 'getCarDetails']); // Allow JS to fetch data
 
         // ... (Keep your existing Auth checks for admin/customer here) ...
         $user = $this->Authentication->getIdentity();
@@ -48,6 +48,26 @@ class BookingsController extends AppController
 
         $this->set(compact('dates'));
         $this->viewBuilder()->setOption('serialize', ['dates']);
+    }
+
+    // --- API to get car details for dynamic preview ---
+    public function getCarDetails($carId = null)
+    {
+        $this->request->allowMethod(['get', 'ajax']);
+        
+        $carsTable = $this->fetchTable('Cars');
+        $car = $carsTable->get($carId);
+
+        $data = [
+            'id' => $car->id,
+            'name' => $car->car_model,
+            'image' => $car->image,
+            'price_per_day' => $car->price_per_day
+        ];
+
+        return $this->response
+            ->withType('application/json')
+            ->withStringBody(json_encode($data));
     }
 
     // --- UPDATED: Add Method with Overlap Check ---
