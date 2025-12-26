@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Rentify Home Page - Bootstrap 5 Version
  */
@@ -57,31 +58,31 @@ $this->assign('title', 'Welcome to Rentify');
                     ]) ?>
                 </div>
             </div>
-            
+
             <!-- Right Column - Content -->
             <div class="col-lg-6">
                 <div class="about-executive-content">
                     <!-- Eyebrow Label -->
                     <span class="about-eyebrow">Driven by Excellence</span>
-                    
+
                     <!-- Main Title - Playfair Display -->
                     <h2 class="about-executive-title">Redefining Your Road Trip Experience</h2>
-                    
+
                     <!-- Professional Paragraphs -->
                     <p class="about-executive-text">
-                        At Rentify, we are committed to delivering an unparalleled driving experience. Our curated fleet 
-                        features iconic vehicles like the powerful <strong>Chevrolet Camaro</strong>, the sophisticated 
-                        <strong>BMW 5 Series</strong>, and the versatile <strong>Audi Q7</strong> — each meticulously 
+                        At Rentify, we are committed to delivering an unparalleled driving experience. Our curated fleet
+                        features iconic vehicles like the powerful <strong>Chevrolet Camaro</strong>, the sophisticated
+                        <strong>BMW 5 Series</strong>, and the versatile <strong>Audi Q7</strong> — each meticulously
                         maintained to ensure your journey is nothing short of exceptional.
                     </p>
                     <p class="about-executive-text">
-                        Whether you're embarking on a business trip, a family vacation, or a weekend adventure, 
-                        we provide the perfect blend of luxury, comfort, and performance. Our dedicated 
-                        <strong>24-hour concierge and support service</strong> ensures complete peace of mind, 
-                        day or night. Our dedication to quality and customer satisfaction sets us apart as your 
+                        Whether you're embarking on a business trip, a family vacation, or a weekend adventure,
+                        we provide the perfect blend of luxury, comfort, and performance. Our dedicated
+                        <strong>24-hour concierge and support service</strong> ensures complete peace of mind,
+                        day or night. Our dedication to quality and customer satisfaction sets us apart as your
                         trusted partner on the road.
                     </p>
-                    
+
                     <!-- Executive Trust Icons -->
                     <div class="executive-trust-row">
                         <div class="executive-trust-item">
@@ -116,7 +117,7 @@ $this->assign('title', 'Welcome to Rentify');
         <h2 class="fleet-title">Our Featured Fleet</h2>
         <p class="fleet-description">From executive sedans to high-performance sports cars, discover a curated selection of world-class vehicles designed for your ultimate driving pleasure.</p>
     </div>
-    
+
     <!-- Marquee Container with Fade Masks -->
     <div class="marquee-container">
         <div class="marquee-track">
@@ -139,7 +140,7 @@ $this->assign('title', 'Welcome to Rentify');
                     </div>
                 </div>
             </div>
-            
+
             <!-- Card 2: BMW 5 Series -->
             <div class="marquee-card">
                 <div class="marquee-card-img">
@@ -159,7 +160,7 @@ $this->assign('title', 'Welcome to Rentify');
                     </div>
                 </div>
             </div>
-            
+
             <!-- Card 3: Audi Q7 -->
             <div class="marquee-card">
                 <div class="marquee-card-img">
@@ -179,7 +180,7 @@ $this->assign('title', 'Welcome to Rentify');
                     </div>
                 </div>
             </div>
-            
+
             <!-- Card 4: Ferrari F8 Tributo -->
             <div class="marquee-card">
                 <div class="marquee-card-img">
@@ -199,7 +200,7 @@ $this->assign('title', 'Welcome to Rentify');
                     </div>
                 </div>
             </div>
-            
+
             <!-- Card 5: Lamborghini Huracán -->
             <div class="marquee-card">
                 <div class="marquee-card-img">
@@ -219,7 +220,7 @@ $this->assign('title', 'Welcome to Rentify');
                     </div>
                 </div>
             </div>
-            
+
             <!-- Card 6: McLaren 720S -->
             <div class="marquee-card">
                 <div class="marquee-card-img">
@@ -239,7 +240,7 @@ $this->assign('title', 'Welcome to Rentify');
                     </div>
                 </div>
             </div>
-            
+
             <!-- Card 7: Porsche 911 GT3 -->
             <div class="marquee-card">
                 <div class="marquee-card-img">
@@ -259,7 +260,7 @@ $this->assign('title', 'Welcome to Rentify');
                     </div>
                 </div>
             </div>
-            
+
             <!-- Card 8: Aston Martin DBS -->
             <div class="marquee-card">
                 <div class="marquee-card-img">
@@ -279,7 +280,7 @@ $this->assign('title', 'Welcome to Rentify');
                     </div>
                 </div>
             </div>
-            
+
             <!-- Card 9: Toyota Hilux -->
             <div class="marquee-card">
                 <div class="marquee-card-img">
@@ -299,9 +300,9 @@ $this->assign('title', 'Welcome to Rentify');
                     </div>
                 </div>
             </div>
-            
+
             <!-- DUPLICATES FOR SEAMLESS LOOP -->
-            
+
             <!-- Card 1: Chevrolet Camaro (Duplicate) -->
             <div class="marquee-card">
                 <div class="marquee-card-img">
@@ -321,7 +322,7 @@ $this->assign('title', 'Welcome to Rentify');
                     </div>
                 </div>
             </div>
-            
+
             <!-- Card 2: BMW 5 Series (Duplicate) -->
             <div class="marquee-card">
                 <div class="marquee-card-img">
@@ -341,7 +342,7 @@ $this->assign('title', 'Welcome to Rentify');
                     </div>
                 </div>
             </div>
-            
+
             <!-- Card 3: Audi Q7 (Duplicate) -->
             <div class="marquee-card">
                 <div class="marquee-card-img">
@@ -363,7 +364,7 @@ $this->assign('title', 'Welcome to Rentify');
             </div>
         </div>
     </div>
-    
+
     <div class="container">
         <div class="text-center mt-5 animate-fade-in-up" style="animation-delay: 0.5s;">
             <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="btn btn-primary btn-lg rounded-pill px-5 shadow-lg">
@@ -381,7 +382,7 @@ $this->assign('title', 'Welcome to Rentify');
             <div class="how-subtitle">The Executive Process</div>
             <h2 class="how-title">How It Works</h2>
         </div>
-        
+
         <!-- Step 1: Secure Dates - Image LEFT, Text RIGHT -->
         <div class="zigzag-row">
             <div class="zigzag-image">
@@ -393,7 +394,7 @@ $this->assign('title', 'Welcome to Rentify');
                 <p class="step-text">Select your preferred timeline to view real-time availability.</p>
             </div>
         </div>
-        
+
         <!-- Step 2: Select Vehicle - Image RIGHT, Text LEFT -->
         <div class="zigzag-row zigzag-reverse">
             <div class="zigzag-image">
@@ -405,7 +406,7 @@ $this->assign('title', 'Welcome to Rentify');
                 <p class="step-text">Choose from our curated fleet of performance engineering.</p>
             </div>
         </div>
-        
+
         <!-- Step 3: Take Delivery - Image LEFT, Text RIGHT -->
         <div class="zigzag-row">
             <div class="zigzag-image">
@@ -417,7 +418,7 @@ $this->assign('title', 'Welcome to Rentify');
                 <p class="step-text">Confirm your reservation and collect your keys. Excellence delivered.</p>
             </div>
         </div>
-        
+
         <!-- CTA Button -->
         <div class="text-center mt-5 pt-4">
             <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="how-cta-btn">
@@ -428,191 +429,191 @@ $this->assign('title', 'Welcome to Rentify');
 </section>
 
 <style>
-/* ========================================
+    /* ========================================
    HOW IT WORKS - CORPORATE MINIMALIST WHITE
    Zig-Zag Layout with Photography
    ======================================== */
 
-/* Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@400;500;600;700&display=swap');
+    /* Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@400;500;600;700&display=swap');
 
-/* Section Container - Pure White */
-.how-it-works-section {
-    background: #ffffff;
-    padding: 100px 0;
-    position: relative;
-}
-
-/* Subtitle */
-.how-subtitle {
-    font-family: 'Playfair Display', serif;
-    font-size: 1rem;
-    font-weight: 400;
-    font-style: italic;
-    letter-spacing: 3px;
-    color: #94a3b8;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-}
-
-/* Main Title - Serif for Elegance */
-.how-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 3.5rem;
-    font-weight: 700;
-    letter-spacing: -1px;
-    color: #0f172a;
-    margin: 0;
-}
-
-/* Zig-Zag Row */
-.zigzag-row {
-    display: flex;
-    align-items: center;
-    gap: 60px;
-    margin-bottom: 80px;
-}
-
-.zigzag-row:last-of-type {
-    margin-bottom: 0;
-}
-
-/* Reverse for alternating rows */
-.zigzag-reverse {
-    flex-direction: row-reverse;
-}
-
-/* Image Container */
-.zigzag-image {
-    flex: 1;
-    max-width: 50%;
-}
-
-.zigzag-image img {
-    width: 100%;
-    height: 350px;
-    object-fit: cover;
-    border-radius: 12px;
-    box-shadow: 
-        0 4px 6px -1px rgba(0, 0, 0, 0.05),
-        0 20px 40px -12px rgba(0, 0, 0, 0.15);
-    transition: transform 0.4s ease;
-}
-
-.zigzag-row:hover .zigzag-image img {
-    transform: scale(1.02);
-}
-
-/* Content Container */
-.zigzag-content {
-    flex: 1;
-    max-width: 50%;
-    padding: 20px 0;
-}
-
-/* Step Label */
-.step-label {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: #b8860b;
-    margin-bottom: 16px;
-}
-
-/* Step Title */
-.step-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.25rem;
-    font-weight: 600;
-    color: #0f172a;
-    margin-bottom: 16px;
-    letter-spacing: -0.5px;
-}
-
-/* Step Text */
-.step-text {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1.1rem;
-    color: #64748b;
-    line-height: 1.8;
-    max-width: 400px;
-    margin: 0;
-}
-
-/* CTA Button */
-.how-cta-btn {
-    display: inline-block;
-    padding: 18px 48px;
-    background: #0f172a;
-    border: 2px solid #0f172a;
-    border-radius: 50px;
-    color: #ffffff;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-decoration: none;
-    text-transform: uppercase;
-    transition: all 0.3s ease;
-}
-
-.how-cta-btn:hover {
-    background: transparent;
-    color: #0f172a;
-    text-decoration: none;
-}
-
-/* Responsive */
-@media (max-width: 991px) {
+    /* Section Container - Pure White */
     .how-it-works-section {
-        padding: 60px 0;
+        background: #ffffff;
+        padding: 100px 0;
+        position: relative;
     }
-    
-    .how-title {
-        font-size: 2.5rem;
-    }
-    
-    .zigzag-row,
-    .zigzag-reverse {
-        flex-direction: column;
-        gap: 30px;
-        margin-bottom: 50px;
-    }
-    
-    .zigzag-image,
-    .zigzag-content {
-        max-width: 100%;
-    }
-    
-    .zigzag-image img {
-        height: 280px;
-    }
-    
-    .step-title {
-        font-size: 1.75rem;
-    }
-    
-    .step-text {
-        max-width: 100%;
-    }
-    
-    .how-cta-btn {
-        padding: 14px 36px;
-        font-size: 0.85rem;
-    }
-}
 
-@media (max-width: 576px) {
-    .zigzag-image img {
-        height: 220px;
+    /* Subtitle */
+    .how-subtitle {
+        font-family: 'Playfair Display', serif;
+        font-size: 1rem;
+        font-weight: 400;
+        font-style: italic;
+        letter-spacing: 3px;
+        color: #94a3b8;
+        text-transform: uppercase;
+        margin-bottom: 12px;
     }
-    
+
+    /* Main Title - Serif for Elegance */
     .how-title {
-        font-size: 2rem;
+        font-family: 'Playfair Display', serif;
+        font-size: 3.5rem;
+        font-weight: 700;
+        letter-spacing: -1px;
+        color: #0f172a;
+        margin: 0;
     }
-}
+
+    /* Zig-Zag Row */
+    .zigzag-row {
+        display: flex;
+        align-items: center;
+        gap: 60px;
+        margin-bottom: 80px;
+    }
+
+    .zigzag-row:last-of-type {
+        margin-bottom: 0;
+    }
+
+    /* Reverse for alternating rows */
+    .zigzag-reverse {
+        flex-direction: row-reverse;
+    }
+
+    /* Image Container */
+    .zigzag-image {
+        flex: 1;
+        max-width: 50%;
+    }
+
+    .zigzag-image img {
+        width: 100%;
+        height: 350px;
+        object-fit: cover;
+        border-radius: 12px;
+        box-shadow:
+            0 4px 6px -1px rgba(0, 0, 0, 0.05),
+            0 20px 40px -12px rgba(0, 0, 0, 0.15);
+        transition: transform 0.4s ease;
+    }
+
+    .zigzag-row:hover .zigzag-image img {
+        transform: scale(1.02);
+    }
+
+    /* Content Container */
+    .zigzag-content {
+        flex: 1;
+        max-width: 50%;
+        padding: 20px 0;
+    }
+
+    /* Step Label */
+    .step-label {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: #b8860b;
+        margin-bottom: 16px;
+    }
+
+    /* Step Title */
+    .step-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.25rem;
+        font-weight: 600;
+        color: #0f172a;
+        margin-bottom: 16px;
+        letter-spacing: -0.5px;
+    }
+
+    /* Step Text */
+    .step-text {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.1rem;
+        color: #64748b;
+        line-height: 1.8;
+        max-width: 400px;
+        margin: 0;
+    }
+
+    /* CTA Button */
+    .how-cta-btn {
+        display: inline-block;
+        padding: 18px 48px;
+        background: #0f172a;
+        border: 2px solid #0f172a;
+        border-radius: 50px;
+        color: #ffffff;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-decoration: none;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+    }
+
+    .how-cta-btn:hover {
+        background: transparent;
+        color: #0f172a;
+        text-decoration: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 991px) {
+        .how-it-works-section {
+            padding: 60px 0;
+        }
+
+        .how-title {
+            font-size: 2.5rem;
+        }
+
+        .zigzag-row,
+        .zigzag-reverse {
+            flex-direction: column;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .zigzag-image,
+        .zigzag-content {
+            max-width: 100%;
+        }
+
+        .zigzag-image img {
+            height: 280px;
+        }
+
+        .step-title {
+            font-size: 1.75rem;
+        }
+
+        .step-text {
+            max-width: 100%;
+        }
+
+        .how-cta-btn {
+            padding: 14px 36px;
+            font-size: 0.85rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .zigzag-image img {
+            height: 220px;
+        }
+
+        .how-title {
+            font-size: 2rem;
+        }
+    }
 </style>
 
 <!-- Call To Action -->
@@ -628,8 +629,22 @@ $this->assign('title', 'Welcome to Rentify');
 </section>
 
 <style>
-    .hover-shadow:hover { box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important; transform: translateY(-5px); }
-    .transition-all { transition: all 0.3s ease; }
-    .bg-primary-subtle { background-color: rgba(13, 110, 253, 0.1); }
-    .btn-outline-secondary.hover-primary:hover { background-color: var(--bs-primary); border-color: var(--bs-primary); color: white; }
+    .hover-shadow:hover {
+        box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175) !important;
+        transform: translateY(-5px);
+    }
+
+    .transition-all {
+        transition: all 0.3s ease;
+    }
+
+    .bg-primary-subtle {
+        background-color: rgba(13, 110, 253, 0.1);
+    }
+
+    .btn-outline-secondary.hover-primary:hover {
+        background-color: var(--bs-primary);
+        border-color: var(--bs-primary);
+        color: white;
+    }
 </style>

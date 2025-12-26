@@ -12,9 +12,9 @@
                 }
                 ?>
                 <a href="<?= $homeLink ?>" class="footer-brand">
-                    <i class="fas fa-car-side"></i>
-                    <span>RENTIFY</span>
+                    <?= $this->Html->image('rentify_logo.png', ['alt' => 'Rentify Logo', 'class' => 'footer-logo']) ?>
                 </a>
+
                 <p class="footer-description">
                     Experience the freedom of the road with our premium fleet. Reliable, comfortable, and affordable.
                 </p>

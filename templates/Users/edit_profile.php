@@ -103,6 +103,25 @@
         justify-content: center;
         font-size: 2rem;
     }
+
+    .avatar-thumbnail {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #e2e8f0;
+    }
+
+    .avatar-upload-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .current-avatar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
 </style>
 
 <div class="container py-5">
@@ -214,12 +233,21 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="avatar">Avatar URL</label>
-                    <?= $this->Form->text('avatar', [
-                        'class' => 'form-control',
-                        'id' => 'avatar',
-                        'placeholder' => 'Enter avatar image URL'
-                    ]) ?>
+                    <label for="avatar_file">Profile Picture</label>
+                    <div class="avatar-upload-container">
+                        <?php if (!empty($user->avatar) && file_exists(WWW_ROOT . 'img' . DS . $user->avatar)): ?>
+                            <div class="current-avatar mb-2">
+                                <img src="<?= $this->Url->webroot('img/' . $user->avatar) ?>" alt="Current Avatar" class="avatar-thumbnail">
+                                <small class="text-muted d-block">Current avatar</small>
+                            </div>
+                        <?php endif; ?>
+                        <?= $this->Form->file('avatar_file', [
+                            'class' => 'form-control',
+                            'id' => 'avatar_file',
+                            'accept' => 'image/jpeg,image/png,image/gif,image/webp'
+                        ]) ?>
+                        <small class="text-muted">Accepted formats: JPG, PNG, GIF, WebP (Max 2MB)</small>
+                    </div>
                 </div>
             </div>
         </div>

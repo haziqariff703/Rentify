@@ -6,19 +6,18 @@
             <button class="sidebar-toggle-header" id="sidebarToggle" aria-label="Toggle Sidebar">
                 <i class="bi bi-list"></i>
             </button>
-            
-            <?php 
+
+            <?php
             $identity = $this->request->getAttribute('identity');
             $homeLink = $this->Url->build('/');
             if ($identity && $identity->role === 'admin') {
                 $homeLink = $this->Url->build(['controller' => 'Admins', 'action' => 'dashboard']);
             }
             ?>
-            
+
             <!-- Logo -->
-            <a class="navbar-brand d-flex align-items-center gap-2 mb-0" href="<?= $homeLink ?>">
-                <i class="bi bi-car-front-fill" style="font-size: 24px; color: #3B82F6;"></i>
-                <span class="fw-bold" style="color: #ffffff; font-size: 20px;">RENTIFY</span>
+            <a class="navbar-brand d-flex align-items-center mb-0" href="<?= $homeLink ?>">
+                <?= $this->Html->image('rentify_logo.png', ['alt' => 'Rentify Logo']) ?>
             </a>
         </div>
 
@@ -37,14 +36,18 @@
                                     <i class="bi bi-speedometer2"></i> Admin Dashboard
                                 </a>
                             </li>
-                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
                         <?php endif; ?>
                         <li>
                             <a class="dropdown-item d-flex align-items-center gap-2" href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'view', $identity->getIdentifier()]) ?>">
                                 <i class="bi bi-person"></i> Profile
                             </a>
                         </li>
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li>
                             <a class="dropdown-item d-flex align-items-center gap-2 text-danger" href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'logout']) ?>">
                                 <i class="bi bi-box-arrow-right"></i> Logout
@@ -61,6 +64,21 @@
 </nav>
 
 <style>
+    #navbar {
+        height: 70px;
+        background: linear-gradient(rgba(30, 41, 59, 0.85), rgba(30, 41, 59, 0.9)),
+            url('<?= $this->Url->assetUrl('img/header_background.jpg') ?>') !important;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    #navbar .navbar-brand img {
+        height: 150px;
+        max-height: 150px;
+        width: auto;
+    }
+
     .sidebar-toggle-header {
         background: rgba(59, 130, 246, 0.2);
         border: 1px solid rgba(59, 130, 246, 0.3);
@@ -75,12 +93,12 @@
         color: #ffffff;
         font-size: 20px;
     }
-    
+
     .sidebar-toggle-header:hover {
         background: rgba(59, 130, 246, 0.4);
         transform: scale(1.05);
     }
-    
+
     .navbar-brand:hover {
         opacity: 0.9;
     }

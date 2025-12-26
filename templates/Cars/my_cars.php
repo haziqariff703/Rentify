@@ -14,7 +14,7 @@ $this->assign('title', 'The Garage');
        PLATINUM STUDIO BACKGROUND
        Clean Micro-Dot Pattern
        ======================================== */
-    
+
     /* Page Wrapper - Clean Micro-Dot Pattern */
     .platinum-studio-wrapper {
         background-color: #f8fafc;
@@ -84,8 +84,9 @@ $this->assign('title', 'The Garage');
         position: relative;
         z-index: 1;
     }
-        position: relative;
-        z-index: 1;
+
+    position: relative;
+    z-index: 1;
     }
 
     .filter-header {
@@ -186,7 +187,7 @@ $this->assign('title', 'The Garage');
        FLOATING GLASS CARD - Modern UI
        (With Proper 3D Flip)
        ======================================== */
-    
+
     /* Card Container - Landscape 4:3 Shape */
     .flip-card {
         background-color: transparent;

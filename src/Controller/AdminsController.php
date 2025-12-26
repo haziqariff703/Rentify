@@ -105,12 +105,20 @@ class AdminsController extends AppController
             $carStatusCounts[] = $row->count;
         }
 
-        // Fleet Tracking Data
+        // --- Fleet Tracking Data ---
         $availableCars = $carsTable->find()->where(['status' => 'available'])->count();
         $maintenanceCars = $carsTable->find()->where(['status' => 'maintenance'])->count();
 
-        // Calculate currently rented cars from active bookings (confirmed bookings with today's date in range)
+        // Cars Due for Return Today
         $today = new \Cake\I18n\Date();
+        $carsDueToday = $bookingsTable->find()
+            ->where([
+                'booking_status' => 'confirmed',
+                'end_date' => $today
+            ])
+            ->count();
+
+        // Calculate currently rented cars
         $currentlyRentedCars = $bookingsTable->find()
             ->where([
                 'booking_status' => 'confirmed',
@@ -118,6 +126,22 @@ class AdminsController extends AppController
                 'end_date >=' => $today
             ])
             ->count();
+
+        // --- Top Performing Cars (Revenue Leaderboard) ---
+        // Basic query: sum total_price group by car_id
+        $topCars = $bookingsTable->find();
+        $topCars = $topCars->select([
+            'car_model' => 'Cars.car_model',
+            'car_image' => 'Cars.image',
+            'total_revenue' => $topCars->func()->sum('Bookings.total_price'),
+            'booking_count' => $topCars->func()->count('Bookings.id')
+        ])
+            ->contain(['Cars'])
+            ->where(['Bookings.booking_status IN' => ['confirmed', 'completed']])
+            ->group(['Bookings.car_id', 'Cars.car_model', 'Cars.image'])
+            ->order(['total_revenue' => 'DESC'])
+            ->limit(5)
+            ->all();
 
         $this->set(compact(
             'totalCars',
@@ -135,7 +159,9 @@ class AdminsController extends AppController
             'pendingBookings',
             'availableCars',
             'currentlyRentedCars',
-            'maintenanceCars'
+            'maintenanceCars',
+            'carsDueToday',
+            'topCars'
         ));
     }
 

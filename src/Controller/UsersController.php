@@ -153,6 +153,47 @@ class UsersController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
 
+            // Handle avatar file upload
+            $avatarFile = $this->request->getUploadedFile('avatar_file');
+            if ($avatarFile && $avatarFile->getError() === UPLOAD_ERR_OK) {
+                $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                $maxFileSize = 2 * 1024 * 1024; // 2MB
+
+                if (!in_array($avatarFile->getClientMediaType(), $allowedMimeTypes)) {
+                    $this->Flash->error(__('Invalid file type. Please upload JPG, PNG, GIF, or WebP.'));
+                    $this->set(compact('user'));
+                    return;
+                }
+
+                if ($avatarFile->getSize() > $maxFileSize) {
+                    $this->Flash->error(__('File is too large. Maximum size is 2MB.'));
+                    $this->set(compact('user'));
+                    return;
+                }
+
+                // Create avatars directory if it doesn't exist
+                $uploadDir = WWW_ROOT . 'img' . DS . 'avatars';
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+
+                // Generate unique filename
+                $extension = pathinfo($avatarFile->getClientFilename(), PATHINFO_EXTENSION);
+                $newFilename = 'avatar_' . $userId . '_' . time() . '.' . $extension;
+                $targetPath = $uploadDir . DS . $newFilename;
+
+                // Move uploaded file
+                $avatarFile->moveTo($targetPath);
+
+                // Set the avatar path in data
+                $data['avatar'] = 'avatars' . DS . $newFilename;
+
+                // Delete old avatar if exists
+                if (!empty($user->avatar) && file_exists(WWW_ROOT . 'img' . DS . $user->avatar)) {
+                    @unlink(WWW_ROOT . 'img' . DS . $user->avatar);
+                }
+            }
+
             // Only allow customers to update specific fields (not role)
             $allowedFields = ['name', 'ic_number', 'email', 'phone', 'address', 'avatar'];
 

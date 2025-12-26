@@ -262,4 +262,43 @@ class BookingsController extends AppController
 
         return $this->redirect(['action' => 'myBookings']);
     }
+    /**
+     * Calendar Data API
+     * Returns JSON data for FullCalendar
+     */
+    public function calendarData()
+    {
+        $this->request->allowMethod(['get', 'ajax']);
+
+        $bookings = $this->Bookings->find('all')
+            ->contain(['Cars', 'Users'])
+            ->all();
+
+        $events = [];
+        foreach ($bookings as $booking) {
+            $color = match (strtolower($booking->booking_status)) {
+                'confirmed' => '#22c55e', // Green
+                'pending' => '#f59e0b',   // Orange
+                'completed' => '#3b82f6', // Blue
+                'cancelled' => '#ef4444', // Red
+                default => '#6b7280'
+            };
+
+            $events[] = [
+                'id' => $booking->id,
+                'title' => $booking->car->car_model . ' (' . $booking->user->name . ')',
+                'start' => $booking->start_date->format('Y-m-d'),
+                'end' => $booking->end_date->modify('+1 day')->format('Y-m-d'),
+                'color' => $color,
+                'extendedProps' => [
+                    'status' => ucfirst($booking->booking_status),
+                    'price' => '$' . number_format((float)$booking->total_price, 2)
+                ]
+            ];
+        }
+
+        return $this->response
+            ->withType('application/json')
+            ->withStringBody(json_encode($events));
+    }
 }

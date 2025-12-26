@@ -25,7 +25,9 @@ $cakeDescription = 'Rentify - Admin Panel';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@527&display=swap" rel="stylesheet">
 
     <!-- DataTables CSS with Bootstrap 5 -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
@@ -40,7 +42,7 @@ $cakeDescription = 'Rentify - Admin Panel';
 
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Syne', sans-serif;
             background-color: #f8fafc;
         }
 
@@ -112,6 +114,9 @@ $cakeDescription = 'Rentify - Admin Panel';
 
     <!-- ApexCharts -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <!-- FullCalendar -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
 </body>
 
 </html>

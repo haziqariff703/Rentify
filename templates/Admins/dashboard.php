@@ -11,186 +11,426 @@
  * @var array $revenueData
  * @var array $carStatusLabels
  * @var array $carStatusCounts
+ * @var int $pendingBookings
+ * @var int $carsDueToday
+ * @var iterable $topCars
  */
 ?>
 
+<style>
+    :root {
+        --glass-bg: rgba(255, 255, 255, 0.7);
+        --glass-border: 1px solid rgba(255, 255, 255, 0.5);
+        --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+        --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    }
+
+    .glass-card {
+        background: var(--glass-bg);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: var(--glass-border);
+        box-shadow: var(--glass-shadow);
+        border-radius: 20px;
+        padding: 24px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .glass-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.1);
+    }
+
+    .widget-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .stat-value-lg {
+        font-size: 2.5rem;
+        font-weight: 800;
+        letter-spacing: -1px;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* FullCalendar Customization */
+    #calendar {
+        font-family: 'Inter', sans-serif;
+    }
+
+    .fc-theme-standard .fc-scrollgrid {
+        border: none;
+    }
+
+    .fc-scroller {
+        overflow-y: hidden !important;
+    }
+
+    .fc-daygrid-day-frame {
+        min-height: 80px;
+    }
+
+    .fc-event {
+        border-radius: 6px;
+        border: none;
+        padding: 2px 4px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .fc-toolbar-title {
+        font-size: 1.25rem !important;
+        font-weight: 700;
+    }
+
+    .fc-button {
+        background: white !important;
+        color: #64748b !important;
+        border: 1px solid #e2e8f0 !important;
+        font-weight: 600 !important;
+        text-transform: capitalize !important;
+        box-shadow: none !important;
+    }
+
+    .fc-button-active {
+        background: #f1f5f9 !important;
+        color: #0f172a !important;
+    }
+
+    .fc-button-primary {
+        border-color: transparent !important;
+    }
+
+    /* Action Widget */
+    .action-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid #f1f5f9;
+        transition: background 0.2s;
+    }
+
+    .action-item:last-child {
+        border-bottom: none;
+    }
+
+    .action-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        font-size: 1.2rem;
+    }
+
+    .bg-soft-warning {
+        background: rgba(245, 158, 11, 0.1);
+        color: #f59e0b;
+    }
+
+    .bg-soft-danger {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+    }
+
+    .bg-soft-info {
+        background: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+    }
+
+    /* Top Cars */
+    .car-leaderboard-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .car-thumb {
+        width: 50px;
+        height: 35px;
+        border-radius: 6px;
+        object-fit: cover;
+        margin-right: 15px;
+        background: #f1f5f9;
+    }
+</style>
+
 <!-- Analytics Header -->
-<div class="analytics-header">
-    <h2>Analytics</h2>
-    <div class="date-filter">
-        <button class="btn btn-light">
-            <i class="fas fa-calendar me-2"></i>
-            <?= date('M d, Y') ?>
+<?php
+$hour = (int) date('H');
+$greeting = match (true) {
+    $hour < 12 => 'Good morning',
+    $hour < 17 => 'Good afternoon',
+    default => 'Good evening'
+};
+?>
+<div class="d-flex justify-content-between align-items-center mb-5">
+    <div>
+        <h2 class="fw-bold mb-1" style="color: #0f172a;">Dashboard Overview</h2>
+        <p class="text-muted mb-0"><?= $greeting ?>, Admin! Here's what's happening today.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <button class="btn btn-white shadow-sm border">
+            <i class="fas fa-filter me-2 text-muted"></i> Filter
         </button>
-        <button class="btn btn-primary" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); border: none;">
-            <i class="fas fa-download me-2"></i>
-            Export
+        <button class="btn btn-primary shadow-lg" style="background: var(--primary-gradient); border: none;">
+            <i class="fas fa-plus me-2"></i> Quick Action
         </button>
     </div>
 </div>
 
 <!-- Stat Cards Row -->
-<div class="row g-4 mb-4">
-    <div class="col-md-6 col-lg-3">
-        <div class="stat-card">
-            <div class="stat-card-header">
-                <span class="stat-indicator blue"></span>
-                <span class="stat-label">Total Cars</span>
+<div class="row g-4 mb-5">
+    <!-- Total Bookings -->
+    <div class="col-xl-3 col-md-6">
+        <div class="glass-card h-100 position-relative overflow-hidden">
+            <div class="position-absolute top-0 end-0 p-3 opacity-10">
+                <i class="fas fa-calendar-check fa-4x text-primary"></i>
             </div>
-            <h3 class="stat-value"><?= number_format($totalCars) ?></h3>
+            <div class="mb-2 text-uppercase fw-bold text-muted small tracking-wider">Total Bookings</div>
+            <div class="stat-value-lg"><?= number_format($totalBookings) ?></div>
+            <div class="mt-2 text-success small fw-semibold">
+                <i class="fas fa-arrow-up me-1"></i> +12% <span class="text-muted fw-normal">from last month</span>
+            </div>
         </div>
     </div>
 
-    <div class="col-md-6 col-lg-3">
-        <div class="stat-card">
-            <div class="stat-card-header">
-                <span class="stat-indicator green"></span>
-                <span class="stat-label">Total Bookings</span>
+    <!-- Total Revenue -->
+    <div class="col-xl-3 col-md-6">
+        <div class="glass-card h-100 position-relative overflow-hidden">
+            <div class="position-absolute top-0 end-0 p-3 opacity-10">
+                <i class="fas fa-wallet fa-4x text-success"></i>
             </div>
-            <h3 class="stat-value"><?= number_format($totalBookings) ?></h3>
+            <div class="mb-2 text-uppercase fw-bold text-muted small tracking-wider">Total Revenue</div>
+            <div class="stat-value-lg" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                $<?= number_format($totalRevenue) ?>
+            </div>
+            <div class="mt-2 text-success small fw-semibold">
+                <i class="fas fa-arrow-up me-1"></i> +8.5% <span class="text-muted fw-normal">from last month</span>
+            </div>
         </div>
     </div>
 
-    <div class="col-md-6 col-lg-3">
-        <div class="stat-card">
-            <div class="stat-card-header">
-                <span class="stat-indicator orange"></span>
-                <span class="stat-label">Registered Users</span>
+    <!-- Active Fleet -->
+    <div class="col-xl-3 col-md-6">
+        <div class="glass-card h-100 position-relative overflow-hidden">
+            <div class="position-absolute top-0 end-0 p-3 opacity-10">
+                <i class="fas fa-car fa-4x text-info"></i>
             </div>
-            <h3 class="stat-value"><?= number_format($totalUsers) ?></h3>
+            <div class="mb-2 text-uppercase fw-bold text-muted small tracking-wider">Active Fleet</div>
+            <div class="stat-value-lg" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                <?= $availableCars + $currentlyRentedCars ?> <span class="fs-5 text-muted">/ <?= $totalCars ?></span>
+            </div>
+            <div class="mt-2 text-muted small">
+                <?= $maintenanceCars ?> cars in maintenance
+            </div>
         </div>
     </div>
 
-    <div class="col-md-6 col-lg-3">
-        <div class="stat-card">
-            <div class="stat-card-header">
-                <span class="stat-indicator purple"></span>
-                <span class="stat-label">Total Revenue</span>
+    <!-- Users -->
+    <div class="col-xl-3 col-md-6">
+        <div class="glass-card h-100 position-relative overflow-hidden">
+            <div class="position-absolute top-0 end-0 p-3 opacity-10">
+                <i class="fas fa-users fa-4x text-warning"></i>
             </div>
-            <h3 class="stat-value">$<?= number_format($totalRevenue, 2) ?></h3>
+            <div class="mb-2 text-uppercase fw-bold text-muted small tracking-wider">Registered Users</div>
+            <div class="stat-value-lg" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                <?= number_format($totalUsers) ?>
+            </div>
+            <div class="mt-2 text-success small fw-semibold">
+                <i class="fas fa-arrow-up me-1"></i> +24 <span class="text-muted fw-normal">new this week</span>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Charts Row -->
-<div class="row g-4 mb-4">
-    <!-- Main Chart - Highlight Section -->
-    <div class="col-lg-8">
-        <div class="highlight-section">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="widget-title mb-0">Highlight</h5>
-                <div class="chart-legend">
-                    <div class="legend-item">
-                        <span class="legend-dot" style="background: #6366f1;"></span>
-                        Revenue
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-dot" style="background: #22c55e;"></span>
-                        Bookings
-                    </div>
+<!-- Main Dashboard Content -->
+<div class="row g-4 mb-5">
+    <!-- Left Column: Calendar (66%) -->
+    <div class="col-xl-8">
+        <div class="glass-card mb-5" style="margin-bottom: 60px;">
+            <div class="widget-title">
+                <div>
+                    <i class="fas fa-calendar-alt me-2 text-primary"></i>
+                    Booking Interactive Calendar
                 </div>
             </div>
-            <div style="height: 280px;">
+            <!-- FullCalendar Container -->
+            <div id="calendar" style="height: 500px;"></div>
+        </div>
+
+        <!-- Highlight Chart (Revenue) -->
+        <div class="glass-card">
+            <div class="widget-title mb-3">
+                <div>
+                    <i class="fas fa-chart-area me-2 text-info"></i>
+                    Revenue & Bookings Trend
+                </div>
+            </div>
+            <div style="height: 300px;">
                 <div id="highlightChart"></div>
             </div>
         </div>
     </div>
 
-    <!-- Side Widgets Column -->
-    <div class="col-lg-4">
-        <!-- Orders Widget -->
-        <div class="side-widget">
-            <div class="side-widget-header">
-                <span class="side-widget-title">Orders</span>
-                <span class="side-widget-value"><?= number_format($totalBookings) ?></span>
+    <!-- Right Column: Action Center & Insights (33%) -->
+    <div class="col-xl-4">
+        <!-- Action Center -->
+        <div class="glass-card mb-4">
+            <div class="widget-title">
+                <div>
+                    <i class="fas fa-bolt me-2 text-warning"></i>
+                    Action Center
+                </div>
+                <span class="badge bg-danger rounded-pill"><?= $pendingBookings + ($carsDueToday ?? 0) ?> New</span>
             </div>
-            <div style="height: 60px;">
-                <div id="ordersChart"></div>
+            <div class="action-list">
+                <!-- Pending Approvals -->
+                <div class="action-item">
+                    <div class="d-flex align-items-center">
+                        <div class="action-icon bg-soft-warning">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold text-dark">Pending Bookings</div>
+                            <div class="small text-muted"><?= $pendingBookings ?> bookings waiting approval</div>
+                        </div>
+                    </div>
+                    <a href="<?= $this->Url->build(['controller' => 'Bookings', 'action' => 'index']) ?>" class="btn btn-sm btn-light border">Review</a>
+                </div>
+
+                <!-- Returns Due -->
+                <div class="action-item">
+                    <div class="d-flex align-items-center">
+                        <div class="action-icon bg-soft-info">
+                            <i class="fas fa-undo"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold text-dark">Returns Due Today</div>
+                            <div class="small text-muted"><?= $carsDueToday ?? 0 ?> cars scheduled for return</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-light border">View</button>
+                </div>
+
+                <!-- Maintenance Alerts -->
+                <div class="action-item">
+                    <div class="d-flex align-items-center">
+                        <div class="action-icon bg-soft-danger">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold text-dark">Maintenance Required</div>
+                            <div class="small text-muted">2 cars reported issues</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-light border">Check</button>
+                </div>
             </div>
         </div>
 
-        <!-- Earnings Widget -->
-        <div class="side-widget">
-            <div class="side-widget-header">
-                <span class="side-widget-title">Earnings</span>
+        <!-- Top Performing Cars -->
+        <div class="glass-card mb-4">
+            <div class="widget-title">
+                <div>
+                    <i class="fas fa-trophy me-2 text-success"></i>
+                    Top Performing Cars
+                </div>
             </div>
-            <div class="earnings-amount">$<?= number_format($totalRevenue, 2) ?></div>
-            <div style="height: 50px; margin-top: 8px;">
-                <div id="earningsChart"></div>
+            <div class="leaderboard-list">
+                <?php if (!empty($topCars)): ?>
+                    <?php foreach ($topCars as $index => $car): ?>
+                        <div class="car-leaderboard-item justify-content-between">
+                            <div class="d-flex align-items-center">
+                                <div class="fw-bold text-muted me-3">#<?= $index + 1 ?></div>
+                                <!-- Thumbnail Placeholder or Actual Image -->
+                                <?php if (!empty($car->car->image)): ?>
+                                    <?= $this->Html->image('cars/' . h($car->car->image), ['class' => 'car-thumb']) ?>
+                                <?php else: ?>
+                                    <div class="car-thumb d-flex align-items-center justify-content-center text-muted small bg-light">
+                                        <i class="fas fa-car"></i>
+                                    </div>
+                                <?php endif; ?>
+                                <div>
+                                    <div class="fw-bold text-dark small"><?= h($car->car_model) ?></div>
+                                    <div class="text-muted" style="font-size: 0.75rem;"><?= h($car->booking_count) ?> bookings</div>
+                                </div>
+                            </div>
+                            <div class="fw-bold text-success small">
+                                $<?= number_format((float)$car->total_revenue) ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p class="text-muted text-center py-3">No revenue data yet.</p>
+                <?php endif; ?>
             </div>
         </div>
 
-        <!-- Fleet Status Widget (Donut) -->
-        <div class="side-widget">
-            <div class="side-widget-header">
-                <span class="side-widget-title">Fleet Status</span>
+        <!-- Mini Chart Widgets (Stacked) -->
+        <div class="row g-3">
+            <div class="col-6">
+                <div class="glass-card p-3 d-flex flex-column h-100 justify-content-between">
+                    <div class="small text-muted fw-bold mb-2">EARNINGS</div>
+                    <div id="earningsChart"></div>
+                </div>
             </div>
-            <div style="height: 120px; display: flex; align-items: center; justify-content: center;">
-                <div id="fleetChart"></div>
+            <div class="col-6">
+                <div class="glass-card p-3 d-flex flex-column h-100 justify-content-between">
+                    <div class="small text-muted fw-bold mb-2">ORDERS</div>
+                    <div id="ordersChart"></div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="glass-card p-3">
+                    <div class="d-flex justify-content-between mb-2">
+                        <div class="small text-muted fw-bold">FLEET STATUS</div>
+                        <div class="badge bg-light text-dark">Total: <?= $totalCars ?></div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <div id="fleetChart"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Recent Bookings Table -->
-<div class="data-table-card">
-    <div class="data-table-header">
-        <h5 class="widget-title mb-0">Recent Booking Activity</h5>
-        <a href="<?= $this->Url->build(['controller' => 'Bookings', 'action' => 'index']) ?>" class="btn btn-sm btn-outline-primary rounded-pill px-3">
-            View All
-        </a>
-    </div>
-    <table class="data-table">
-        <thead>
-            <tr>
-                <th>Customer</th>
-                <th>Car Model</th>
-                <th>Date Range</th>
-                <th>Price</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if (!empty($recentBookings)): ?>
-                <?php foreach ($recentBookings as $booking): ?>
-                    <tr>
-                        <td>
-                            <div class="fw-semibold"><?= h($booking->user->name ?? 'Unknown User') ?></div>
-                            <div class="text-muted small"><?= h($booking->user->email ?? '') ?></div>
-                        </td>
-                        <td><?= h($booking->car->car_model ?? 'Unknown Car') ?></td>
-                        <td class="text-muted">
-                            <?= $booking->start_date ? $booking->start_date->format('M d') : 'N/A' ?> -
-                            <?= $booking->end_date ? $booking->end_date->format('M d, Y') : 'N/A' ?>
-                        </td>
-                        <td class="fw-semibold">$<?= number_format((float)$booking->total_price, 2) ?></td>
-                        <td>
-                            <?php
-                            $status = $booking->booking_status ?? $booking->status ?? 'Pending';
-                            $statusClass = match (strtolower($status)) {
-                                'confirmed', 'completed' => 'confirmed',
-                                'cancelled' => 'cancelled',
-                                'pending' => 'pending',
-                                default => 'pending'
-                            };
-                            ?>
-                            <span class="status-badge <?= $statusClass ?>"><?= h(ucfirst($status)) ?></span>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <tr>
-                    <td colspan="5" class="text-center py-4 text-muted">No recent bookings found.</td>
-                </tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
-</div>
-
-<!-- ApexCharts Initialization -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // 1. Highlight Chart (Spline Area Chart for Revenue & Bookings)
+        // --- FullCalendar Initialization ---
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek'
+            },
+            themeSystem: 'standard',
+            height: 600,
+            events: '/rentify/bookings/calendar-data', // JSON Endpoint
+            eventClick: function(info) {
+                // Simple alert for now, can be a modal later
+                alert('Booking: ' + info.event.title + '\nPrice: ' + info.event.extendedProps.price + '\nStatus: ' + info.event.extendedProps.status);
+            }
+        });
+        calendar.render();
+
+        // --- ApexCharts Initialization ---
+
+        // 1. Highlight Chart
         const highlightOptions = {
             series: [{
                 name: 'Revenue',
@@ -201,40 +441,35 @@
             }],
             chart: {
                 type: 'area',
-                height: 280,
+                height: 300,
                 fontFamily: "'Inter', sans-serif",
                 toolbar: {
                     show: false
                 },
                 zoom: {
                     enabled: false
-                }
+                },
+                background: 'transparent'
             },
-            colors: ['#6366f1', '#22c55e'],
-            dataLabels: {
-                enabled: false
-            },
+            colors: ['#6366f1', '#10b981'],
             stroke: {
                 curve: 'smooth',
-                width: 2
+                width: 3
             },
             fill: {
                 type: 'gradient',
                 gradient: {
                     shadeIntensity: 1,
-                    opacityFrom: 0.4,
-                    opacityTo: 0.05,
-                    stops: [0, 100]
+                    opacityFrom: 0.5,
+                    opacityTo: 0.1,
+                    stops: [0, 90, 100]
                 }
+            },
+            dataLabels: {
+                enabled: false
             },
             xaxis: {
                 categories: <?= json_encode($revenueLabels ?? []) ?>,
-                labels: {
-                    style: {
-                        colors: '#64748b',
-                        fontFamily: "'Inter', sans-serif"
-                    }
-                },
                 axisBorder: {
                     show: false
                 },
@@ -242,39 +477,19 @@
                     show: false
                 }
             },
-            yaxis: {
-                labels: {
-                    style: {
-                        colors: '#64748b',
-                        fontFamily: "'Inter', sans-serif"
-                    },
-                    formatter: function(val) {
-                        return '$' + val.toLocaleString();
-                    }
-                }
-            },
             grid: {
-                borderColor: '#f1f5f9',
-                strokeDashArray: 0
+                borderColor: 'rgba(0,0,0,0.05)',
+                strokeDashArray: 4
             },
             legend: {
-                show: false
+                position: 'top',
+                horizontalAlign: 'right'
             },
             tooltip: {
-                theme: 'dark',
-                y: {
-                    formatter: function(val, opts) {
-                        if (opts.seriesIndex === 0) {
-                            return '$' + val.toLocaleString();
-                        }
-                        return val.toLocaleString() + ' bookings';
-                    }
-                }
+                theme: 'light'
             }
         };
-
-        const highlightChart = new ApexCharts(document.querySelector("#highlightChart"), highlightOptions);
-        highlightChart.render();
+        new ApexCharts(document.querySelector("#highlightChart"), highlightOptions).render();
 
         // 2. Orders Bar Chart
         const ordersOptions = {
@@ -291,29 +506,28 @@
             colors: ['#6366f1'],
             plotOptions: {
                 bar: {
-                    columnWidth: '60%',
-                    borderRadius: 4
+                    borderRadius: 4,
+                    columnWidth: '60%'
                 }
             },
             tooltip: {
-                theme: 'dark',
+                theme: 'light',
                 fixed: {
                     enabled: false
                 },
+                x: {
+                    show: false
+                },
                 y: {
                     title: {
-                        formatter: function() {
-                            return '';
-                        }
+                        formatter: () => ''
                     }
                 }
             }
         };
+        new ApexCharts(document.querySelector("#ordersChart"), ordersOptions).render();
 
-        const ordersChart = new ApexCharts(document.querySelector("#ordersChart"), ordersOptions);
-        ordersChart.render();
-
-        // 3. Earnings Sparkline (Area)
+        // 3. Earnings Sparkline
         const earningsOptions = {
             series: [{
                 data: [30, 45, 35, 50, 40, 60, 55]
@@ -325,7 +539,7 @@
                     enabled: true
                 }
             },
-            colors: ['#22c55e'],
+            colors: ['#10b981'],
             stroke: {
                 curve: 'smooth',
                 width: 2
@@ -333,71 +547,62 @@
             fill: {
                 type: 'gradient',
                 gradient: {
-                    shadeIntensity: 1,
                     opacityFrom: 0.4,
-                    opacityTo: 0,
-                    stops: [0, 100]
+                    opacityTo: 0
                 }
             },
             tooltip: {
-                theme: 'dark',
+                theme: 'light',
                 fixed: {
                     enabled: false
                 },
+                x: {
+                    show: false
+                },
                 y: {
                     title: {
-                        formatter: function() {
-                            return '$';
-                        }
+                        formatter: () => '$'
                     }
                 }
             }
         };
-
-        const earningsChart = new ApexCharts(document.querySelector("#earningsChart"), earningsOptions);
-        earningsChart.render();
+        new ApexCharts(document.querySelector("#earningsChart"), earningsOptions).render();
 
         // 4. Fleet Status Donut
         const fleetOptions = {
             series: <?= json_encode($carStatusCounts ?? []) ?>,
             chart: {
                 type: 'donut',
-                height: 120
+                height: 160
             },
             labels: <?= json_encode($carStatusLabels ?? []) ?>,
-            colors: ['#22c55e', '#f97316', '#ef4444', '#6366f1', '#64748b'],
+            colors: ['#10b981', '#f59e0b', '#ef4444', '#6366f1'],
+            legend: {
+                show: false
+            },
             plotOptions: {
                 pie: {
                     donut: {
-                        size: '70%'
+                        size: '75%',
+                        labels: {
+                            show: true,
+                            total: {
+                                show: true,
+                                fontSize: '12px',
+                                fontWeight: 600,
+                                color: '#64748b'
+                            }
+                        }
                     }
                 }
             },
             dataLabels: {
                 enabled: false
             },
-            legend: {
-                position: 'right',
-                fontSize: '11px',
-                fontFamily: "'Inter', sans-serif",
-                markers: {
-                    width: 8,
-                    height: 8,
-                    radius: 12
-                },
-                itemMargin: {
-                    vertical: 4
-                }
-            },
-            stroke: {
-                width: 0
-            },
             tooltip: {
-                theme: 'dark'
+                theme: 'light'
             }
         };
-
-        const fleetChart = new ApexCharts(document.querySelector("#fleetChart"), fleetOptions);
-        fleetChart.render();
+        new ApexCharts(document.querySelector("#fleetChart"), fleetOptions).render();
     });
 </script>
