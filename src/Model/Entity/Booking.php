@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Entity;
@@ -15,6 +16,7 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\Date $end_date
  * @property string|null $total_price
  * @property string|null $booking_status
+ * @property string|null $pickup_location
  * @property \Cake\I18n\DateTime|null $created
  * @property \Cake\I18n\DateTime|null $modified
  *
@@ -41,6 +43,7 @@ class Booking extends Entity
         'end_date' => true,
         'total_price' => true,
         'booking_status' => true,
+        'pickup_location' => true,
         'created' => true,
         'modified' => true,
         'user' => true,

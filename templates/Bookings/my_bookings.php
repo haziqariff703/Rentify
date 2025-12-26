@@ -1,4 +1,5 @@
 <?php
+
 /**
  * My Bookings - High-End Corporate Edition
  * @var \App\View\AppView $this
@@ -15,13 +16,11 @@
        ======================================== */
     .bookings-corporate-wrapper {
         background-color: #f8fafc;
-        background-image: repeating-linear-gradient(
-            135deg,
-            transparent,
-            transparent 10px,
-            rgba(148, 163, 184, 0.05) 10px,
-            rgba(148, 163, 184, 0.05) 11px
-        );
+        background-image: repeating-linear-gradient(135deg,
+                transparent,
+                transparent 10px,
+                rgba(148, 163, 184, 0.05) 10px,
+                rgba(148, 163, 184, 0.05) 11px);
         background-attachment: fixed;
         min-height: 100vh;
         padding: 50px 0 80px;
@@ -120,7 +119,7 @@
         right: 0;
         width: 60px;
         height: 100%;
-        background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+        background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
         pointer-events: none;
     }
 
@@ -217,10 +216,22 @@
         letter-spacing: 0.5px;
     }
 
-    .status-text.confirmed { color: #065f46; }
-    .status-text.pending { color: #92400e; }
-    .status-text.completed { color: #1e40af; }
-    .status-text.cancelled, .status-text.refunded { color: #991b1b; }
+    .status-text.confirmed {
+        color: #065f46;
+    }
+
+    .status-text.pending {
+        color: #92400e;
+    }
+
+    .status-text.completed {
+        color: #1e40af;
+    }
+
+    .status-text.cancelled,
+    .status-text.refunded {
+        color: #991b1b;
+    }
 
     /* Pulsing Dot */
     .status-dot {
@@ -231,15 +242,42 @@
         animation: pulse-ring 2s infinite;
     }
 
-    .status-dot.confirmed { background: #10b981; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2); }
-    .status-dot.pending { background: #f59e0b; box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2); }
-    .status-dot.completed { background: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2); }
-    .status-dot.cancelled, .status-dot.refunded { background: #ef4444; box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2); }
+    .status-dot.confirmed {
+        background: #10b981;
+        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+    }
+
+    .status-dot.pending {
+        background: #f59e0b;
+        box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2);
+    }
+
+    .status-dot.completed {
+        background: #3b82f6;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+    }
+
+    .status-dot.cancelled,
+    .status-dot.refunded {
+        background: #ef4444;
+        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
+    }
 
     @keyframes pulse-ring {
-        0% { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
-        50% { box-shadow: 0 0 0 8px transparent; opacity: 0.5; }
-        100% { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
+        0% {
+            box-shadow: 0 0 0 0 currentColor;
+            opacity: 1;
+        }
+
+        50% {
+            box-shadow: 0 0 0 8px transparent;
+            opacity: 0.5;
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 currentColor;
+            opacity: 1;
+        }
     }
 
     /* ========================================
@@ -504,36 +542,36 @@
             <div class="row justify-content-center">
                 <div class="col-lg-10">
                     <?php foreach ($bookings as $booking): ?>
-                        <?php 
-                            $isCancelled = in_array($booking->booking_status, ['cancelled', 'refunded']);
-                            $cardClass = $isCancelled ? 'cancelled' : '';
-                            
-                            // Check for Refund
-                            $isRefunded = false;
-                            if (!empty($booking->payments)) {
-                                foreach($booking->payments as $p) {
-                                    if ($p->payment_status === 'refunded') $isRefunded = true;
-                                }
+                        <?php
+                        $isCancelled = in_array($booking->booking_status, ['cancelled', 'refunded']);
+                        $cardClass = $isCancelled ? 'cancelled' : '';
+
+                        // Check for Refund
+                        $isRefunded = false;
+                        if (!empty($booking->payments)) {
+                            foreach ($booking->payments as $p) {
+                                if ($p->payment_status === 'refunded') $isRefunded = true;
                             }
+                        }
 
-                            // Status class
-                            $statusClass = match ($booking->booking_status) {
-                                'pending' => 'pending',
-                                'confirmed' => 'confirmed',
-                                'completed' => 'completed',
-                                'cancelled' => 'cancelled',
-                                'refunded' => 'refunded',
-                                default => 'pending'
-                            };
+                        // Status class
+                        $statusClass = match ($booking->booking_status) {
+                            'pending' => 'pending',
+                            'confirmed' => 'confirmed',
+                            'completed' => 'completed',
+                            'cancelled' => 'cancelled',
+                            'refunded' => 'refunded',
+                            default => 'pending'
+                        };
 
-                            $statusLabel = match ($booking->booking_status) {
-                                'pending' => 'Pending',
-                                'confirmed' => 'Confirmed',
-                                'completed' => 'Completed',
-                                'cancelled' => 'Cancelled',
-                                'refunded' => 'Refunded',
-                                default => ucfirst($booking->booking_status)
-                            };
+                        $statusLabel = match ($booking->booking_status) {
+                            'pending' => 'Pending',
+                            'confirmed' => 'Confirmed',
+                            'completed' => 'Completed',
+                            'cancelled' => 'Cancelled',
+                            'refunded' => 'Refunded',
+                            default => ucfirst($booking->booking_status)
+                        };
                         ?>
 
                         <!-- Composite Ticket Card -->
@@ -600,8 +638,8 @@
                                     <div class="ticket-actions">
                                         <?= $this->Html->link(
                                             '<i class="fas fa-file-invoice"></i>',
-                                            ['action' => 'view', $booking->id],
-                                            ['class' => 'ticket-btn-icon', 'escape' => false, 'title' => 'View Receipt']
+                                            ['action' => 'viewBookings', $booking->id],
+                                            ['class' => 'ticket-btn-icon', 'escape' => false, 'title' => 'View Booking']
                                         ) ?>
 
                                         <?php
@@ -609,7 +647,8 @@
                                         if (!empty($booking->invoices)) {
                                             foreach ($booking->invoices as $inv) {
                                                 if ($inv->status === 'unpaid' && !$isCancelled) {
-                                                    $unpaidInvoice = $inv; break;
+                                                    $unpaidInvoice = $inv;
+                                                    break;
                                                 }
                                             }
                                         }
@@ -623,9 +662,9 @@
                                         <?php endif; ?>
 
                                         <?php if (!$isCancelled && $booking->booking_status !== 'completed'): ?>
-                                            <?php 
-                                                $today = date('Y-m-d');
-                                                $startDate = $booking->start_date ? $booking->start_date->format('Y-m-d') : '';
+                                            <?php
+                                            $today = date('Y-m-d');
+                                            $startDate = $booking->start_date ? $booking->start_date->format('Y-m-d') : '';
                                             ?>
                                             <?php if ($startDate > $today): ?>
                                                 <?= $this->Form->postLink(
@@ -646,7 +685,9 @@
 
                     <!-- Pagination -->
                     <div class="d-flex justify-content-center mt-4">
-                        <nav><ul class="pagination"><?= $this->Paginator->numbers() ?></ul></nav>
+                        <nav>
+                            <ul class="pagination"><?= $this->Paginator->numbers() ?></ul>
+                        </nav>
                     </div>
                 </div>
             </div>

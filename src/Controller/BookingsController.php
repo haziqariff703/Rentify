@@ -54,7 +54,7 @@ class BookingsController extends AppController
     public function getCarDetails($carId = null)
     {
         $this->request->allowMethod(['get', 'ajax']);
-        
+
         $carsTable = $this->fetchTable('Cars');
         $car = $carsTable->get($carId);
 
@@ -170,6 +170,24 @@ class BookingsController extends AppController
                 $this->Flash->error(__('You are not authorized to view this booking.'));
                 return $this->redirect(['action' => 'myBookings']);
             }
+        }
+
+        $this->set(compact('booking'));
+    }
+
+    /**
+     * User-facing booking view (modern UI)
+     * Only the booking owner can view
+     */
+    public function viewBookings($id = null)
+    {
+        $booking = $this->Bookings->get($id, contain: ['Users', 'Cars', 'Invoices', 'Payments']);
+
+        // Check ownership: only booking owner can view
+        $user = $this->Authentication->getIdentity();
+        if (!$user || $user->getIdentifier() != $booking->user_id) {
+            $this->Flash->error(__('You are not authorized to view this booking.'));
+            return $this->redirect(['action' => 'myBookings']);
         }
 
         $this->set(compact('booking'));
