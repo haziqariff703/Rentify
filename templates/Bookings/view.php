@@ -26,7 +26,7 @@ $statusColors = [
     'completed' => ['bg' => '#dbeafe', 'text' => '#1e40af'],
     'cancelled' => ['bg' => '#fee2e2', 'text' => '#991b1b']
 ];
-$currentStatus = $statusColors[$booking->booking_status] ?? ['bg' => '#e2e8f0', 'text' => '#475569'];
+$currentStatus = $statusColors[$booking->display_status] ?? ['bg' => '#e2e8f0', 'text' => '#475569'];
 ?>
 
 <div class="view-booking-container">
@@ -36,7 +36,7 @@ $currentStatus = $statusColors[$booking->booking_status] ?? ['bg' => '#e2e8f0', 
             <h2>Booking #<?= h($booking->id) ?></h2>
             <p class="text-muted">
                 <span class="status-badge" style="background: <?= $currentStatus['bg'] ?>; color: <?= $currentStatus['text'] ?>">
-                    <?= h(ucfirst($booking->booking_status)) ?>
+                    <?= h(ucfirst($booking->display_status)) ?>
                 </span>
                 <span class="date-badge">
                     <i class="fas fa-calendar me-1"></i>
@@ -66,7 +66,7 @@ $currentStatus = $statusColors[$booking->booking_status] ?? ['bg' => '#e2e8f0', 
     </div>
 
     <!-- Admin Approval Banner -->
-    <?php if ($isAdmin && $booking->booking_status === 'pending'): ?>
+    <?php if ($isAdmin && $booking->display_status === 'pending'): ?>
         <div class="approval-banner">
             <div class="approval-content">
                 <i class="fas fa-clock"></i>
@@ -150,7 +150,7 @@ $currentStatus = $statusColors[$booking->booking_status] ?? ['bg' => '#e2e8f0', 
                         <th><?= __('Status') ?></th>
                         <td>
                             <span class="status-badge" style="background: <?= $currentStatus['bg'] ?>; color: <?= $currentStatus['text'] ?>">
-                                <?= h(ucfirst($booking->booking_status)) ?>
+                                <?= h(ucfirst($booking->display_status)) ?>
                             </span>
                         </td>
                     </tr>

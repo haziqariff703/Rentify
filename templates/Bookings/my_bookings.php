@@ -15,7 +15,7 @@ $activeBookings = [];
 $historyBookings = [];
 
 foreach ($bookings as $booking) {
-    $status = strtolower($booking->booking_status);
+    $status = strtolower($booking->display_status);
     if (in_array($status, $activeStatuses)) {
         $activeBookings[] = $booking;
     } elseif (in_array($status, $historyStatuses)) {
@@ -315,10 +315,22 @@ foreach ($bookings as $booking) {
         letter-spacing: 0.5px;
     }
 
-    .status-text.confirmed { color: #059669; }
-    .status-text.pending { color: #d97706; }
-    .status-text.completed { color: #2563eb; }
-    .status-text.cancelled, .status-text.refunded { color: #dc2626; }
+    .status-text.confirmed {
+        color: #059669;
+    }
+
+    .status-text.pending {
+        color: #d97706;
+    }
+
+    .status-text.completed {
+        color: #2563eb;
+    }
+
+    .status-text.cancelled,
+    .status-text.refunded {
+        color: #dc2626;
+    }
 
     .status-dot {
         width: 10px;
@@ -327,15 +339,42 @@ foreach ($bookings as $booking) {
         animation: pulse-ring 2s infinite;
     }
 
-    .status-dot.confirmed { background: #10b981; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2); }
-    .status-dot.pending { background: #f59e0b; box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2); }
-    .status-dot.completed { background: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2); }
-    .status-dot.cancelled, .status-dot.refunded { background: #ef4444; box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2); }
+    .status-dot.confirmed {
+        background: #10b981;
+        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+    }
+
+    .status-dot.pending {
+        background: #f59e0b;
+        box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2);
+    }
+
+    .status-dot.completed {
+        background: #3b82f6;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+    }
+
+    .status-dot.cancelled,
+    .status-dot.refunded {
+        background: #ef4444;
+        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
+    }
 
     @keyframes pulse-ring {
-        0% { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
-        50% { box-shadow: 0 0 0 8px transparent; opacity: 0.5; }
-        100% { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
+        0% {
+            box-shadow: 0 0 0 0 currentColor;
+            opacity: 1;
+        }
+
+        50% {
+            box-shadow: 0 0 0 8px transparent;
+            opacity: 0.5;
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 currentColor;
+            opacity: 1;
+        }
     }
 
     /* Dates Section */
@@ -349,7 +388,9 @@ foreach ($bookings as $booking) {
         margin-bottom: 12px;
     }
 
-    .date-block { flex: 1; }
+    .date-block {
+        flex: 1;
+    }
 
     .date-label {
         font-family: 'Montserrat', sans-serif;
@@ -491,8 +532,13 @@ foreach ($bookings as $booking) {
         transition: background 0.2s ease;
     }
 
-    .history-row:hover { background: #fafbfc; }
-    .history-row:last-child { border-bottom: none; }
+    .history-row:hover {
+        background: #fafbfc;
+    }
+
+    .history-row:last-child {
+        border-bottom: none;
+    }
 
     .history-date {
         color: #64748b;
@@ -529,7 +575,9 @@ foreach ($bookings as $booking) {
         background: transparent;
     }
 
-    .status-pill.cancelled, .status-pill.rejected, .status-pill.refunded {
+    .status-pill.cancelled,
+    .status-pill.rejected,
+    .status-pill.refunded {
         border: 1.5px solid #ef4444;
         color: #ef4444;
     }
@@ -611,28 +659,84 @@ foreach ($bookings as $booking) {
        RESPONSIVE
        ======================================== */
     @media (max-width: 991px) {
-        .composite-ticket { flex-direction: column; }
-        .ticket-image { width: 100%; height: 220px; }
-        .ticket-image::after { display: none; }
-        .ticket-details { padding: 25px; }
-        .ticket-bottom { flex-direction: column; gap: 20px; align-items: flex-start; }
-        .ticket-actions { width: 100%; justify-content: flex-start; }
+        .composite-ticket {
+            flex-direction: column;
+        }
+
+        .ticket-image {
+            width: 100%;
+            height: 220px;
+        }
+
+        .ticket-image::after {
+            display: none;
+        }
+
+        .ticket-details {
+            padding: 25px;
+        }
+
+        .ticket-bottom {
+            flex-direction: column;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .ticket-actions {
+            width: 100%;
+            justify-content: flex-start;
+        }
     }
 
     @media (max-width: 768px) {
-        .stats-cards { flex-direction: column; padding: 0 20px; gap: 16px; }
-        .stat-card { min-width: 100%; }
-        .header-title { font-size: 2rem; }
-        .controls-bar { flex-direction: column; }
-        .search-input { width: 100%; }
-        .history-row { grid-template-columns: 1fr 80px 90px; gap: 8px; }
-        .history-date, .history-ref { display: none; }
+        .stats-cards {
+            flex-direction: column;
+            padding: 0 20px;
+            gap: 16px;
+        }
+
+        .stat-card {
+            min-width: 100%;
+        }
+
+        .header-title {
+            font-size: 2rem;
+        }
+
+        .controls-bar {
+            flex-direction: column;
+        }
+
+        .search-input {
+            width: 100%;
+        }
+
+        .history-row {
+            grid-template-columns: 1fr 80px 90px;
+            gap: 8px;
+        }
+
+        .history-date,
+        .history-ref {
+            display: none;
+        }
     }
 
     @media (max-width: 576px) {
-        .ticket-dates { flex-direction: column; gap: 20px; align-items: flex-start; }
-        .date-divider { display: none; }
-        .ticket-top { flex-direction: column; gap: 15px; }
+        .ticket-dates {
+            flex-direction: column;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .date-divider {
+            display: none;
+        }
+
+        .ticket-top {
+            flex-direction: column;
+            gap: 15px;
+        }
     }
 </style>
 
@@ -697,25 +801,25 @@ foreach ($bookings as $booking) {
 
                             <?php foreach ($activeBookings as $booking): ?>
                                 <?php
-                                $isCancelled = in_array($booking->booking_status, ['cancelled', 'refunded']);
-                                
-                                $statusClass = match ($booking->booking_status) {
+                                $isCancelled = in_array($booking->display_status, ['cancelled', 'refunded']);
+
+                                $statusClass = match ($booking->display_status) {
                                     'pending' => 'pending',
                                     'confirmed' => 'confirmed',
                                     'active' => 'confirmed',
                                     default => 'pending'
                                 };
 
-                                $statusLabel = match ($booking->booking_status) {
+                                $statusLabel = match ($booking->display_status) {
                                     'pending' => 'Pending',
                                     'confirmed' => 'Confirmed',
                                     'active' => 'Active',
-                                    default => ucfirst($booking->booking_status)
+                                    default => ucfirst($booking->display_status)
                                 };
                                 ?>
 
                                 <!-- Composite Ticket Card -->
-                                <div class="composite-ticket booking-row" data-status="<?= strtolower($booking->booking_status) ?>">
+                                <div class="composite-ticket booking-row" data-status="<?= strtolower($booking->display_status) ?>">
                                     <!-- Left - Image -->
                                     <div class="ticket-image">
                                         <?php if (!empty($booking->car->image) && file_exists(WWW_ROOT . 'img' . DS . $booking->car->image)): ?>
@@ -911,7 +1015,7 @@ foreach ($bookings as $booking) {
         rows.forEach(row => {
             const text = row.textContent.toLowerCase();
             const rowStatus = row.getAttribute('data-status');
-            
+
             const matchesSearch = text.includes(filter);
             const matchesStatus = status === '' || rowStatus === status;
 

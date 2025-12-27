@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use Cake\I18n\FrozenDate;
 
 /**
  * Booking Entity
@@ -19,6 +20,7 @@ use Cake\ORM\Entity;
  * @property string|null $pickup_location
  * @property \Cake\I18n\DateTime|null $created
  * @property \Cake\I18n\DateTime|null $modified
+ * @property-read string $display_status Virtual property for computed status
  *
  * @property \App\Model\Entity\User $user
  * @property \App\Model\Entity\Car $car
@@ -27,6 +29,22 @@ use Cake\ORM\Entity;
  */
 class Booking extends Entity
 {
+    /**
+     * Virtual property: Returns computed display status
+     * - Confirmed bookings past end_date → "completed"
+     * - All others → original booking_status
+     *
+     * @return string
+     */
+    protected function _getDisplayStatus(): string
+    {
+        if ($this->booking_status === 'confirmed' && $this->end_date) {
+            if ($this->end_date < FrozenDate::now()) {
+                return 'completed';
+            }
+        }
+        return $this->booking_status ?? 'pending';
+    }
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *

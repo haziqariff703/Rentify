@@ -23,7 +23,7 @@ $statusConfig = [
     'cancelled' => ['class' => 'status-cancelled', 'icon' => 'fa-times-circle', 'label' => 'Cancelled'],
 ];
 
-$currentStatus = $booking->booking_status ?? 'pending';
+$currentStatus = $booking->display_status ?? 'pending';
 $statusInfo = $statusConfig[$currentStatus] ?? $statusConfig['pending'];
 
 // Calculate days
@@ -636,7 +636,7 @@ if ($booking->start_date && $booking->end_date) {
                         ['class' => 'btn-action btn-outline', 'escape' => false]
                     ) ?>
 
-                    <?php if ($booking->booking_status === 'pending' || $booking->booking_status === 'confirmed'): ?>
+                    <?php if ($booking->display_status === 'pending' || $booking->display_status === 'confirmed'): ?>
                         <?= $this->Form->postLink(
                             '<i class="fas fa-times"></i> Cancel Booking',
                             ['action' => 'cancelBooking', $booking->id],
