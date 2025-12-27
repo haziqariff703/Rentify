@@ -57,7 +57,8 @@ if ($booking && $booking->car) {
     $addons = $preTaxTotal - $baseCost;
 
     // Safety: If floating point math makes it -0.00001, set to 0
-    if ($addons < 0.01) $addons = 0;
+    if ($addons < 0.01)
+        $addons = 0;
 
     // E. Calculate Tax Amount
     $tax = $invoice->amount - $preTaxTotal;
@@ -67,40 +68,112 @@ if ($booking && $booking->car) {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-<div class="container mt-4 mb-4" data-html2canvas-ignore="true">
-    <div class="d-flex justify-content-between align-items-center">
-        <?= $this->Html->link(
-            '<i class="fas fa-arrow-left me-2"></i>Back',
-            ['action' => 'index'],
-            ['class' => 'btn btn-outline-secondary rounded-pill px-4', 'escape' => false]
-        ) ?>
-
-        <div class="d-flex gap-2">
+<div class="container py-4" data-html2canvas-ignore="true">
+    <!-- Page Header -->
+    <div class="invoice-page-header">
+        <div>
+            <h2><?= __('Invoice') ?> #<?= h($invoice->invoice_number) ?></h2>
+            <p class="text-muted">
+                <?php
+                $statusColors = [
+                    'paid' => ['bg' => '#dcfce7', 'text' => '#166534'],
+                    'unpaid' => ['bg' => '#fef3c7', 'text' => '#92400e'],
+                    'cancelled' => ['bg' => '#fee2e2', 'text' => '#991b1b'],
+                ];
+                $invStatus = strtolower($invoice->status ?? 'unpaid');
+                $statusStyle = $statusColors[$invStatus] ?? ['bg' => '#e2e8f0', 'text' => '#475569'];
+                ?>
+                <span class="inv-status-badge"
+                    style="background: <?= $statusStyle['bg'] ?>; color: <?= $statusStyle['text'] ?>">
+                    <?= h(ucfirst($invoice->status)) ?>
+                </span>
+                <span class="inv-amount">RM <?= number_format($invoice->amount, 2) ?></span>
+            </p>
+        </div>
+        <div class="header-actions">
+            <?= $this->Html->link(
+                '<i class="fas fa-edit me-2"></i>' . __('Edit'),
+                ['action' => 'edit', $invoice->id],
+                ['class' => 'btn btn-primary', 'escape' => false]
+            ) ?>
             <?php if (strtolower($invoice->status) === 'unpaid' && strtolower($booking->booking_status) !== 'cancelled'): ?>
                 <?= $this->Html->link(
-                    '<i class="fas fa-credit-card me-2"></i>Pay Now',
-                    [
-                        'controller' => 'Payments',
-                        'action' => 'add',
-                        '?' => ['booking_id' => $invoice->booking_id, 'amount' => $invoice->amount]
-                    ],
-                    ['class' => 'btn btn-success rounded-pill px-4 fw-bold', 'escape' => false]
+                    '<i class="fas fa-credit-card me-2"></i>' . __('Pay Now'),
+                    ['controller' => 'Payments', 'action' => 'add', '?' => ['booking_id' => $invoice->booking_id, 'amount' => $invoice->amount]],
+                    ['class' => 'btn btn-success', 'escape' => false]
                 ) ?>
             <?php endif; ?>
-
-            <button onclick="downloadPDF()" class="btn btn-dark rounded-pill px-4">
-                <i class="fas fa-download me-2"></i>Save as PDF
+            <button onclick="downloadPDF()" class="btn btn-dark">
+                <i class="fas fa-download me-2"></i><?= __('Save as PDF') ?>
             </button>
+            <?= $this->Html->link(
+                '<i class="fas fa-arrow-left me-2"></i>' . __('Back to List'),
+                ['action' => 'index'],
+                ['class' => 'btn btn-outline-secondary', 'escape' => false]
+            ) ?>
         </div>
     </div>
 </div>
+
+<style>
+    .invoice-page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #e2e8f0;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .invoice-page-header h2 {
+        margin: 0;
+        color: #1e293b;
+    }
+
+    .invoice-page-header .text-muted {
+        margin: 8px 0 0;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .inv-status-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .inv-amount {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #059669;
+    }
+
+    .invoice-page-header .header-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    @media (max-width: 768px) {
+        .invoice-page-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+</style>
 
 <div class="invoice-wrapper">
     <div id="invoice-to-print" class="invoice-paper">
 
         <div class="row mb-5">
             <div class="col-6">
-                <img src="<?= $this->Url->webroot('img/rentify_logo_black.png') ?>" alt="Rentify" class="brand-logo-img" style="height: 150px; width: auto;">
+                <img src="<?= $this->Url->webroot('img/rentify_logo_black.png') ?>" alt="Rentify" class="brand-logo-img"
+                    style="height: 150px; width: auto;">
                 <div class="text-muted small mt-2">
                     <strong>Rentify Sdn Bhd</strong> (12345-X)<br>
                     Level 15, Menara Tech<br>
@@ -180,7 +253,8 @@ if ($booking && $booking->car) {
                             <div class="fw-bold text-dark"><?= h($car->brand . ' ' . $car->car_model) ?></div>
                             <div class="small text-muted">Plate: <?= h($car->plate_number) ?></div>
                             <div class="small text-muted mt-1">
-                                <?= h($booking->start_date->format('d M')) ?> - <?= h($booking->end_date->format('d M Y')) ?>
+                                <?= h($booking->start_date->format('d M')) ?> -
+                                <?= h($booking->end_date->format('d M Y')) ?>
                             </div>
                         </td>
                         <td class="text-center py-3">RM <?= number_format($car->price_per_day, 2) ?></td>
@@ -229,11 +303,13 @@ if ($booking && $booking->car) {
                 <div class="col-8">
                     <h6 class="fw-bold small mb-1">Terms & Conditions</h6>
                     <p class="small text-muted mb-0">
-                        Payment is due within 24 hours of booking. Late returns will be charged at the daily rate plus a RM50 penalty. Please keep this invoice for your records.
+                        Payment is due within 24 hours of booking. Late returns will be charged at the daily rate plus a
+                        RM50 penalty. Please keep this invoice for your records.
                     </p>
                 </div>
                 <div class="col-4 text-end">
-                    <img src="<?= $this->Url->webroot('img/rentify_logo_black.png') ?>" alt="Rentify" class="brand-logo-img opacity-50" style="height: 150px; width: auto;">
+                    <img src="<?= $this->Url->webroot('img/rentify_logo_black.png') ?>" alt="Rentify"
+                        class="brand-logo-img opacity-50" style="height: 150px; width: auto;">
                 </div>
             </div>
 
