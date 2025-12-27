@@ -11,15 +11,13 @@ class BookingsController extends AppController
     public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         parent::beforeFilter($event);
-        $this->Authentication->allowUnauthenticated(['getBookedDates', 'getCarDetails']); // Allow JS to fetch data
-
-        // ... (Keep your existing Auth checks for admin/customer here) ...
+        $this->Authentication->allowUnauthenticated(['getBookedDates', 'getCarDetails']);
+        
         $user = $this->Authentication->getIdentity();
         $action = $this->request->getParam('action');
 
-        // [Existing Admin/Customer Logic goes here - kept short for brevity]
         if ($action === 'index' && (!$user || $user->role !== 'admin')) {
-            return $this->redirect(['action' => 'myBookings']);
+             return $this->redirect(['action' => 'myBookings']);
         }
     }
 
@@ -70,7 +68,7 @@ class BookingsController extends AppController
             ->withStringBody(json_encode($data));
     }
 
-    // --- UPDATED: Add Method with Overlap Check ---
+    // --- UPDATED ADD METHOD WITH TAX CALCULATION ---
     public function add($carId = null)
     {
         $booking = $this->Bookings->newEmptyEntity();
@@ -93,11 +91,26 @@ class BookingsController extends AppController
                 // 2. Calculate Price
                 $startDate = $booking->start_date;
                 $endDate   = $booking->end_date;
-                $days = $endDate->diffInDays($startDate);
-                if ($days == 0) $days = 1;
+                
+                // OLD Logic (Delete this or comment it out):
+                // $days = $endDate->diffInDays($startDate);
+                // if ($days == 0) $days = 1;
+
+                // NEW Logic (Matches your request):
+                // Inclusive days: (End - Start) + 1. 
+                // Example: Jan 1 to Jan 2 is 1 day difference + 1 = 2 Days billing.
+                $days = $endDate->diffInDays($startDate) + 1;
 
                 $car = $this->Bookings->Cars->get($booking->car_id);
-                $booking->total_price = $days * $car->price_per_day;
+                
+                // --- FINANCIAL LOGIC ---
+                $subtotal = $days * $car->price_per_day;
+                $taxRate = 0.06; // 6% SST
+                $taxAmount = $subtotal * $taxRate;
+                $totalPrice = $subtotal + $taxAmount;
+
+                $booking->total_price = $totalPrice; 
+                // -----------------------
 
                 $booking->user_id = $this->Authentication->getIdentity()->getIdentifier();
                 $booking->booking_status = 'pending';
@@ -112,7 +125,7 @@ class BookingsController extends AppController
                     $invoice->status = 'unpaid';
                     $invoicesTable->save($invoice);
 
-                    $this->Flash->success(__('Booking successful! Invoice generated.'));
+                    $this->Flash->success(__('Booking successful! Invoice generated (incl. 6% Tax).'));
                     return $this->redirect(['controller' => 'Invoices', 'action' => 'view', $invoice->id]);
                 }
                 $this->Flash->error(__('Unable to add booking.'));
