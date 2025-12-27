@@ -46,17 +46,29 @@ class CarsController extends AppController
     }
 
     /**
-     * My Cars method - User-facing 3D flip card catalog
+     * My Cars method - User-facing fleet catalog with availability indicators
      *
      * @return \Cake\Http\Response|null|void Renders view
      */
     public function myCars()
     {
-        // Query cars from database with their categories
+        $today = new \Cake\I18n\Date();
+
+        // Query ALL cars (including maintenance) with their categories
         $cars = $this->Cars->find()
             ->contain(['Categories'])
-            ->where(['status !=' => 'maintenance'])
-            ->all();
+            ->all()
+            ->toArray();
+
+        // Add availability status to each car (simplified: available or maintenance)
+        foreach ($cars as &$car) {
+            // Only maintenance cars are unavailable
+            if ($car->status === 'maintenance') {
+                $car->availability = 'maintenance';
+            } else {
+                $car->availability = 'available';
+            }
+        }
 
         // Query all categories for filter buttons
         $categories = $this->Cars->Categories->find()->all();

@@ -1,33 +1,39 @@
 <?php
 /**
- * My Invoices - Clean Corporate Blue
+ * My Invoices - Private Banking Executive Edition
  * @var \App\View\AppView $this
  * @var iterable<\App\Model\Entity\Invoice> $invoices
  */
+
+// Calculate financial summary
+$totalOutstanding = 0;
+$totalSpendYTD = 0;
+$nextDueDate = null;
+
+foreach ($invoices as $invoice) {
+    if (strtolower($invoice->status) === 'unpaid') {
+        $totalOutstanding += $invoice->amount;
+        if ($nextDueDate === null || $invoice->due_date < $nextDueDate) {
+            $nextDueDate = $invoice->due_date ?? $invoice->created;
+        }
+    }
+    if (strtolower($invoice->status) === 'paid') {
+        $totalSpendYTD += $invoice->amount;
+    }
+}
 ?>
 
 <style>
-    /* Google Fonts - Montserrat */
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+    /* Google Fonts - Montserrat + Playfair Display */
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap');
 
     /* ========================================
-       DIAGONAL MICRO-STRIPE BACKGROUND
+       PAGE WRAPPER
        ======================================== */
-    .invoices-corporate-wrapper {
+    .invoices-executive-wrapper {
         background-color: #f8fafc;
-        background-image: repeating-linear-gradient(
-            135deg,
-            transparent,
-            transparent 10px,
-            rgba(148, 163, 184, 0.05) 10px,
-            rgba(148, 163, 184, 0.05) 11px
-        );
-        background-attachment: fixed;
         min-height: 100vh;
-        padding: 50px 0 80px;
-        /* Pull up to cancel layout pt-5 gap */
         margin-top: -3rem;
-        /* FORCE FULL VIEWPORT WIDTH */
         width: 100vw;
         position: relative;
         left: 50%;
@@ -37,92 +43,171 @@
     }
 
     /* ========================================
-       PAGE HEADER
+       DARK NAVY HEADER SECTION
        ======================================== */
-    .invoices-header {
-        text-align: center;
-        margin-bottom: 40px;
+    .navy-header {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        padding: 50px 0 80px;
+        position: relative;
     }
 
-    .invoices-subtitle {
+    .navy-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: linear-gradient(to bottom, transparent, #f8fafc);
+    }
+
+    .header-subtitle {
         font-family: 'Montserrat', sans-serif;
         font-size: 0.7rem;
         font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 3px;
-        color: #94a3b8;
+        letter-spacing: 4px;
+        color: #64748b;
         margin-bottom: 8px;
-    }
-
-    .invoices-title {
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 900;
-        font-size: 2.5rem;
-        letter-spacing: -2px;
-        background: linear-gradient(to bottom, #1e293b, #475569);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin: 0;
-    }
-
-    /* ========================================
-       BRAND BLUE HERO WIDGET
-       ======================================== */
-    .hero-widget {
-        background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
-        border-radius: 20px;
-        box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.4);
-        margin-bottom: 50px;
-        padding: 40px;
         text-align: center;
     }
 
-    .hero-widget-label {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 3px;
-        color: rgba(255, 255, 255, 0.8);
-        margin-bottom: 10px;
-    }
-
-    .hero-widget-number {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 4rem;
-        font-weight: 800;
+    .header-title {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: 2.8rem;
+        letter-spacing: -1px;
         color: #ffffff;
-        line-height: 1;
+        margin: 0 0 40px;
+        text-align: center;
     }
 
     /* ========================================
-       WHITE TABLE CONTAINER
+       FINANCIAL SUMMARY CARDS
        ======================================== */
-    .white-card {
+    .summary-cards {
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+        margin-top: -40px;
+        position: relative;
+        z-index: 10;
+    }
+
+    .summary-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 24px 32px;
+        min-width: 200px;
+        text-align: center;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e2e8f0;
+    }
+
+    .summary-label {
+        font-family: 'Playfair Display', serif;
+        font-size: 0.75rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #64748b;
+        margin-bottom: 8px;
+    }
+
+    .summary-value {
+        font-family: 'Courier New', monospace;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    .summary-value.outstanding {
+        color: #dc2626;
+    }
+
+    .summary-value.spend {
+        color: #d4a017;
+    }
+
+    .summary-value.due-date {
+        color: #64748b;
+    }
+
+    /* ========================================
+       CONTROLS BAR
+       ======================================== */
+    .controls-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 30px 0;
+    }
+
+    .search-input {
         background: #ffffff;
         border: 1px solid #e2e8f0;
-        border-radius: 24px;
-        box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
-        padding: 40px;
+        border-radius: 10px;
+        padding: 12px 18px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.85rem;
+        width: 280px;
+        color: #334155;
+        transition: all 0.2s ease;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: #0f172a;
+        box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.1);
+    }
+
+    .search-input::placeholder {
+        color: #94a3b8;
+    }
+
+    .download-btn {
+        background: transparent;
+        border: 1px solid #0f172a;
+        color: #0f172a;
+        border-radius: 10px;
+        padding: 12px 24px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .download-btn:hover {
+        background: #0f172a;
+        color: #ffffff;
+    }
+
+    /* ========================================
+       WHITE TABLE CONTAINER (LEDGER)
+       ======================================== */
+    .ledger-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
         overflow: hidden;
     }
 
     /* Scroll Wrapper */
     .table-scroll-wrapper {
-        max-height: 400px;
+        max-height: 450px;
         overflow-y: auto;
-        border-radius: 12px;
     }
 
-    /* Custom Scrollbar */
     .table-scroll-wrapper::-webkit-scrollbar {
         width: 6px;
     }
 
     .table-scroll-wrapper::-webkit-scrollbar-track {
-        background: #f1f5f9;
-        border-radius: 3px;
+        background: transparent;
     }
 
     .table-scroll-wrapper::-webkit-scrollbar-thumb {
@@ -131,18 +216,17 @@
     }
 
     .table-scroll-wrapper::-webkit-scrollbar-thumb:hover {
-        background: #94a3b8;
+        background: #334155;
     }
 
     /* ========================================
-       TABLE STYLING - LIGHT THEME
+       TABLE STYLING - LEDGER THEME
        ======================================== */
     .invoices-table {
         width: 100%;
         border-collapse: collapse;
     }
 
-    /* Sticky Header */
     .invoices-table thead {
         position: sticky;
         top: 0;
@@ -151,24 +235,28 @@
 
     .invoices-table thead th {
         font-family: 'Montserrat', sans-serif;
-        font-size: 0.7rem;
-        font-weight: 600;
+        font-size: 0.65rem;
+        font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 2px;
         color: #64748b;
-        padding: 15px 18px;
+        padding: 18px 24px;
         text-align: left;
         border-bottom: 1px solid #e2e8f0;
-        background: #ffffff;
+        background: #f8fafc;
+    }
+
+    .invoices-table thead th.text-right {
+        text-align: right;
     }
 
     .invoices-table tbody tr {
-        transition: background 0.3s ease;
+        transition: background 0.2s ease;
         border-bottom: 1px solid #f1f5f9;
     }
 
     .invoices-table tbody tr:hover {
-        background: #f8fafc;
+        background: #fafbfc;
     }
 
     .invoices-table tbody tr:last-child {
@@ -178,117 +266,116 @@
     .invoices-table tbody td {
         font-family: 'Montserrat', sans-serif;
         color: #334155;
-        padding: 18px;
+        padding: 20px 24px;
         font-size: 0.9rem;
         vertical-align: middle;
     }
 
-    /* Invoice Number */
+    /* Invoice Number - Monospace Blue Link */
     .invoice-number {
-        color: #2563eb;
-        font-weight: 700;
         font-family: 'Courier New', monospace;
-    }
-
-    /* Date */
-    .invoice-date {
-        color: #64748b;
         font-size: 0.85rem;
+        font-weight: 700;
+        color: #2563eb;
+        text-decoration: none;
     }
 
-    /* Car Name */
+    .invoice-number:hover {
+        text-decoration: underline;
+    }
+
+    /* Car Name + Date */
     .invoice-car {
-        color: #1e293b;
-        font-weight: 600;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 2px;
     }
 
-    .invoice-plate {
-        font-family: 'Courier New', monospace;
+    .invoice-trip-date {
         font-size: 0.75rem;
         color: #94a3b8;
     }
 
-    /* Amount */
+    /* Amount - Monospace Right Aligned */
     .invoice-amount {
-        color: #059669;
+        font-family: 'Courier New', monospace;
+        font-size: 0.95rem;
         font-weight: 700;
+        color: #0f172a;
+        text-align: right;
     }
 
     /* ========================================
-       STATUS BADGES
+       STATUS BADGES - OUTLINE STYLE
        ======================================== */
-    .status-badge {
-        padding: 6px 14px;
+    .status-outline {
+        padding: 5px 14px;
         border-radius: 50px;
-        font-size: 0.65rem;
-        font-weight: 600;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.6rem;
+        font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 1px;
         display: inline-block;
+        background: transparent;
     }
 
-    .status-badge.paid {
-        background: rgba(16, 185, 129, 0.1);
-        color: #059669;
-        border: 1px solid rgba(16, 185, 129, 0.2);
+    .status-outline.paid {
+        border: 1.5px solid #10b981;
+        color: #10b981;
     }
 
-    .status-badge.unpaid {
-        background: rgba(239, 68, 68, 0.1);
-        color: #dc2626;
-        border: 1px solid rgba(239, 68, 68, 0.2);
+    .status-outline.unpaid {
+        border: 1.5px solid #ef4444;
+        color: #ef4444;
     }
 
-    .status-badge.cancelled {
-        background: rgba(100, 116, 139, 0.1);
-        color: #64748b;
-        border: 1px solid rgba(100, 116, 139, 0.2);
+    .status-outline.cancelled {
+        border: 1.5px solid #94a3b8;
+        color: #94a3b8;
     }
 
     /* ========================================
        ACTION BUTTONS
        ======================================== */
-    .outlined-btn {
-        background: transparent;
-        border: 1px solid #e2e8f0;
-        color: #64748b;
-        border-radius: 50px;
-        padding: 8px 18px;
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.75rem;
-        font-weight: 500;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-    }
-
-    .outlined-btn:hover {
-        background: #eff6ff;
-        color: #2563eb;
-        border-color: #bfdbfe;
-        text-decoration: none;
-    }
-
     .pay-btn {
-        background: #2563eb;
+        background: #0f172a;
         border: none;
         color: #ffffff;
-        border-radius: 50px;
-        padding: 8px 18px;
+        border-radius: 8px;
+        padding: 10px 20px;
         font-family: 'Montserrat', sans-serif;
         font-size: 0.75rem;
         font-weight: 600;
         text-decoration: none;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
         display: inline-flex;
         align-items: center;
         gap: 6px;
     }
 
     .pay-btn:hover {
-        background: #1d4ed8;
+        background: #1e293b;
+        color: #ffffff;
+    }
+
+    .icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        color: #64748b;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .icon-btn:hover {
+        background: #0f172a;
+        border-color: #0f172a;
         color: #ffffff;
     }
 
@@ -307,7 +394,7 @@
     }
 
     .invoices-empty h4 {
-        font-family: 'Montserrat', sans-serif;
+        font-family: 'Playfair Display', serif;
         color: #1e293b;
         font-weight: 600;
         margin-bottom: 10px;
@@ -318,22 +405,39 @@
     }
 
     /* ========================================
+       CONTENT SECTION
+       ======================================== */
+    .content-section {
+        padding: 0 0 60px;
+        background: #f8fafc;
+    }
+
+    /* ========================================
        RESPONSIVE
        ======================================== */
     @media (max-width: 768px) {
-        .white-card {
-            margin: 0 15px;
-            padding: 25px;
-            border-radius: 16px;
+        .summary-cards {
+            flex-direction: column;
+            padding: 0 20px;
+            gap: 16px;
         }
 
-        .hero-widget {
-            margin: 0 15px 40px;
-            padding: 30px;
+        .summary-card {
+            min-width: 100%;
         }
 
-        .hero-widget-number {
-            font-size: 3rem;
+        .controls-bar {
+            flex-direction: column;
+            gap: 16px;
+            padding: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+        }
+
+        .header-title {
+            font-size: 2rem;
         }
 
         .invoices-table thead {
@@ -342,18 +446,19 @@
 
         .invoices-table tbody tr {
             display: block;
-            margin-bottom: 15px;
-            background: #f8fafc;
+            margin: 15px;
+            background: #ffffff;
             border-radius: 12px;
             padding: 15px;
             border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
 
         .invoices-table tbody td {
             display: flex;
             justify-content: space-between;
             padding: 10px 0;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid #f1f5f9;
         }
 
         .invoices-table tbody td:last-child {
@@ -365,121 +470,195 @@
             font-weight: 600;
             color: #64748b;
             text-transform: uppercase;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             letter-spacing: 1px;
         }
     }
 </style>
 
-<!-- Clean Corporate Blue Invoices Wrapper -->
-<div class="invoices-corporate-wrapper">
-    <div class="container">
-        <!-- Page Header -->
-        <div class="invoices-header">
-            <div class="invoices-subtitle">Billing & Payments</div>
-            <h1 class="invoices-title">MY INVOICES</h1>
-        </div>
+<!-- Executive Invoices Wrapper -->
+<div class="invoices-executive-wrapper">
 
-        <!-- Brand Blue Hero Widget -->
-        <div class="row justify-content-center">
-            <div class="col-md-4">
-                <div class="hero-widget">
-                    <div class="hero-widget-label">Total Invoices</div>
-                    <div class="hero-widget-number"><?= count($invoices) ?></div>
+    <!-- Dark Navy Header Section -->
+    <div class="navy-header">
+        <div class="container">
+            <div class="header-subtitle">Billing & Payments</div>
+            <h1 class="header-title">My Invoices</h1>
+        </div>
+    </div>
+
+    <!-- Financial Summary Cards -->
+    <div class="container">
+        <div class="summary-cards">
+            <div class="summary-card">
+                <div class="summary-label">Outstanding Due</div>
+                <div class="summary-value outstanding">
+                    RM <?= number_format($totalOutstanding, 2) ?>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-label">Total Spend YTD</div>
+                <div class="summary-value spend">
+                    RM <?= number_format($totalSpendYTD, 2) ?>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-label">Next Due Date</div>
+                <div class="summary-value due-date">
+                    <?= $nextDueDate ? $nextDueDate->format('M d, Y') : '—' ?>
                 </div>
             </div>
         </div>
+    </div>
 
-        <?php if (!empty($invoices) && count($invoices) > 0): ?>
-            <!-- White Table Card -->
-            <div class="white-card">
-                <div class="table-scroll-wrapper">
-                    <table class="invoices-table">
-                        <thead>
-                            <tr>
-                                <th>Invoice #</th>
-                                <th>Date</th>
-                                <th>Car / Service</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($invoices as $invoice): ?>
+    <!-- Content Section -->
+    <div class="content-section">
+        <div class="container">
+            <!-- Controls Bar -->
+            <div class="controls-bar">
+                <input type="text" class="search-input" placeholder="🔍  Search invoices..." id="invoiceSearch" onkeyup="filterInvoices()">
+                <button class="download-btn">
+                    <i class="fas fa-file-pdf"></i> Download Statement (PDF)
+                </button>
+            </div>
+
+            <?php if (!empty($invoices) && count($invoices) > 0): ?>
+                <!-- Ledger Table Card -->
+                <div class="ledger-card">
+                    <div class="table-scroll-wrapper">
+                        <table class="invoices-table" id="invoicesTable">
+                            <thead>
                                 <tr>
-                                    <td data-label="Invoice #">
-                                        <span class="invoice-number">#<?= h($invoice->invoice_number) ?></span>
-                                    </td>
-                                    <td class="invoice-date" data-label="Date">
-                                        <?= h($invoice->created->format('d M Y')) ?>
-                                    </td>
-                                    <td data-label="Car">
-                                        <?php if ($invoice->booking && $invoice->booking->car): ?>
-                                            <div class="invoice-car"><?= h($invoice->booking->car->car_model) ?></div>
-                                            <div class="invoice-plate"><?= h($invoice->booking->car->plate_number) ?></div>
-                                        <?php else: ?>
-                                            <span class="text-muted">Car Removed</span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td data-label="Amount">
-                                        <span class="invoice-amount">RM <?= number_format($invoice->amount, 2) ?></span>
-                                    </td>
-                                    <td data-label="Status">
-                                        <?php 
-                                        $statusClass = match(strtolower($invoice->status)) {
-                                            'paid' => 'paid',
-                                            'unpaid' => 'unpaid',
-                                            'cancelled' => 'cancelled',
-                                            default => 'cancelled'
-                                        };
-                                        ?>
-                                        <span class="status-badge <?= $statusClass ?>">
-                                            <?= h($invoice->status) ?>
-                                        </span>
-                                    </td>
-                                    <td data-label="Actions">
-                                        <?php if (strtolower($invoice->status) === 'unpaid'): ?>
-                                            <?= $this->Html->link(
-                                                '<i class="fas fa-credit-card"></i> Pay Now',
-                                                ['action' => 'view', $invoice->id],
-                                                ['class' => 'pay-btn', 'escape' => false]
-                                            ) ?>
-                                        <?php elseif (strtolower($invoice->status) === 'paid'): ?>
-                                            <?= $this->Html->link(
-                                                '<i class="fas fa-file-download"></i> Receipt',
-                                                ['action' => 'view', $invoice->id],
-                                                ['class' => 'outlined-btn', 'escape' => false]
-                                            ) ?>
-                                        <?php else: ?>
-                                            <?= $this->Html->link(
-                                                'View',
-                                                ['action' => 'view', $invoice->id],
-                                                ['class' => 'outlined-btn']
-                                            ) ?>
-                                        <?php endif; ?>
+                                    <th>Invoice #</th>
+                                    <th>Car / Trip</th>
+                                    <th class="text-right">Amount</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="invoiceTableBody">
+                                <?php foreach ($invoices as $invoice): ?>
+                                    <tr class="invoice-row">
+                                        <td data-label="Invoice #">
+                                            <a href="<?= $this->Url->build(['action' => 'view', $invoice->id]) ?>" class="invoice-number">
+                                                #<?= h($invoice->invoice_number) ?>
+                                            </a>
+                                        </td>
+                                        <td data-label="Car / Trip">
+                                            <?php if ($invoice->booking && $invoice->booking->car): ?>
+                                                <div class="invoice-car">
+                                                    <?= h($invoice->booking->car->brand ?? '') ?> <?= h($invoice->booking->car->car_model) ?>
+                                                </div>
+                                                <div class="invoice-trip-date">
+                                                    <?php if ($invoice->booking->start_date && $invoice->booking->end_date): ?>
+                                                        <?= $invoice->booking->start_date->format('M d') ?> - <?= $invoice->booking->end_date->format('M d, Y') ?>
+                                                    <?php endif; ?>
+                                                </div>
+                                            <?php else: ?>
+                                                <span class="text-muted">—</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="invoice-amount" data-label="Amount">
+                                            RM <?= number_format($invoice->amount, 2) ?>
+                                        </td>
+                                        <td data-label="Status">
+                                            <?php 
+                                            $statusClass = match(strtolower($invoice->status)) {
+                                                'paid' => 'paid',
+                                                'unpaid' => 'unpaid',
+                                                'cancelled' => 'cancelled',
+                                                default => 'cancelled'
+                                            };
+                                            ?>
+                                            <span class="status-outline <?= $statusClass ?>">
+                                                <?= h($invoice->status) ?>
+                                            </span>
+                                        </td>
+                                        <td data-label="Actions">
+                                            <?php if (strtolower($invoice->status) === 'unpaid'): ?>
+                                                <?= $this->Html->link(
+                                                    'Pay Now',
+                                                    ['action' => 'view', $invoice->id],
+                                                    ['class' => 'pay-btn']
+                                                ) ?>
+                                            <?php else: ?>
+                                                <?= $this->Html->link(
+                                                    '<i class="fas fa-file-pdf"></i>',
+                                                    ['action' => 'view', $invoice->id],
+                                                    ['class' => 'icon-btn', 'escape' => false, 'title' => 'View PDF']
+                                                ) ?>
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                                <!-- No Results Row (Hidden by default) -->
+                                <tr id="noResultsRow" style="display: none;">
+                                    <td colspan="5" style="text-align: center; padding: 40px; color: #94a3b8;">
+                                        <i class="fas fa-search" style="font-size: 1.5rem; margin-bottom: 10px; display: block;"></i>
+                                        No invoices found matching your search.
                                     </td>
                                 </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Pagination -->
-            <div class="d-flex justify-content-center mt-5">
-                <nav><ul class="pagination"><?= $this->Paginator->numbers() ?></ul></nav>
-            </div>
-
-        <?php else: ?>
-            <!-- Empty State -->
-            <div class="white-card">
-                <div class="invoices-empty">
-                    <i class="fas fa-file-invoice-dollar"></i>
-                    <h4>No Invoices Found</h4>
-                    <p>You have no pending bills or history.</p>
+                <!-- Pagination -->
+                <div class="d-flex justify-content-center mt-5">
+                    <nav><ul class="pagination"><?= $this->Paginator->numbers() ?></ul></nav>
                 </div>
-            </div>
-        <?php endif; ?>
+
+            <?php else: ?>
+                <!-- Empty State -->
+                <div class="ledger-card">
+                    <div class="invoices-empty">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <h4>No Invoices Found</h4>
+                        <p>You have no pending bills or payment history.</p>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
     </div>
 </div>
+
+<script>
+    // Enhanced Invoice Search Filter
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('invoiceSearch');
+        const tableBody = document.getElementById('invoiceTableBody');
+        const noResultsRow = document.getElementById('noResultsRow');
+        const invoiceRows = tableBody.querySelectorAll('.invoice-row');
+
+        searchInput.addEventListener('keyup', function() {
+            const filter = this.value.toLowerCase().trim();
+            let visibleCount = 0;
+
+            invoiceRows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(filter)) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            // Show "No results" row if all invoices are hidden
+            if (visibleCount === 0 && filter !== '') {
+                noResultsRow.style.display = '';
+            } else {
+                noResultsRow.style.display = 'none';
+            }
+        });
+
+        // Clear search on Escape key
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                this.value = '';
+                invoiceRows.forEach(row => row.style.display = '');
+                noResultsRow.style.display = 'none';
+            }
+        });
+    });
+</script>

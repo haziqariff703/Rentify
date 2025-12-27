@@ -1,65 +1,156 @@
 <?php
-
 /**
- * Rentify Premium Fleet Catalog - 3D Flip Edition (Full 9 Cars)
+ * Rentify Premium Fleet Catalog - 2-Column Grid Edition
+ * Features: Responsive grid, fixed sidebar, uniform cards, no spotlight effect
  */
 $this->assign('title', 'The Garage');
 ?>
 
 <style>
-    /* Google Fonts - Montserrat */
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap');
+    /* Google Fonts - Montserrat + Playfair Display */
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap');
 
     /* ========================================
-       PLATINUM STUDIO BACKGROUND
-       Clean Micro-Dot Pattern
+       DASHBOARD LAYOUT - Fixed Height Container
        ======================================== */
-
-    /* Page Wrapper - Clean Micro-Dot Pattern */
     .platinum-studio-wrapper {
         background-color: #f8fafc;
         background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px);
         background-size: 24px 24px;
-        min-height: 100vh;
-        padding: 0 0 60px;
+        height: 80vh;
+        overflow: hidden;
+        padding: 30px 0;
+    }
+
+    /* Dashboard Row - 25% / 75% Split */
+    .dashboard-row {
+        display: flex;
+        height: 100%;
+        gap: 24px;
     }
 
     /* ========================================
-   3D FLIP CARD CATALOG STYLES
-   ======================================== */
-
-    /* Apply Montserrat to entire page */
-    .catalog-hero,
-    .filter-card,
-    .flip-card {
-        font-family: 'Montserrat', sans-serif;
+       FIXED SIDEBAR - 25% Width
+       ======================================== */
+    .sidebar-column {
+        width: 25%;
+        min-width: 220px;
+        max-width: 280px;
+        flex-shrink: 0;
+        height: 100%;
+        overflow-y: auto;
+        position: relative;
     }
 
-    /* Hero Section - Transparent Ferrari Cutout */
+    /* ========================================
+       SCROLLABLE CAR GRID - 75% Width
+       ======================================== */
+    .content-column {
+        flex: 1;
+        height: 80vh;
+        max-height: 800px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 8px;
+    }
+
+    /* Polished Thin Scrollbar */
+    .content-column::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .content-column::-webkit-scrollbar-track {
+        background: transparent;
+        border-radius: 10px;
+    }
+
+    .content-column::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+    }
+
+    .content-column::-webkit-scrollbar-thumb:hover {
+        background: #334155;
+    }
+
+    /* ========================================
+       2-COLUMN RESPONSIVE GRID
+       ======================================== */
+    .car-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 24px;
+        padding-bottom: 40px;
+    }
+
+    @media (min-width: 768px) {
+        .car-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    /* ========================================
+       UTILITY CONTROL BAR
+       ======================================== */
+    .utility-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        padding: 0 4px;
+    }
+
+    .utility-bar-left {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #64748b;
+    }
+
+    .utility-bar-left .count {
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .utility-bar-right {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.85rem;
+        color: #475569;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        transition: color 0.2s ease;
+    }
+
+    .utility-bar-right:hover {
+        color: #0f172a;
+    }
+
+    .utility-bar-right i {
+        font-size: 0.7rem;
+    }
+
+    /* ========================================
+       HERO SECTION - FERRARI BANNER
+       ======================================== */
     .catalog-hero {
-        /* Deep dark background */
         background-color: #0d1117;
-        /* Transparent Ferrari PNG on top */
         background-image: url('<?= $this->Url->image('ferrari-background.png') ?>');
         background-size: 80%;
         background-position: center bottom;
         background-repeat: no-repeat;
-        /* More height to show the car */
-        padding: 100px 0 180px;
+        padding: 80px 0 140px;
         position: relative;
-        /* Curved professional edges */
         border-radius: 30px;
         overflow: hidden;
-        /* Clip content to curved corners */
-        margin-bottom: 20px;
-        /* Pull up to cancel layout pt-5 gap */
+        margin-bottom: 30px;
         margin-top: -3rem;
-        /* Shadow for depth - banner casts shadow onto dots */
         box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
         z-index: 10;
     }
 
-    /* Subtle gradient for depth (optional) */
     .catalog-hero::before {
         content: '';
         position: absolute;
@@ -72,8 +163,25 @@ $this->assign('title', 'The Garage');
         pointer-events: none;
     }
 
+    .hero-title {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        color: white;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+    }
+
+    .hero-subtitle {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 400;
+        letter-spacing: 1px;
+        color: rgba(255,255,255,0.85);
+        text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+    }
+
     /* ========================================
-       SOLID WHITE FILTER SIDEBAR
+       FILTER SIDEBAR
        ======================================== */
     .filter-card {
         background: #ffffff;
@@ -81,12 +189,7 @@ $this->assign('title', 'The Garage');
         border-radius: 16px;
         padding: 24px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        position: relative;
-        z-index: 1;
-    }
-
-    position: relative;
-    z-index: 1;
+        font-family: 'Montserrat', sans-serif;
     }
 
     .filter-header {
@@ -171,270 +274,409 @@ $this->assign('title', 'The Garage');
         font-weight: 500;
     }
 
-    .filter-list-item i {
-        width: 24px;
-        text-align: center;
-        margin-right: 12px;
-        font-size: 0.9rem;
-        color: #9ca3af;
-    }
-
-    .filter-list-item.active i {
-        color: #3b82f6;
-    }
-
     /* ========================================
-       FLOATING GLASS CARD - Modern UI
-       (With Proper 3D Flip)
+       GRID CAR CARDS - Luxury Physics
        ======================================== */
-
-    /* Card Container - Landscape 4:3 Shape */
-    .flip-card {
-        background-color: transparent;
-        width: 100%;
-        aspect-ratio: 4/3;
-        border-radius: 24px;
-        overflow: visible;
-        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.15);
-        position: relative;
-        perspective: 1000px;
-    }
-
-    .flip-card-inner {
-        position: relative;
-        width: 100%;
+    .car-item {
         height: 100%;
-        border-radius: 24px;
-        transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        transform-style: preserve-3d;
     }
 
-    /* Flip on hover */
-    .flip-card:hover .flip-card-inner {
-        transform: rotateY(180deg);
-    }
-
-    .flip-card-front,
-    .flip-card-back {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        border-radius: 24px;
+    .car-card {
+        /* Studio Atmosphere - Vignette background */
+        background: radial-gradient(circle at center, #ffffff 0%, #f8fafc 100%);
+        border-radius: 16px;
         overflow: hidden;
-        -webkit-backface-visibility: hidden;
-        backface-visibility: hidden;
+        display: flex;
+        flex-direction: column;
+        font-family: 'Montserrat', sans-serif;
+        /* Phantom Borders */
+        border: 1px solid #f1f5f9;
+        height: 100%;
+        /* Hover transition */
+        transition: transform 0.3s ease-out, box-shadow 0.3s ease-out, border-color 0.3s ease-out;
     }
 
-    /* Front Styling - Full Image Coverage */
-    .flip-card-front {
-        background-color: #1e293b;
-        background-size: cover;
-        background-position: center;
+    .car-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        /* Phantom border disappears on hover */
+        border-color: transparent;
     }
 
-    /* Image hover scale effect */
-    .flip-card-front img {
+    /* Car Image - 16:9 Aspect Ratio with Inner Shadow */
+    .car-image-container {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        position: relative;
+        overflow: hidden;
+        flex-shrink: 0;
+        border-radius: 16px 16px 0 0;
+    }
+
+    /* Inner shadow overlay for image blend */
+    .car-image-container::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 40px;
+        background: linear-gradient(to bottom, transparent, rgba(248, 250, 252, 0.5));
+        pointer-events: none;
+    }
+
+    .car-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
         transition: transform 0.4s ease;
     }
 
-    .flip-card:hover .flip-card-front img {
+    .car-card:hover .car-image {
         transform: scale(1.05);
     }
 
-    /* Glass Pill Overlay - Compact Floating at bottom */
-    .front-overlay {
+    /* Availability Badge - Corner */
+    .availability-badge {
         position: absolute;
-        bottom: 10px;
-        left: 10px;
-        right: 10px;
-        padding: 8px 14px;
-        /* White Glass Effect */
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border-radius: 12px;
-        text-align: center;
-        /* Subtle shadow */
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Text styling in Glass Pill - Compact */
-    .front-overlay .badge {
-        margin-bottom: 4px;
-        font-size: 0.65rem;
-    }
-
-    .front-overlay h4 {
-        color: #1e293b !important;
-        font-size: 0.95rem;
+        top: 12px;
+        left: 12px;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.7rem;
         font-weight: 700;
-        margin-bottom: 2px;
-        text-shadow: none !important;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        z-index: 5;
     }
 
-    .price-tag {
-        color: #4f46e5 !important;
-        font-weight: 800;
-        font-size: 0.9rem;
-        margin-top: 2px;
-    }
-
-    .price-tag small {
-        color: #64748b;
-        font-weight: 500;
-    }
-
-    .text-shadow {
-        text-shadow: none;
-    }
-
-    /* Back Styling - Glassmorphism (Lighter) */
-    .flip-card-back {
-        /* Lighter semi-transparent background */
-        background: rgba(30, 41, 59, 0.85) !important;
-
-        /* The Glass Blur Effect */
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-
-        /* Border to simulate glass edge */
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-
-        /* Text & Orientation */
+    .badge-available {
+        background: rgba(34, 197, 94, 0.95);
         color: white;
-        transform: rotateY(180deg);
+    }
+
+    .badge-maintenance {
+        background: rgba(239, 68, 68, 0.95);
+        color: white;
+    }
+
+    /* Special Badges - Top Right */
+    .special-badge {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        z-index: 5;
+    }
+
+    .badge-hot {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+    }
+
+    .badge-top-rated {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+    }
+
+    /* Car Details */
+    .car-details {
+        flex: 1;
+        padding: 20px;
         display: flex;
         flex-direction: column;
-        align-items: center;
-        justify-content: center;
     }
 
-    .specs-grid {
+    .car-category {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.65rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+        width: fit-content;
+    }
+
+    .car-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0 0 4px;
+    }
+
+    /* Serif Price Tag - Playfair Display */
+    .car-price {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.15rem;
+        font-weight: 500;
+        color: #0f172a;
+        margin-bottom: 12px;
+    }
+
+    .car-price small {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 500;
+        color: #94a3b8;
+        font-size: 0.7rem;
+    }
+
+    /* Specs Row */
+    .car-specs {
         display: flex;
-        gap: 20px;
-        justify-content: center;
-        width: 100%;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 16px;
     }
 
     .spec-item {
         display: flex;
-        flex-direction: column;
         align-items: center;
-        font-size: 0.9rem;
-        color: #cbd5e1;
+        gap: 6px;
+        font-size: 0.75rem;
+        color: #64748b;
     }
 
     .spec-item i {
-        font-size: 1.5rem;
-        margin-bottom: 8px;
+        color: #94a3b8;
+        font-size: 0.8rem;
+    }
+
+    /* Action Row */
+    .car-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: auto;
+    }
+
+    .btn-book {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        color: #ffffff;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 10px 18px;
+        border-radius: 8px;
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.2s ease;
+        border: none;
+        flex: 1;
+        text-align: center;
+    }
+
+    .btn-book:hover {
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        color: #ffffff;
+    }
+
+    .btn-book:disabled,
+    .btn-book.disabled {
+        background: #cbd5e1;
+        cursor: not-allowed;
+    }
+
+    .btn-specs {
+        background: transparent;
+        color: #64748b;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 10px 14px;
+        border-radius: 8px;
+        text-decoration: none;
+        border: 1px solid #e2e8f0;
+        transition: all 0.2s ease;
+    }
+
+    .btn-specs:hover {
+        background: #f8fafc;
+        color: #0f172a;
+        border-color: #cbd5e1;
     }
 
     /* Hidden class for filtering */
     .car-hidden {
         display: none !important;
     }
+
+    /* ========================================
+       RESPONSIVE
+       ======================================== */
+    @media (max-width: 768px) {
+        .dashboard-row {
+            flex-direction: column;
+        }
+
+        .sidebar-column {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .content-column {
+            height: 60vh;
+        }
+    }
 </style>
 
-<!-- Hero Section -->
+<!-- Hero Section - Ferrari Banner -->
 <section class="catalog-hero">
     <div class="container text-center position-relative" style="z-index: 1;">
-        <h1 class="display-4 mb-2" style="font-family: 'Montserrat', sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.8);">The <span style="color: #ef4444;">Garage</span></h1>
-        <p class="lead" style="font-family: 'Montserrat', sans-serif; font-weight: 400; letter-spacing: 1px; color: rgba(255,255,255,0.85); text-shadow: 0 2px 8px rgba(0,0,0,0.7);">Unveil the Engineering.</p>
+        <h1 class="display-5 mb-2 hero-title">The <span style="color: #ef4444;">Garage</span></h1>
+        <p class="lead hero-subtitle">Unveil the Engineering.</p>
     </div>
 </section>
 
-<!-- Main Content - PLATINUM STUDIO WRAPPER -->
+<!-- Main Content - Dashboard Layout -->
 <section class="platinum-studio-wrapper">
-    <div class="container-fluid px-3">
-        <div class="row">
-            <!-- Filter Sidebar - Corporate Accordion -->
-            <div class="col-lg-2 mb-4">
-                <div class="sticky-top" style="top: 100px; z-index: 10;">
-                    <div class="filter-card">
-                        <div class="filter-header">
-                            <i class="fas fa-filter"></i>
-                            <h5>Filter</h5>
+    <div class="container-fluid px-4">
+        <div class="dashboard-row">
+            
+            <!-- Filter Sidebar (25% Width) -->
+            <div class="sidebar-column">
+                <div class="filter-card">
+                    <div class="filter-header">
+                        <i class="fas fa-filter"></i>
+                        <h5>Filter</h5>
+                    </div>
+                    <div class="filter-accordion">
+                        <div class="filter-accordion-header" onclick="toggleAccordion(this)">
+                            <span class="filter-accordion-title">Vehicle Class</span>
+                            <i class="fas fa-plus filter-accordion-toggle"></i>
                         </div>
-                        <div class="filter-accordion">
-                            <div class="filter-accordion-header" onclick="toggleAccordion(this)">
-                                <span class="filter-accordion-title">Vehicle Class</span>
-                                <i class="fas fa-plus filter-accordion-toggle"></i>
-                            </div>
-                            <div class="filter-accordion-content">
-                                <ul class="filter-list">
-                                    <li class="filter-list-item active" data-filter="all" onclick="filterFleet('all', this)">
-                                        <i class="fas fa-th-large"></i> All Vehicles
+                        <div class="filter-accordion-content">
+                            <ul class="filter-list">
+                                <li class="filter-list-item active" data-filter="all" onclick="filterFleet('all', this)">
+                                    <i class="fas fa-th-large me-2"></i> All Vehicles
+                                </li>
+                                <?php foreach ($categories as $category): ?>
+                                    <li class="filter-list-item" data-filter="<?= h($category->name) ?>" onclick="filterFleet('<?= h($category->name) ?>', this)">
+                                        <?= h($category->name) ?>
                                     </li>
-                                    <?php foreach ($categories as $category): ?>
-                                        <li class="filter-list-item" data-filter="<?= h($category->name) ?>" onclick="filterFleet('<?= h($category->name) ?>', this)">
-                                            <?= h($category->name) ?>
-                                        </li>
-                                    <?php endforeach; ?>
-                                </ul>
-                            </div>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Availability Filter -->
+                    <div class="filter-accordion" style="margin-top: 16px; border-top: 1px solid #e5e7eb; padding-top: 16px;">
+                        <div class="filter-accordion-header" onclick="toggleAccordion(this)">
+                            <span class="filter-accordion-title">Availability</span>
+                            <i class="fas fa-plus filter-accordion-toggle"></i>
+                        </div>
+                        <div class="filter-accordion-content">
+                            <ul class="filter-list">
+                                <li class="filter-list-item active" onclick="filterAvailability('all', this)">
+                                    <span class="me-2">📋</span> All Cars
+                                </li>
+                                <li class="filter-list-item" onclick="filterAvailability('available', this)">
+                                    <span class="me-2">🟢</span> Available
+                                </li>
+                                <li class="filter-list-item" onclick="filterAvailability('maintenance', this)">
+                                    <span class="me-2">🔴</span> Maintenance
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Fleet Grid - 3 Cards Per Row -->
-            <div class="col-lg-10">
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="fleetGrid">
+            <!-- Fleet Grid - 2 Column Responsive -->
+            <div class="content-column">
+                <!-- Utility Control Bar -->
+                <div class="utility-bar">
+                    <div class="utility-bar-left">
+                        Showing <span class="count"><?= count($cars) ?></span> Premium Vehicles
+                    </div>
+                    <div class="utility-bar-right">
+                        Sort by: Price (Low to High) <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
 
-
+                <div class="car-grid">
                     <?php foreach ($cars as $car): ?>
-                        <div class="col car-item" data-category="<?= h($car->category ? $car->category->name : 'Uncategorized') ?>">
-                            <div class="flip-card">
-                                <div class="flip-card-inner">
+                        <div class="car-item" data-category="<?= h($car->category ? $car->category->name : 'Uncategorized') ?>" data-availability="<?= h($car->availability) ?>">
+                            <div class="car-card">
+                                
+                                <!-- Car Image -->
+                                <div class="car-image-container">
+                                    <?php if ($car->image): ?>
+                                        <?= $this->Html->image($car->image, ['class' => 'car-image', 'alt' => $car->car_model]) ?>
+                                    <?php else: ?>
+                                        <div class="car-image d-flex align-items-center justify-content-center bg-secondary">
+                                            <i class="fas fa-car fa-3x text-white opacity-50"></i>
+                                        </div>
+                                    <?php endif; ?>
 
-                                    <!-- FRONT: Image + Name + Price -->
-                                    <div class="flip-card-front shadow-sm">
-                                        <?php if ($car->image): ?>
-                                            <?= $this->Html->image($car->image, ['class' => 'w-100 h-100 object-fit-cover', 'alt' => $car->car_model]) ?>
-                                        <?php else: ?>
-                                            <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-secondary">
-                                                <i class="fas fa-car fa-4x text-white opacity-50"></i>
-                                            </div>
-                                        <?php endif; ?>
-                                        <div class="front-overlay">
-                                            <span class="badge rounded-pill mb-2" style="background: <?= h($car->badge_color ?: '#3b82f6') ?>"><?= h($car->category ? $car->category->name : 'Car') ?></span>
-                                            <h4 class="text-white fw-bold mb-0 text-shadow"><?= h($car->brand . ' ' . $car->car_model) ?></h4>
-                                            <div class="price-tag">$<?= h($car->price_per_day) ?> <small>/ day</small></div>
+                                    <!-- Availability Badge -->
+                                    <?php if ($car->availability === 'maintenance'): ?>
+                                        <span class="availability-badge badge-maintenance">🔴 Maintenance</span>
+                                    <?php else: ?>
+                                        <span class="availability-badge badge-available">🟢 Available</span>
+                                    <?php endif; ?>
+
+                                    <!-- Special Badges -->
+                                    <?php if ($car->price_per_day >= 300): ?>
+                                        <span class="special-badge badge-hot">🔥 Premium</span>
+                                    <?php elseif ($car->id % 3 === 0): ?>
+                                        <span class="special-badge badge-top-rated">⭐ Top Rated</span>
+                                    <?php endif; ?>
+                                </div>
+
+                                <!-- Car Details -->
+                                <div class="car-details">
+                                    <span class="car-category" style="background: <?= h($car->badge_color ?: '#3b82f6') ?>20; color: <?= h($car->badge_color ?: '#3b82f6') ?>;">
+                                        <?= h($car->category ? $car->category->name : 'Car') ?>
+                                    </span>
+                                    
+                                    <h3 class="car-name"><?= h($car->brand . ' ' . $car->car_model) ?></h3>
+                                    <div class="car-price">
+                                        RM <?= number_format($car->price_per_day, 2) ?>
+                                        <small>/ day</small>
+                                    </div>
+
+                                    <!-- Specs -->
+                                    <div class="car-specs">
+                                        <div class="spec-item">
+                                            <i class="fas fa-cogs"></i>
+                                            <span><?= h($car->transmission ?: 'Auto') ?></span>
+                                        </div>
+                                        <div class="spec-item">
+                                            <i class="fas fa-user-friends"></i>
+                                            <span><?= h($car->seats ?: '5') ?> Seats</span>
+                                        </div>
+                                        <div class="spec-item">
+                                            <i class="fas fa-gas-pump"></i>
+                                            <span><?= h($car->fuel_type ?: 'Petrol') ?></span>
                                         </div>
                                     </div>
 
-                                    <!-- BACK: Specs + Buttons -->
-                                    <div class="flip-card-back shadow-lg">
-                                        <h4 class="fw-bold mb-4 text-white"><?= h($car->brand . ' ' . $car->car_model) ?></h4>
-
-                                        <!-- Specs Grid -->
-                                        <div class="specs-grid mb-4">
-                                            <div class="spec-item">
-                                                <i class="fas fa-tachometer-alt text-primary"></i>
-                                                <span><?= h($car->engine ?: 'N/A') ?></span>
-                                            </div>
-                                            <div class="spec-item">
-                                                <i class="fas fa-stopwatch text-primary"></i>
-                                                <span><?= h($car->zero_to_sixty ?: 'N/A') ?></span>
-                                            </div>
-                                            <div class="spec-item">
-                                                <i class="fas fa-cogs text-primary"></i>
-                                                <span><?= h($car->transmission ?: 'Auto') ?></span>
-                                            </div>
-                                        </div>
-
-                                        <!-- Buttons -->
-                                        <div class="d-grid gap-3 w-100 px-4">
-                                            <a href="<?= $this->Url->build(['controller' => 'Bookings', 'action' => 'add']) ?>" class="btn btn-primary rounded-pill fw-bold">Book Now</a>
-                                            <button type="button" class="btn btn-outline-light rounded-pill btn-sm" onclick="showCarModal(<?= $car->id ?>)">Full Specs <i class="fas fa-info-circle ms-1"></i></button>
-                                        </div>
+                                    <!-- Actions -->
+                                    <div class="car-actions">
+                                        <?php if ($car->availability !== 'maintenance'): ?>
+                                            <a href="<?= $this->Url->build(['controller' => 'Bookings', 'action' => 'add', $car->id]) ?>" class="btn-book">
+                                                Book Now
+                                            </a>
+                                        <?php else: ?>
+                                            <button class="btn-book disabled" disabled>
+                                                Maintenance
+                                            </button>
+                                        <?php endif; ?>
+                                        <button type="button" class="btn-specs" onclick="showCarModal(<?= $car->id ?>)">
+                                            <i class="fas fa-info-circle"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     <?php endforeach; ?>
-
                 </div>
             </div>
         </div>
@@ -450,7 +692,7 @@ $this->assign('title', 'The Garage');
             <div class="car-modal-details">
                 <span class="badge rounded-pill mb-2" id="modalBadge">Category</span>
                 <h2 class="car-modal-title" id="modalTitle">Car Name</h2>
-                <div class="car-modal-price" id="modalPrice">$0 / day</div>
+                <div class="car-modal-price" id="modalPrice">RM 0 / day</div>
 
                 <div class="car-modal-specs">
                     <div class="spec-row">
@@ -485,7 +727,7 @@ $this->assign('title', 'The Garage');
 </div>
 
 <style>
-    /* Car Details Modal Styles */
+    /* Modal Styles */
     .car-modal {
         display: none;
         position: fixed;
@@ -505,7 +747,7 @@ $this->assign('title', 'The Garage');
     }
 
     .car-modal-content {
-        background: rgba(255, 255, 255, 0.95);
+        background: rgba(255, 255, 255, 0.98);
         backdrop-filter: blur(20px);
         border-radius: 24px;
         max-width: 800px;
@@ -554,10 +796,10 @@ $this->assign('title', 'The Garage');
     .car-modal-details {
         flex: 1;
         padding: 30px;
+        font-family: 'Montserrat', sans-serif;
     }
 
     .car-modal-title {
-        font-family: 'Montserrat', sans-serif;
         font-weight: 800;
         font-size: 1.8rem;
         color: #1e293b;
@@ -604,22 +846,23 @@ $this->assign('title', 'The Garage');
 
 <!-- Cars Data for Modal -->
 <script>
-    const carsData = <?= json_encode(array_map(function ($car) {
-                            return [
-                                'id' => $car->id,
-                                'brand' => $car->brand,
-                                'car_model' => $car->car_model,
-                                'price_per_day' => $car->price_per_day,
-                                'image' => $car->image,
-                                'engine' => $car->engine,
-                                'zero_to_sixty' => $car->zero_to_sixty,
-                                'transmission' => $car->transmission,
-                                'seats' => $car->seats,
-                                'year' => $car->year,
-                                'badge_color' => $car->badge_color,
-                                'category' => $car->category ? $car->category->name : 'Car'
-                            ];
-                        }, $cars->toArray())) ?>;
+    const carsData = <?= json_encode(array_map(function($car) {
+        return [
+            'id' => $car->id,
+            'brand' => $car->brand,
+            'car_model' => $car->car_model,
+            'price_per_day' => $car->price_per_day,
+            'image' => $car->image,
+            'engine' => $car->engine,
+            'zero_to_sixty' => $car->zero_to_sixty,
+            'transmission' => $car->transmission,
+            'seats' => $car->seats,
+            'year' => $car->year,
+            'badge_color' => $car->badge_color,
+            'category' => $car->category ? $car->category->name : 'Car',
+            'availability' => $car->availability
+        ];
+    }, $cars)) ?>;
 
     const imageBasePath = '<?= $this->Url->image('') ?>';
     const bookingUrl = '<?= $this->Url->build(['controller' => 'Bookings', 'action' => 'add']) ?>';
@@ -630,7 +873,7 @@ $this->assign('title', 'The Garage');
         if (!car) return;
 
         document.getElementById('modalTitle').textContent = car.brand + ' ' + car.car_model;
-        document.getElementById('modalPrice').textContent = '$' + car.price_per_day + ' / day';
+        document.getElementById('modalPrice').textContent = 'RM ' + parseFloat(car.price_per_day).toFixed(2) + ' / day';
         document.getElementById('modalEngine').textContent = car.engine || 'N/A';
         document.getElementById('modalZeroSixty').textContent = car.zero_to_sixty || 'N/A';
         document.getElementById('modalTransmission').textContent = car.transmission || 'Auto';
@@ -648,9 +891,18 @@ $this->assign('title', 'The Garage');
             imageDiv.style.backgroundImage = 'none';
         }
 
-        document.getElementById('modalBookBtn').href = bookingUrl;
-        document.getElementById('modalReviewBtn').href = reviewsBaseUrl + '/' + carId;
+        const bookBtn = document.getElementById('modalBookBtn');
+        if (car.availability === 'available') {
+            bookBtn.href = bookingUrl + '/' + carId;
+            bookBtn.classList.remove('disabled');
+            bookBtn.textContent = 'Book This Car';
+        } else {
+            bookBtn.href = '#';
+            bookBtn.classList.add('disabled');
+            bookBtn.textContent = 'Under Maintenance';
+        }
 
+        document.getElementById('modalReviewBtn').href = reviewsBaseUrl + '/' + carId;
         document.getElementById('carModal').classList.add('show');
     }
 
@@ -664,14 +916,13 @@ $this->assign('title', 'The Garage');
         }
     }
 
-    // Close modal on Escape key
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') closeCarModal();
     });
 </script>
 
 <script>
-    // Toggle Accordion (expand/collapse with +/- icon)
+    // Toggle Accordion
     function toggleAccordion(header) {
         var content = header.nextElementSibling;
         var icon = header.querySelector('.filter-accordion-toggle');
@@ -703,11 +954,35 @@ $this->assign('title', 'The Garage');
             }
         });
 
-        var items = document.querySelectorAll('.filter-list-item');
+        // Update active state
+        var items = clickedItem.parentElement.querySelectorAll('.filter-list-item');
         items.forEach(function(item) {
             item.classList.remove('active');
         });
+        clickedItem.classList.add('active');
+    }
 
+    // Filter by Availability
+    function filterAvailability(status, clickedItem) {
+        var cards = document.querySelectorAll('.car-item');
+
+        cards.forEach(function(card) {
+            if (status === 'all') {
+                card.classList.remove('car-hidden');
+            } else {
+                if (card.dataset.availability === status) {
+                    card.classList.remove('car-hidden');
+                } else {
+                    card.classList.add('car-hidden');
+                }
+            }
+        });
+
+        // Update active state
+        var items = clickedItem.parentElement.querySelectorAll('.filter-list-item');
+        items.forEach(function(item) {
+            item.classList.remove('active');
+        });
         clickedItem.classList.add('active');
     }
 </script>
