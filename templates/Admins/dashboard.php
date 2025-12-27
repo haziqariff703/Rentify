@@ -433,14 +433,16 @@ $greeting = match (true) {
         // 1. Highlight Chart
         const highlightOptions = {
             series: [{
-                name: 'Revenue',
+                name: 'Revenue (RM)',
+                type: 'area',
                 data: <?= json_encode($revenueData ?? []) ?>
             }, {
                 name: 'Bookings',
-                data: <?= json_encode(array_map(fn($v) => $v * 0.6, $revenueData ?? [])) ?>
+                type: 'line',
+                data: <?= json_encode($bookingCountData ?? []) ?>
             }],
             chart: {
-                type: 'area',
+                type: 'line',
                 height: 300,
                 fontFamily: "'Inter', sans-serif",
                 toolbar: {
@@ -454,10 +456,10 @@ $greeting = match (true) {
             colors: ['#6366f1', '#10b981'],
             stroke: {
                 curve: 'smooth',
-                width: 3
+                width: [3, 3]
             },
             fill: {
-                type: 'gradient',
+                type: ['gradient', 'solid'],
                 gradient: {
                     shadeIntensity: 1,
                     opacityFrom: 0.5,
@@ -477,6 +479,36 @@ $greeting = match (true) {
                     show: false
                 }
             },
+            yaxis: [{
+                    title: {
+                        text: 'Revenue (RM)',
+                        style: {
+                            fontSize: '12px',
+                            color: '#6366f1'
+                        }
+                    },
+                    labels: {
+                        formatter: function(val) {
+                            return 'RM ' + (val ? val.toLocaleString() : '0');
+                        }
+                    }
+                },
+                {
+                    opposite: true,
+                    title: {
+                        text: 'Bookings',
+                        style: {
+                            fontSize: '12px',
+                            color: '#10b981'
+                        }
+                    },
+                    labels: {
+                        formatter: function(val) {
+                            return Math.round(val);
+                        }
+                    }
+                }
+            ],
             grid: {
                 borderColor: 'rgba(0,0,0,0.05)',
                 strokeDashArray: 4
@@ -486,7 +518,9 @@ $greeting = match (true) {
                 horizontalAlign: 'right'
             },
             tooltip: {
-                theme: 'light'
+                theme: 'light',
+                shared: true,
+                intersect: false
             }
         };
         new ApexCharts(document.querySelector("#highlightChart"), highlightOptions).render();

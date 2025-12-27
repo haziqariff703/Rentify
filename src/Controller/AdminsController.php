@@ -69,6 +69,7 @@ class AdminsController extends AppController
         // --- Chart Data: Revenue Trends (Last 6 Months) ---
         $sixMonthsAgo = new \Cake\I18n\FrozenDate('-6 months');
 
+        // Get revenue by month
         $revenueQuery = $paymentsTable->find();
         $revenueResults = $revenueQuery->select([
             'month_str' => $revenueQuery->newExpr("DATE_FORMAT(payment_date, '%Y-%m')"),
@@ -79,13 +80,46 @@ class AdminsController extends AppController
             ->order(['month_str' => 'ASC'])
             ->all();
 
+        // Build revenue lookup by month
+        $revenueByMonth = [];
+        foreach ($revenueResults as $row) {
+            $revenueByMonth[$row->month_str] = (float)$row->total;
+        }
+
+        // --- Chart Data: Booking Counts (Last 6 Months) ---
+        $bookingCountQuery = $bookingsTable->find();
+        $bookingCountResults = $bookingCountQuery->select([
+            'month_str' => $bookingCountQuery->newExpr("DATE_FORMAT(created, '%Y-%m')"),
+            'count' => $bookingCountQuery->func()->count('*')
+        ])
+            ->where(['created >=' => $sixMonthsAgo])
+            ->group('month_str')
+            ->order(['month_str' => 'ASC'])
+            ->all();
+
+        // Build booking lookup by month
+        $bookingsByMonth = [];
+        foreach ($bookingCountResults as $row) {
+            $bookingsByMonth[$row->month_str] = (int)$row->count;
+        }
+
+        // --- Combine all months from both datasets ---
+        $allMonths = array_unique(array_merge(
+            array_keys($revenueByMonth),
+            array_keys($bookingsByMonth)
+        ));
+        sort($allMonths);
+
+        // Build aligned arrays
         $revenueLabels = [];
         $revenueData = [];
+        $bookingCountData = [];
 
-        foreach ($revenueResults as $row) {
-            $dateObj = \DateTime::createFromFormat('Y-m', $row->month_str);
-            $revenueLabels[] = $dateObj ? $dateObj->format('M Y') : $row->month_str;
-            $revenueData[] = $row->total;
+        foreach ($allMonths as $monthStr) {
+            $dateObj = \DateTime::createFromFormat('Y-m', $monthStr);
+            $revenueLabels[] = $dateObj ? $dateObj->format('M Y') : $monthStr;
+            $revenueData[] = $revenueByMonth[$monthStr] ?? 0;
+            $bookingCountData[] = $bookingsByMonth[$monthStr] ?? 0;
         }
 
         // --- Chart Data: Fleet Status ---
@@ -154,6 +188,7 @@ class AdminsController extends AppController
             'totalReviews',
             'revenueLabels',
             'revenueData',
+            'bookingCountData',
             'carStatusLabels',
             'carStatusCounts',
             'pendingBookings',
