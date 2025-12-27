@@ -1,31 +1,22 @@
 <?php
 /**
- * My Reviews - Clean Corporate Blue
- * Matches my_invoices.php and my_payments.php design
+ * My Reviews - Executive Brand Identity Edition
+ * Dark Navy Header, Serif Fonts, Stacked Card List
  * @var \App\View\AppView $this
  */
 $this->assign('title', 'My Reviews');
 ?>
 
 <style>
-    /* Google Fonts - Montserrat */
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+    /* Google Fonts - Montserrat + Playfair Display */
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap');
 
     /* ========================================
-       DIAGONAL MICRO-STRIPE BACKGROUND
+       PAGE WRAPPER
        ======================================== */
-    .reviews-corporate-wrapper {
+    .reviews-executive-wrapper {
         background-color: #f8fafc;
-        background-image: repeating-linear-gradient(
-            135deg,
-            transparent,
-            transparent 10px,
-            rgba(148, 163, 184, 0.05) 10px,
-            rgba(148, 163, 184, 0.05) 11px
-        );
-        background-attachment: fixed;
         min-height: 100vh;
-        padding: 50px 0 80px;
         margin-top: -3rem;
         width: 100vw;
         position: relative;
@@ -36,254 +27,203 @@ $this->assign('title', 'My Reviews');
     }
 
     /* ========================================
-       WHITE PANEL CONTAINER + DEEP LIFT SHADOW
+       DARK NAVY HEADER SECTION
        ======================================== */
-    .white-panel {
-        background: #ffffff;
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        border-radius: 24px;
-        box-shadow:
-            0 4px 6px -1px rgba(0, 0, 0, 0.05),
-            0 25px 50px -12px rgba(37, 99, 235, 0.2);
-        padding: 50px;
-        max-width: 1200px;
-        margin: 0 auto;
-        overflow: visible;
+    .navy-header {
+        background: #0f172a;
+        padding: 50px 0 60px;
+        position: relative;
     }
 
-    /* ========================================
-       EDITORIAL HEADER
-       ======================================== */
-    .editorial-header {
-        text-align: center;
-        margin-bottom: 35px;
-    }
+    /* REMOVED: No more fade gradient - clean hard line */
 
-    .editorial-subtitle {
+    .header-subtitle {
         font-family: 'Montserrat', sans-serif;
         font-size: 0.7rem;
         font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 3px;
-        color: #94a3b8;
+        letter-spacing: 4px;
+        color: #64748b;
         margin-bottom: 8px;
-    }
-
-    .editorial-title {
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 900;
-        font-size: 2.5rem;
-        letter-spacing: -2px;
-        background: linear-gradient(to bottom, #1e293b, #475569);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin: 0;
-        line-height: 1.1;
-    }
-
-    /* ========================================
-       BRAND BLUE HERO WIDGET
-       ======================================== */
-    .hero-widget {
-        background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
-        border-radius: 20px;
-        box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.4);
-        margin-bottom: 40px;
-        padding: 35px 50px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .hero-widget-left {
-        display: flex;
-        align-items: center;
-        gap: 40px;
-    }
-
-    .hero-stat {
         text-align: center;
     }
 
-    .hero-stat-number {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 3rem;
-        font-weight: 800;
+    .header-title {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: 2.8rem;
+        letter-spacing: -1px;
         color: #ffffff;
-        line-height: 1;
-    }
-
-    .hero-stat-label {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.7rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        color: rgba(255, 255, 255, 0.8);
-        margin-top: 8px;
-    }
-
-    .hero-divider {
-        width: 1px;
-        height: 60px;
-        background: rgba(255, 255, 255, 0.3);
+        margin: 0 0 40px;
+        text-align: center;
     }
 
     /* ========================================
-       SCROLL WRAPPER
+       STATS CARDS - Floating Overlap
        ======================================== */
-    .table-scroll-wrapper {
-        max-height: 450px;
-        overflow-y: auto;
-        border-radius: 12px;
-    }
-
-    .table-scroll-wrapper::-webkit-scrollbar {
-        width: 6px;
-    }
-
-    .table-scroll-wrapper::-webkit-scrollbar-track {
-        background: #f1f5f9;
-        border-radius: 3px;
-    }
-
-    .table-scroll-wrapper::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
-        border-radius: 3px;
-    }
-
-    .table-scroll-wrapper::-webkit-scrollbar-thumb:hover {
-        background: #94a3b8;
-    }
-
-    /* ========================================
-       TABLE STYLING - LIGHT THEME
-       ======================================== */
-    .reviews-table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
-    }
-
-    .reviews-table thead {
-        position: sticky;
-        top: 0;
+    .stats-cards {
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+        margin-top: -3rem;
+        position: relative;
         z-index: 10;
     }
 
-    .reviews-table thead tr {
-        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    .stat-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 24px 40px;
+        min-width: 180px;
+        text-align: center;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e2e8f0;
     }
 
-    .reviews-table th {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.7rem;
-        font-weight: 700;
+    .stat-label {
+        font-family: 'Playfair Display', serif;
+        font-size: 0.75rem;
+        font-weight: 500;
         text-transform: uppercase;
-        letter-spacing: 2px;
-        color: #ffffff;
-        padding: 18px 20px;
-        text-align: left;
-        white-space: nowrap;
+        letter-spacing: 1px;
+        color: #64748b;
+        margin-bottom: 8px;
     }
 
-    .reviews-table th:first-child {
-        border-radius: 12px 0 0 12px;
+    .stat-value {
+        font-family: 'Courier New', monospace;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #0f172a;
     }
 
-    .reviews-table th:last-child {
-        border-radius: 0 12px 12px 0;
+    .stat-value .stars {
+        color: #f59e0b;
+        font-size: 1.5rem;
     }
 
-    .reviews-table tbody tr {
-        border-bottom: 1px solid #f1f5f9;
-        transition: background 0.2s ease;
+    /* ========================================
+       CONTENT SECTION
+       ======================================== */
+    .content-section {
+        padding: 40px 0 60px;
+        background-color: #f1f5f9;
+        background-image: repeating-linear-gradient(
+            135deg,
+            transparent,
+            transparent 10px,
+            rgba(148, 163, 184, 0.05) 10px,
+            rgba(148, 163, 184, 0.05) 11px
+        );
     }
 
-    .reviews-table tbody tr:hover {
-        background: #f8fafc;
-    }
-
-    .reviews-table td {
-        font-family: 'Montserrat', sans-serif;
-        padding: 20px;
-        vertical-align: middle;
-        color: #475569;
-        font-size: 0.9rem;
-    }
-
-    /* Car Cell */
-    .car-cell {
+    /* ========================================
+       REVIEW CARDS - STACKED LIST
+       ======================================== */
+    .reviews-list {
         display: flex;
-        align-items: center;
+        flex-direction: column;
         gap: 16px;
     }
 
-    .car-thumb {
-        width: 60px;
-        height: 45px;
-        border-radius: 8px;
+    .review-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 24px;
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
+
+    .review-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        border-color: transparent;
+    }
+
+    /* Car Thumbnail */
+    .review-thumb {
+        width: 100px;
+        height: 70px;
+        border-radius: 12px;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+
+    .review-thumb img {
+        width: 100%;
+        height: 100%;
         object-fit: cover;
     }
 
-    .car-thumb-placeholder {
-        width: 60px;
-        height: 45px;
-        border-radius: 8px;
-        background: #f1f5f9;
+    .review-thumb-placeholder {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
         display: flex;
         align-items: center;
         justify-content: center;
-    }
-
-    .car-thumb-placeholder i {
         color: #94a3b8;
-        font-size: 1rem;
     }
 
-    .car-name {
-        font-weight: 600;
-        color: #1e293b;
+    /* Review Content */
+    .review-content {
+        flex: 1;
+        min-width: 0;
     }
 
-    /* Rating Stars */
-    .rating-stars {
+    .review-car-name {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: #0f172a;
+        margin-bottom: 6px;
+    }
+
+    .review-stars {
         color: #f59e0b;
-        font-size: 1rem;
+        font-size: 1.1rem;
+        margin-bottom: 8px;
     }
 
-    .rating-stars .empty {
+    .review-stars .empty {
         color: #e2e8f0;
     }
 
-    .rating-number {
-        font-weight: 600;
-        color: #1e293b;
-        margin-left: 8px;
-    }
-
-    /* Comment Cell */
-    .comment-text {
-        max-width: 300px;
+    .review-comment {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        font-style: italic;
+        color: #64748b;
+        line-height: 1.5;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
-        color: #64748b;
-        line-height: 1.5;
     }
 
-    /* Date Cell */
-    .date-text {
-        color: #64748b;
-        font-size: 0.85rem;
+    /* Review Meta & Actions */
+    .review-meta {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 12px;
+        flex-shrink: 0;
     }
 
-    /* Action Button */
-    .btn-view {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        color: #ffffff;
+    .review-date {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.75rem;
+        color: #94a3b8;
+    }
+
+    .btn-ghost {
+        background: transparent;
+        border: 1px solid #e2e8f0;
+        color: #64748b;
         font-family: 'Montserrat', sans-serif;
         font-size: 0.75rem;
         font-weight: 600;
@@ -293,172 +233,202 @@ $this->assign('title', 'My Reviews');
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        white-space: nowrap;
+        transition: all 0.2s ease;
     }
 
-    /* Empty State */
-    .empty-state {
+    .btn-ghost:hover {
+        background: #0f172a;
+        border-color: #0f172a;
+        color: #ffffff;
+    }
+
+    /* ========================================
+       EMPTY STATE
+       ======================================== */
+    .reviews-empty {
         text-align: center;
-        padding: 80px 40px;
+        padding: 80px 20px;
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     }
 
-    .empty-state i {
+    .reviews-empty i {
         font-size: 4rem;
         color: #cbd5e1;
         margin-bottom: 20px;
     }
 
-    .empty-state h4 {
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 700;
-        color: #475569;
+    .reviews-empty h4 {
+        font-family: 'Playfair Display', serif;
+        color: #1e293b;
+        font-weight: 600;
+        font-size: 1.5rem;
         margin-bottom: 10px;
     }
 
-    .empty-state p {
+    .reviews-empty p {
         font-family: 'Montserrat', sans-serif;
-        color: #94a3b8;
+        color: #64748b;
         margin-bottom: 24px;
     }
 
-    /* Responsive */
-    @media (max-width: 992px) {
-        .white-panel {
-            padding: 30px 20px;
-            margin: 0 16px;
-        }
+    .btn-browse {
+        background: #0f172a;
+        color: #ffffff;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        padding: 14px 28px;
+        border-radius: 10px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s ease;
+    }
 
-        .hero-widget {
+    .btn-browse:hover {
+        background: #1e293b;
+        color: #ffffff;
+    }
+
+    /* ========================================
+       RESPONSIVE
+       ======================================== */
+    @media (max-width: 768px) {
+        .stats-cards {
             flex-direction: column;
-            gap: 20px;
-            padding: 30px;
+            padding: 0 20px;
+            gap: 16px;
         }
 
-        .hero-widget-left {
-            gap: 30px;
+        .stat-card {
+            min-width: 100%;
         }
 
-        .reviews-table th,
-        .reviews-table td {
-            padding: 14px 12px;
-            font-size: 0.8rem;
+        .header-title {
+            font-size: 2rem;
+        }
+
+        .review-card {
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+        }
+
+        .review-thumb {
+            width: 100%;
+            height: 150px;
+        }
+
+        .review-meta {
+            flex-direction: row;
+            justify-content: space-between;
+            width: 100%;
+            align-items: center;
         }
     }
 </style>
 
-<!-- Corporate Wrapper with Diagonal Stripes -->
-<div class="reviews-corporate-wrapper">
-    <div class="container">
-        <div class="white-panel">
-            
-            <!-- Editorial Header -->
-            <div class="editorial-header">
-                <p class="editorial-subtitle">Your Feedback</p>
-                <h1 class="editorial-title">MY REVIEWS</h1>
-            </div>
+<!-- Executive Reviews Wrapper -->
+<div class="reviews-executive-wrapper">
 
-            <!-- Hero Widget with Stats -->
-            <div class="hero-widget">
-                <div class="hero-widget-left">
-                    <div class="hero-stat">
-                        <div class="hero-stat-number"><?= $totalReviews ?></div>
-                        <div class="hero-stat-label">Total Reviews</div>
-                    </div>
-                    <div class="hero-divider"></div>
-                    <div class="hero-stat">
-                        <div class="hero-stat-number"><?= $avgRating ?>★</div>
-                        <div class="hero-stat-label">Avg Rating</div>
-                    </div>
+    <!-- Dark Navy Header Section -->
+    <div class="navy-header">
+        <div class="container">
+            <div class="header-subtitle">Your Feedback</div>
+            <h1 class="header-title">My Reviews</h1>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="container">
+        <div class="stats-cards">
+            <div class="stat-card">
+                <div class="stat-label">Total Reviews</div>
+                <div class="stat-value"><?= $totalReviews ?></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Average Rating</div>
+                <div class="stat-value">
+                    <span class="stars">★</span> <?= number_format($avgRating, 1) ?>
                 </div>
             </div>
+        </div>
+    </div>
 
+    <!-- Content Section -->
+    <div class="content-section">
+        <div class="container">
             <?php if ($reviews->isEmpty()): ?>
-                <div class="empty-state">
+                <!-- Empty State -->
+                <div class="reviews-empty">
                     <i class="fas fa-star"></i>
                     <h4>No Reviews Yet</h4>
                     <p>You haven't left any reviews yet. Complete a booking to share your experience!</p>
-                    <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="btn btn-primary rounded-pill px-4">
-                        <i class="fas fa-car me-2"></i>Browse Cars
+                    <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="btn-browse">
+                        <i class="fas fa-car"></i> Browse Cars
                     </a>
                 </div>
             <?php else: ?>
-                <!-- Scrollable Table -->
-                <div class="table-scroll-wrapper">
-                    <table class="reviews-table">
-                        <thead>
-                            <tr>
-                                <th>Car</th>
-                                <th>Rating</th>
-                                <th>Comment</th>
-                                <th>Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($reviews as $review): ?>
-                                <tr>
-                                    <!-- Car -->
-                                    <td>
-                                        <div class="car-cell">
-                                            <?php if ($review->car && $review->car->image): ?>
-                                                <?= $this->Html->image($review->car->image, ['class' => 'car-thumb', 'alt' => $review->car->name ?? 'Car']) ?>
-                                            <?php else: ?>
-                                                <div class="car-thumb-placeholder">
-                                                    <i class="fas fa-car"></i>
-                                                </div>
-                                            <?php endif; ?>
-                                            <span class="car-name"><?= h($review->car->name ?? 'Unknown Car') ?></span>
-                                        </div>
-                                    </td>
+                <!-- Reviews List -->
+                <div class="reviews-list">
+                    <?php foreach ($reviews as $review): ?>
+                        <div class="review-card">
+                            <!-- Car Thumbnail -->
+                            <div class="review-thumb">
+                                <?php if ($review->car && $review->car->image): ?>
+                                    <?= $this->Html->image($review->car->image, ['alt' => $review->car->name ?? 'Car']) ?>
+                                <?php else: ?>
+                                    <div class="review-thumb-placeholder">
+                                        <i class="fas fa-car fa-2x"></i>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
 
-                                    <!-- Rating -->
-                                    <td>
-                                        <div class="rating-stars">
-                                            <?php for ($i = 1; $i <= 5; $i++): ?>
-                                                <?php if ($i <= $review->rating): ?>
-                                                    <i class="fas fa-star"></i>
-                                                <?php else: ?>
-                                                    <i class="fas fa-star empty"></i>
-                                                <?php endif; ?>
-                                            <?php endfor; ?>
-                                            <span class="rating-number"><?= $review->rating ?>/5</span>
-                                        </div>
-                                    </td>
+                            <!-- Review Content -->
+                            <div class="review-content">
+                                <div class="review-car-name">
+                                    <?= h($review->car->brand ?? '') ?> <?= h($review->car->car_model ?? $review->car->name ?? 'Unknown Car') ?>
+                                </div>
+                                <div class="review-stars">
+                                    <?php for ($i = 1; $i <= 5; $i++): ?>
+                                        <?php if ($i <= $review->rating): ?>
+                                            <i class="fas fa-star"></i>
+                                        <?php else: ?>
+                                            <i class="fas fa-star empty"></i>
+                                        <?php endif; ?>
+                                    <?php endfor; ?>
+                                </div>
+                                <div class="review-comment">
+                                    "<?= h($review->comment ?? 'No comment') ?>"
+                                </div>
+                            </div>
 
-                                    <!-- Comment -->
-                                    <td>
-                                        <div class="comment-text">
-                                            <?= h($review->comment ?? 'No comment') ?>
-                                        </div>
-                                    </td>
-
-                                    <!-- Date -->
-                                    <td>
-                                        <span class="date-text"><?= $review->created->format('d M Y') ?></span>
-                                    </td>
-
-                                    <!-- Actions -->
-                                    <td>
-                                        <a href="<?= $this->Url->build(['controller' => 'Reviews', 'action' => 'carReviews', $review->car_id]) ?>" class="btn-view">
-                                            <i class="fas fa-eye"></i> View
-                                        </a>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                            <!-- Meta & Actions -->
+                            <div class="review-meta">
+                                <div class="review-date">
+                                    <?= $review->created->format('d M Y') ?>
+                                </div>
+                                <a href="<?= $this->Url->build(['controller' => 'Reviews', 'action' => 'carReviews', $review->car_id]) ?>" class="btn-ghost">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
 
                 <!-- Pagination -->
-                <div class="d-flex justify-content-center mt-4 pt-3">
+                <div class="d-flex justify-content-center mt-5">
                     <nav>
-                        <?= $this->Paginator->prev('« Previous') ?>
-                        <?= $this->Paginator->numbers() ?>
-                        <?= $this->Paginator->next('Next »') ?>
+                        <ul class="pagination">
+                            <?= $this->Paginator->prev('« Previous') ?>
+                            <?= $this->Paginator->numbers() ?>
+                            <?= $this->Paginator->next('Next »') ?>
+                        </ul>
                     </nav>
                 </div>
             <?php endif; ?>
-
         </div>
     </div>
 </div>

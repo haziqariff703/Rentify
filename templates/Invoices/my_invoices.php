@@ -31,7 +31,7 @@ foreach ($invoices as $invoice) {
        PAGE WRAPPER
        ======================================== */
     .invoices-executive-wrapper {
-        background-color: #f8fafc;
+        background-color: #f1f5f9;
         min-height: 100vh;
         margin-top: -3rem;
         width: 100vw;
@@ -46,20 +46,12 @@ foreach ($invoices as $invoice) {
        DARK NAVY HEADER SECTION
        ======================================== */
     .navy-header {
-        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-        padding: 50px 0 80px;
+        background: #0f172a;
+        padding: 50px 0 60px;
         position: relative;
     }
 
-    .navy-header::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 60px;
-        background: linear-gradient(to bottom, transparent, #f8fafc);
-    }
+    /* REMOVED: No more fade gradient - clean hard line */
 
     .header-subtitle {
         font-family: 'Montserrat', sans-serif;
@@ -83,13 +75,13 @@ foreach ($invoices as $invoice) {
     }
 
     /* ========================================
-       FINANCIAL SUMMARY CARDS
+       FINANCIAL SUMMARY CARDS - Floating Overlap
        ======================================== */
     .summary-cards {
         display: flex;
         justify-content: center;
         gap: 24px;
-        margin-top: -40px;
+        margin-top: -3rem;
         position: relative;
         z-index: 10;
     }
@@ -100,7 +92,7 @@ foreach ($invoices as $invoice) {
         padding: 24px 32px;
         min-width: 200px;
         text-align: center;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
         border: 1px solid #e2e8f0;
     }
 
