@@ -1,7 +1,8 @@
 <?php
 
 /**
- * My Bookings - Active vs History Split
+ * My Bookings - Executive Brand Identity Edition
+ * Dark Navy Header, Stats Cards, Active vs History Split
  * @var \App\View\AppView $this
  * @var iterable<\App\Model\Entity\Booking> $bookings
  */
@@ -24,22 +25,15 @@ foreach ($bookings as $booking) {
 ?>
 
 <style>
-    /* Google Fonts - Montserrat */
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+    /* Google Fonts - Montserrat + Playfair Display */
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap');
 
     /* ========================================
-       DIAGONAL MICRO-STRIPE BACKGROUND
+       PAGE WRAPPER
        ======================================== */
-    .bookings-corporate-wrapper {
-        background-color: #f8fafc;
-        background-image: repeating-linear-gradient(135deg,
-                transparent,
-                transparent 10px,
-                rgba(148, 163, 184, 0.05) 10px,
-                rgba(148, 163, 184, 0.05) 11px);
-        background-attachment: fixed;
+    .bookings-executive-wrapper {
+        background-color: #f1f5f9;
         min-height: 100vh;
-        padding: 50px 0 80px;
         margin-top: -3rem;
         width: 100vw;
         position: relative;
@@ -50,34 +44,133 @@ foreach ($bookings as $booking) {
     }
 
     /* ========================================
-       EDITORIAL HEADER
+       DARK NAVY HEADER SECTION
        ======================================== */
-    .editorial-header {
-        text-align: center;
-        margin-bottom: 35px;
+    .navy-header {
+        background: #0f172a;
+        padding: 50px 0 60px;
+        position: relative;
     }
 
-    .editorial-subtitle {
+    .header-subtitle {
         font-family: 'Montserrat', sans-serif;
         font-size: 0.7rem;
         font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 3px;
-        color: #94a3b8;
+        letter-spacing: 4px;
+        color: #64748b;
+        margin-bottom: 8px;
+        text-align: center;
+    }
+
+    .header-title {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: 2.8rem;
+        letter-spacing: -1px;
+        color: #ffffff;
+        margin: 0;
+        text-align: center;
+    }
+
+    /* ========================================
+       STATS CARDS - Floating Overlap
+       ======================================== */
+    .stats-cards {
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+        margin-top: -3rem;
+        position: relative;
+        z-index: 10;
+    }
+
+    .stat-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 24px 40px;
+        min-width: 200px;
+        text-align: center;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e2e8f0;
+    }
+
+    .stat-label {
+        font-family: 'Playfair Display', serif;
+        font-size: 0.75rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #64748b;
         margin-bottom: 8px;
     }
 
-    .editorial-title {
+    .stat-value {
+        font-family: 'Courier New', monospace;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .stat-value.active {
+        color: #2563eb;
+    }
+
+    .stat-value.history {
+        color: #64748b;
+    }
+
+    /* ========================================
+       CONTENT SECTION
+       ======================================== */
+    .content-section {
+        padding: 40px 0 60px;
+    }
+
+    /* ========================================
+       SEARCH & FILTER BAR
+       ======================================== */
+    .controls-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        gap: 16px;
+    }
+
+    .search-input {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 12px 18px;
         font-family: 'Montserrat', sans-serif;
-        font-weight: 900;
-        font-size: 2.5rem;
-        letter-spacing: -2px;
-        background: linear-gradient(to bottom, #1e293b, #475569);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin: 0;
-        line-height: 1.1;
+        font-size: 0.85rem;
+        width: 300px;
+        color: #334155;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        transition: all 0.2s ease;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: #0f172a;
+        box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.1);
+    }
+
+    .search-input::placeholder {
+        color: #94a3b8;
+    }
+
+    .filter-select {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 12px 18px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.85rem;
+        color: #334155;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     }
 
     /* ========================================
@@ -85,18 +178,20 @@ foreach ($bookings as $booking) {
        ======================================== */
     .section-header {
         font-family: 'Montserrat', sans-serif;
-        font-size: 0.75rem;
-        font-weight: 600;
+        font-size: 0.7rem;
+        font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 2px;
         color: #64748b;
         margin-bottom: 20px;
-        padding-bottom: 10px;
+        padding-bottom: 12px;
         border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
 
     .section-header i {
-        margin-right: 8px;
         color: #94a3b8;
     }
 
@@ -105,20 +200,20 @@ foreach ($bookings as $booking) {
        ======================================== */
     .composite-ticket {
         background: #ffffff;
-        border: 1px solid rgba(0, 0, 0, 0.05);
-        box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
         border-radius: 18px;
         overflow: hidden;
         display: flex;
         flex-direction: row;
         margin-bottom: 20px;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.3s ease;
         min-height: 180px;
     }
 
     .composite-ticket:hover {
-        transform: translateY(-5px) scale(1.005);
-        box-shadow: 0 30px 60px -12px rgba(37, 99, 235, 0.15);
+        transform: translateY(-3px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
     }
 
     /* Left - Image Section */
@@ -220,22 +315,10 @@ foreach ($bookings as $booking) {
         letter-spacing: 0.5px;
     }
 
-    .status-text.confirmed {
-        color: #065f46;
-    }
-
-    .status-text.pending {
-        color: #92400e;
-    }
-
-    .status-text.completed {
-        color: #1e40af;
-    }
-
-    .status-text.cancelled,
-    .status-text.refunded {
-        color: #991b1b;
-    }
+    .status-text.confirmed { color: #059669; }
+    .status-text.pending { color: #d97706; }
+    .status-text.completed { color: #2563eb; }
+    .status-text.cancelled, .status-text.refunded { color: #dc2626; }
 
     .status-dot {
         width: 10px;
@@ -244,42 +327,15 @@ foreach ($bookings as $booking) {
         animation: pulse-ring 2s infinite;
     }
 
-    .status-dot.confirmed {
-        background: #10b981;
-        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
-    }
-
-    .status-dot.pending {
-        background: #f59e0b;
-        box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2);
-    }
-
-    .status-dot.completed {
-        background: #3b82f6;
-        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
-    }
-
-    .status-dot.cancelled,
-    .status-dot.refunded {
-        background: #ef4444;
-        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
-    }
+    .status-dot.confirmed { background: #10b981; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2); }
+    .status-dot.pending { background: #f59e0b; box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2); }
+    .status-dot.completed { background: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2); }
+    .status-dot.cancelled, .status-dot.refunded { background: #ef4444; box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2); }
 
     @keyframes pulse-ring {
-        0% {
-            box-shadow: 0 0 0 0 currentColor;
-            opacity: 1;
-        }
-
-        50% {
-            box-shadow: 0 0 0 8px transparent;
-            opacity: 0.5;
-        }
-
-        100% {
-            box-shadow: 0 0 0 0 currentColor;
-            opacity: 1;
-        }
+        0% { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
+        50% { box-shadow: 0 0 0 8px transparent; opacity: 0.5; }
+        100% { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
     }
 
     /* Dates Section */
@@ -293,9 +349,7 @@ foreach ($bookings as $booking) {
         margin-bottom: 12px;
     }
 
-    .date-block {
-        flex: 1;
-    }
+    .date-block { flex: 1; }
 
     .date-label {
         font-family: 'Montserrat', sans-serif;
@@ -363,16 +417,16 @@ foreach ($bookings as $booking) {
     }
 
     .ticket-btn-icon:hover {
-        background: #2563eb;
-        border-color: #2563eb;
+        background: #0f172a;
+        border-color: #0f172a;
         color: #ffffff;
     }
 
     .ticket-btn-pay {
-        background: #2563eb;
+        background: #0f172a;
         color: #ffffff;
         border: none;
-        border-radius: 12px;
+        border-radius: 10px;
         padding: 12px 24px;
         font-family: 'Montserrat', sans-serif;
         font-size: 0.85rem;
@@ -382,7 +436,7 @@ foreach ($bookings as $booking) {
     }
 
     .ticket-btn-pay:hover {
-        background: #1d4ed8;
+        background: #1e293b;
         color: #ffffff;
     }
 
@@ -406,7 +460,7 @@ foreach ($bookings as $booking) {
         border-radius: 16px;
         padding: 24px;
         margin-top: 40px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         border: 1px solid #e2e8f0;
     }
 
@@ -420,16 +474,15 @@ foreach ($bookings as $booking) {
         margin-bottom: 20px;
         padding-bottom: 12px;
         border-bottom: 1px solid #f1f5f9;
-    }
-
-    .history-header i {
-        margin-right: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
 
     /* Compact Ledger Row */
     .history-row {
         display: grid;
-        grid-template-columns: 90px 100px 1fr 100px 100px;
+        grid-template-columns: 100px 100px 1fr 100px 100px;
         padding: 14px 0;
         border-bottom: 1px solid #f8fafc;
         font-family: 'Montserrat', sans-serif;
@@ -438,13 +491,8 @@ foreach ($bookings as $booking) {
         transition: background 0.2s ease;
     }
 
-    .history-row:hover {
-        background: #fafbfc;
-    }
-
-    .history-row:last-child {
-        border-bottom: none;
-    }
+    .history-row:hover { background: #fafbfc; }
+    .history-row:last-child { border-bottom: none; }
 
     .history-date {
         color: #64748b;
@@ -463,32 +511,32 @@ foreach ($bookings as $booking) {
     }
 
     .history-price {
+        font-family: 'Courier New', monospace;
         color: #475569;
         font-weight: 500;
     }
 
-    /* Status Pills */
+    /* Status Pills - Outline Style */
     .status-pill {
         display: inline-block;
-        padding: 4px 10px;
+        padding: 4px 12px;
         border-radius: 20px;
-        font-size: 0.65rem;
+        font-size: 0.6rem;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         text-align: center;
+        background: transparent;
     }
 
-    .status-pill.cancelled,
-    .status-pill.rejected,
-    .status-pill.refunded {
-        background: #fee2e2;
-        color: #dc2626;
+    .status-pill.cancelled, .status-pill.rejected, .status-pill.refunded {
+        border: 1.5px solid #ef4444;
+        color: #ef4444;
     }
 
     .status-pill.completed {
-        background: #dcfce7;
-        color: #16a34a;
+        border: 1.5px solid #10b981;
+        color: #10b981;
     }
 
     /* ========================================
@@ -498,8 +546,8 @@ foreach ($bookings as $booking) {
         text-align: center;
         padding: 100px 20px;
         background: #ffffff;
-        border-radius: 24px;
-        box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.08);
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     }
 
     .bookings-empty i {
@@ -509,7 +557,7 @@ foreach ($bookings as $booking) {
     }
 
     .bookings-empty h4 {
-        font-family: 'Montserrat', sans-serif;
+        font-family: 'Playfair Display', serif;
         font-weight: 700;
         font-size: 1.5rem;
         color: #1e293b;
@@ -517,341 +565,357 @@ foreach ($bookings as $booking) {
     }
 
     .bookings-empty p {
+        font-family: 'Montserrat', sans-serif;
         color: #64748b;
         margin-bottom: 25px;
     }
 
-    .bookings-empty .btn-book {
-        background: #2563eb;
+    .btn-book {
+        background: #0f172a;
         color: #ffffff;
         border: none;
-        border-radius: 14px;
-        padding: 16px 36px;
+        border-radius: 12px;
+        padding: 16px 32px;
         font-family: 'Montserrat', sans-serif;
         font-weight: 700;
         text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
         transition: all 0.2s ease;
-        display: inline-block;
     }
 
-    .bookings-empty .btn-book:hover {
-        background: #1d4ed8;
+    .btn-book:hover {
+        background: #1e293b;
+        color: #ffffff;
     }
 
     .no-active-message {
         text-align: center;
-        padding: 40px 20px;
+        padding: 50px 20px;
         color: #94a3b8;
         font-family: 'Montserrat', sans-serif;
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     }
 
     .no-active-message i {
         font-size: 2.5rem;
         margin-bottom: 15px;
         display: block;
+        color: #10b981;
     }
 
     /* ========================================
        RESPONSIVE
        ======================================== */
     @media (max-width: 991px) {
-        .composite-ticket {
-            flex-direction: column;
-        }
-
-        .ticket-image {
-            width: 100%;
-            height: 220px;
-        }
-
-        .ticket-image::after {
-            display: none;
-        }
-
-        .ticket-details {
-            padding: 25px;
-        }
-
-        .ticket-bottom {
-            flex-direction: column;
-            gap: 20px;
-            align-items: flex-start;
-        }
-
-        .ticket-actions {
-            width: 100%;
-            justify-content: flex-start;
-        }
+        .composite-ticket { flex-direction: column; }
+        .ticket-image { width: 100%; height: 220px; }
+        .ticket-image::after { display: none; }
+        .ticket-details { padding: 25px; }
+        .ticket-bottom { flex-direction: column; gap: 20px; align-items: flex-start; }
+        .ticket-actions { width: 100%; justify-content: flex-start; }
     }
 
     @media (max-width: 768px) {
-        .history-row {
-            grid-template-columns: 1fr 80px 90px;
-            gap: 8px;
-        }
-
-        .history-date,
-        .history-ref {
-            display: none;
-        }
-
-        .editorial-title {
-            font-size: 2rem;
-        }
+        .stats-cards { flex-direction: column; padding: 0 20px; gap: 16px; }
+        .stat-card { min-width: 100%; }
+        .header-title { font-size: 2rem; }
+        .controls-bar { flex-direction: column; }
+        .search-input { width: 100%; }
+        .history-row { grid-template-columns: 1fr 80px 90px; gap: 8px; }
+        .history-date, .history-ref { display: none; }
     }
 
     @media (max-width: 576px) {
-        .ticket-dates {
-            flex-direction: column;
-            gap: 20px;
-            align-items: flex-start;
-        }
-
-        .date-divider {
-            display: none;
-        }
-
-        .ticket-top {
-            flex-direction: column;
-            gap: 15px;
-        }
-    }
-
-    .flash-message {
-        padding: 15px 20px;
-        margin-bottom: 25px;
-        border-radius: 12px;
-        font-weight: 500;
+        .ticket-dates { flex-direction: column; gap: 20px; align-items: flex-start; }
+        .date-divider { display: none; }
+        .ticket-top { flex-direction: column; gap: 15px; }
     }
 </style>
 
-<!-- High-End Corporate Bookings Wrapper -->
-<div class="bookings-corporate-wrapper">
-    <div class="container">
-        <!-- Editorial Header -->
-        <div class="editorial-header">
-            <div class="editorial-subtitle">Manage Your Trips</div>
-            <h1 class="editorial-title">MY RESERVATIONS</h1>
-        </div>
+<!-- Executive Bookings Wrapper -->
+<div class="bookings-executive-wrapper">
 
-        <!-- Flash Messages -->
-        <div class="row justify-content-center">
-            <div class="col-md-10">
-                <?= $this->Flash->render() ?>
+    <!-- Dark Navy Header Section -->
+    <div class="navy-header">
+        <div class="container">
+            <div class="header-subtitle">Manage Your Journeys</div>
+            <h1 class="header-title">My Reservations</h1>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="container">
+        <div class="stats-cards">
+            <div class="stat-card">
+                <div class="stat-label">Upcoming Trips</div>
+                <div class="stat-value active"><?= count($activeBookings) ?></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total History</div>
+                <div class="stat-value history"><?= count($historyBookings) ?></div>
             </div>
         </div>
+    </div>
 
-        <?php if (!empty($bookings) && count($bookings) > 0): ?>
-            <div class="row justify-content-center">
+    <!-- Content Section -->
+    <div class="content-section">
+        <div class="container">
+            <!-- Flash Messages -->
+            <div class="row justify-content-center mb-4">
                 <div class="col-lg-10">
+                    <?= $this->Flash->render() ?>
+                </div>
+            </div>
 
-                    <!-- ========================================
-                         SECTION 1: UPCOMING JOURNEYS (Active)
-                         ======================================== -->
-                    <?php if (!empty($activeBookings)): ?>
-                        <div class="section-header">
-                            <i class="fas fa-plane-departure"></i> Upcoming Journeys
+            <?php if (!empty($bookings) && count($bookings) > 0): ?>
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+
+                        <!-- Search & Filter Bar -->
+                        <div class="controls-bar">
+                            <input type="text" class="search-input" placeholder="🔍  Search by car name or ref..." id="bookingSearch" onkeyup="filterBookings()">
+                            <select class="filter-select" id="statusFilter" onchange="filterBookings()">
+                                <option value="">All Statuses</option>
+                                <option value="pending">Pending</option>
+                                <option value="confirmed">Confirmed</option>
+                                <option value="completed">Completed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
                         </div>
 
-                        <?php foreach ($activeBookings as $booking): ?>
-                            <?php
-                            $isCancelled = in_array($booking->booking_status, ['cancelled', 'refunded']);
-                            
-                            $statusClass = match ($booking->booking_status) {
-                                'pending' => 'pending',
-                                'confirmed' => 'confirmed',
-                                'active' => 'confirmed',
-                                default => 'pending'
-                            };
-
-                            $statusLabel = match ($booking->booking_status) {
-                                'pending' => 'Pending',
-                                'confirmed' => 'Confirmed',
-                                'active' => 'Active',
-                                default => ucfirst($booking->booking_status)
-                            };
-                            ?>
-
-                            <!-- Composite Ticket Card -->
-                            <div class="composite-ticket">
-                                <!-- Left - Image -->
-                                <div class="ticket-image">
-                                    <?php if (!empty($booking->car->image) && file_exists(WWW_ROOT . 'img' . DS . $booking->car->image)): ?>
-                                        <img src="<?= $this->Url->webroot('img/' . $booking->car->image) ?>" alt="Car">
-                                    <?php else: ?>
-                                        <div class="ticket-image-placeholder">
-                                            <i class="fas fa-car"></i>
-                                            <span>No Image</span>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-
-                                <!-- Right - Details -->
-                                <div class="ticket-details">
-                                    <div class="ticket-top">
-                                        <div class="ticket-car-info">
-                                            <h3 class="ticket-car-name">
-                                                <?= h($booking->car->brand ?? '') ?> <?= h($booking->car->car_model ?? 'Vehicle') ?>
-                                            </h3>
-                                            <span class="ticket-plate">
-                                                <?= h($booking->car->plate_number ?? 'N/A') ?>
-                                            </span>
-                                        </div>
-                                        <div class="ticket-status">
-                                            <span class="status-dot <?= $statusClass ?>"></span>
-                                            <span class="status-text <?= $statusClass ?>"><?= $statusLabel ?></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="ticket-dates">
-                                        <div class="date-block">
-                                            <div class="date-label">Pick Up</div>
-                                            <div class="date-value">
-                                                <?= $booking->start_date ? $booking->start_date->format('d M Y') : '-' ?>
-                                            </div>
-                                        </div>
-                                        <div class="date-divider"></div>
-                                        <div class="date-block">
-                                            <div class="date-label">Return</div>
-                                            <div class="date-value">
-                                                <?= $booking->end_date ? $booking->end_date->format('d M Y') : '-' ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="ticket-bottom">
-                                        <div class="ticket-price">
-                                            <small>RM</small> <?= number_format((float)$booking->total_price, 2) ?>
-                                        </div>
-
-                                        <div class="ticket-actions">
-                                            <?= $this->Html->link(
-                                                '<i class="fas fa-file-invoice"></i>',
-                                                ['action' => 'viewBookings', $booking->id],
-                                                ['class' => 'ticket-btn-icon', 'escape' => false, 'title' => 'View Booking']
-                                            ) ?>
-
-                                            <?php
-                                            $unpaidInvoice = null;
-                                            if (!empty($booking->invoices)) {
-                                                foreach ($booking->invoices as $inv) {
-                                                    if ($inv->status === 'unpaid' && !$isCancelled) {
-                                                        $unpaidInvoice = $inv;
-                                                        break;
-                                                    }
-                                                }
-                                            }
-                                            ?>
-                                            <?php if ($unpaidInvoice): ?>
-                                                <?= $this->Html->link(
-                                                    'Pay Now',
-                                                    ['controller' => 'Invoices', 'action' => 'view', $unpaidInvoice->id],
-                                                    ['class' => 'ticket-btn-pay']
-                                                ) ?>
-                                            <?php endif; ?>
-
-                                            <?php if ($booking->booking_status !== 'completed'): ?>
-                                                <?php
-                                                $today = date('Y-m-d');
-                                                $startDate = $booking->start_date ? $booking->start_date->format('Y-m-d') : '';
-                                                ?>
-                                                <?php if ($startDate > $today): ?>
-                                                    <?= $this->Form->postLink(
-                                                        'Cancel',
-                                                        ['action' => 'cancelBooking', $booking->id],
-                                                        [
-                                                            'class' => 'ticket-cancel-link',
-                                                            'confirm' => __('Are you sure? If you have paid, a refund request will be sent to the Admin.')
-                                                        ]
-                                                    ) ?>
-                                                <?php endif; ?>
-                                            <?php endif; ?>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <div class="no-active-message">
-                            <i class="fas fa-check-circle"></i>
-                            No upcoming bookings at the moment.
-                        </div>
-                    <?php endif; ?>
-
-
-                    <!-- ========================================
-                         SECTION 2: TRANSACTION HISTORY
-                         ======================================== -->
-                    <?php if (!empty($historyBookings)): ?>
-                        <div class="history-section">
-                            <div class="history-header">
-                                <i class="fas fa-history"></i> Past & Cancelled Bookings
+                        <!-- ========================================
+                             SECTION 1: UPCOMING JOURNEYS (Active)
+                             ======================================== -->
+                        <?php if (!empty($activeBookings)): ?>
+                            <div class="section-header">
+                                <i class="fas fa-plane-departure"></i> Upcoming Journeys
                             </div>
 
-                            <?php foreach ($historyBookings as $booking): ?>
+                            <?php foreach ($activeBookings as $booking): ?>
                                 <?php
+                                $isCancelled = in_array($booking->booking_status, ['cancelled', 'refunded']);
+                                
                                 $statusClass = match ($booking->booking_status) {
-                                    'completed' => 'completed',
-                                    'cancelled' => 'cancelled',
-                                    'refunded' => 'refunded',
-                                    'rejected' => 'rejected',
-                                    default => 'cancelled'
+                                    'pending' => 'pending',
+                                    'confirmed' => 'confirmed',
+                                    'active' => 'confirmed',
+                                    default => 'pending'
                                 };
 
                                 $statusLabel = match ($booking->booking_status) {
-                                    'completed' => 'Completed',
-                                    'cancelled' => 'Cancelled',
-                                    'refunded' => 'Refunded',
-                                    'rejected' => 'Rejected',
+                                    'pending' => 'Pending',
+                                    'confirmed' => 'Confirmed',
+                                    'active' => 'Active',
                                     default => ucfirst($booking->booking_status)
                                 };
                                 ?>
-                                <div class="history-row">
-                                    <div class="history-date">
-                                        <?= $booking->start_date ? $booking->start_date->format('M d, Y') : '-' ?>
+
+                                <!-- Composite Ticket Card -->
+                                <div class="composite-ticket booking-row" data-status="<?= strtolower($booking->booking_status) ?>">
+                                    <!-- Left - Image -->
+                                    <div class="ticket-image">
+                                        <?php if (!empty($booking->car->image) && file_exists(WWW_ROOT . 'img' . DS . $booking->car->image)): ?>
+                                            <img src="<?= $this->Url->webroot('img/' . $booking->car->image) ?>" alt="Car">
+                                        <?php else: ?>
+                                            <div class="ticket-image-placeholder">
+                                                <i class="fas fa-car"></i>
+                                                <span>No Image</span>
+                                            </div>
+                                        <?php endif; ?>
                                     </div>
-                                    <div class="history-ref">
-                                        #<?= h($booking->car->plate_number ?? 'N/A') ?>
-                                    </div>
-                                    <div class="history-car">
-                                        <?= h(($booking->car->brand ?? '') . ' ' . ($booking->car->car_model ?? 'Vehicle')) ?>
-                                    </div>
-                                    <div class="history-price">
-                                        RM <?= number_format((float)$booking->total_price, 2) ?>
-                                    </div>
-                                    <div>
-                                        <span class="status-pill <?= $statusClass ?>"><?= $statusLabel ?></span>
+
+                                    <!-- Right - Details -->
+                                    <div class="ticket-details">
+                                        <div class="ticket-top">
+                                            <div class="ticket-car-info">
+                                                <h3 class="ticket-car-name">
+                                                    <?= h($booking->car->brand ?? '') ?> <?= h($booking->car->car_model ?? 'Vehicle') ?>
+                                                </h3>
+                                                <span class="ticket-plate">
+                                                    <?= h($booking->car->plate_number ?? 'N/A') ?>
+                                                </span>
+                                            </div>
+                                            <div class="ticket-status">
+                                                <span class="status-dot <?= $statusClass ?>"></span>
+                                                <span class="status-text <?= $statusClass ?>"><?= $statusLabel ?></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="ticket-dates">
+                                            <div class="date-block">
+                                                <div class="date-label">Pick Up</div>
+                                                <div class="date-value">
+                                                    <?= $booking->start_date ? $booking->start_date->format('d M Y') : '-' ?>
+                                                </div>
+                                            </div>
+                                            <div class="date-divider"></div>
+                                            <div class="date-block">
+                                                <div class="date-label">Return</div>
+                                                <div class="date-value">
+                                                    <?= $booking->end_date ? $booking->end_date->format('d M Y') : '-' ?>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="ticket-bottom">
+                                            <div class="ticket-price">
+                                                <small>RM</small> <?= number_format((float)$booking->total_price, 2) ?>
+                                            </div>
+
+                                            <div class="ticket-actions">
+                                                <?= $this->Html->link(
+                                                    '<i class="fas fa-file-invoice"></i>',
+                                                    ['action' => 'viewBookings', $booking->id],
+                                                    ['class' => 'ticket-btn-icon', 'escape' => false, 'title' => 'View Booking']
+                                                ) ?>
+
+                                                <?php
+                                                $unpaidInvoice = null;
+                                                if (!empty($booking->invoices)) {
+                                                    foreach ($booking->invoices as $inv) {
+                                                        if ($inv->status === 'unpaid' && !$isCancelled) {
+                                                            $unpaidInvoice = $inv;
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                                ?>
+                                                <?php if ($unpaidInvoice): ?>
+                                                    <?= $this->Html->link(
+                                                        'Pay Now',
+                                                        ['controller' => 'Invoices', 'action' => 'view', $unpaidInvoice->id],
+                                                        ['class' => 'ticket-btn-pay']
+                                                    ) ?>
+                                                <?php endif; ?>
+
+                                                <?php if ($booking->booking_status !== 'completed'): ?>
+                                                    <?php
+                                                    $today = date('Y-m-d');
+                                                    $startDate = $booking->start_date ? $booking->start_date->format('Y-m-d') : '';
+                                                    ?>
+                                                    <?php if ($startDate > $today): ?>
+                                                        <?= $this->Form->postLink(
+                                                            'Cancel',
+                                                            ['action' => 'cancelBooking', $booking->id],
+                                                            [
+                                                                'class' => 'ticket-cancel-link',
+                                                                'confirm' => __('Are you sure? If you have paid, a refund request will be sent to the Admin.')
+                                                            ]
+                                                        ) ?>
+                                                    <?php endif; ?>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
+                        <?php else: ?>
+                            <div class="no-active-message">
+                                <i class="fas fa-check-circle"></i>
+                                No upcoming bookings at the moment.
+                            </div>
+                        <?php endif; ?>
+
+
+                        <!-- ========================================
+                             SECTION 2: TRANSACTION HISTORY
+                             ======================================== -->
+                        <?php if (!empty($historyBookings)): ?>
+                            <div class="history-section">
+                                <div class="history-header">
+                                    <i class="fas fa-history"></i> Past & Cancelled Bookings
+                                </div>
+
+                                <?php foreach ($historyBookings as $booking): ?>
+                                    <?php
+                                    $statusClass = match ($booking->booking_status) {
+                                        'completed' => 'completed',
+                                        'cancelled' => 'cancelled',
+                                        'refunded' => 'refunded',
+                                        'rejected' => 'rejected',
+                                        default => 'cancelled'
+                                    };
+
+                                    $statusLabel = match ($booking->booking_status) {
+                                        'completed' => 'Completed',
+                                        'cancelled' => 'Cancelled',
+                                        'refunded' => 'Refunded',
+                                        'rejected' => 'Rejected',
+                                        default => ucfirst($booking->booking_status)
+                                    };
+                                    ?>
+                                    <div class="history-row booking-row" data-status="<?= strtolower($booking->booking_status) ?>">
+                                        <div class="history-date">
+                                            <?= $booking->start_date ? $booking->start_date->format('M d, Y') : '-' ?>
+                                        </div>
+                                        <div class="history-ref">
+                                            #<?= h($booking->car->plate_number ?? 'N/A') ?>
+                                        </div>
+                                        <div class="history-car">
+                                            <?= h(($booking->car->brand ?? '') . ' ' . ($booking->car->car_model ?? 'Vehicle')) ?>
+                                        </div>
+                                        <div class="history-price">
+                                            RM <?= number_format((float)$booking->total_price, 2) ?>
+                                        </div>
+                                        <div>
+                                            <span class="status-pill <?= $statusClass ?>"><?= $statusLabel ?></span>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <!-- Pagination -->
+                        <div class="d-flex justify-content-center mt-4">
+                            <nav>
+                                <ul class="pagination"><?= $this->Paginator->numbers() ?></ul>
+                            </nav>
                         </div>
-                    <?php endif; ?>
-
-                    <!-- Pagination -->
-                    <div class="d-flex justify-content-center mt-4">
-                        <nav>
-                            <ul class="pagination"><?= $this->Paginator->numbers() ?></ul>
-                        </nav>
                     </div>
                 </div>
-            </div>
 
-        <?php else: ?>
-            <!-- Empty State -->
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="bookings-empty">
-                        <i class="fas fa-calendar-alt"></i>
-                        <h4>No Reservations Yet</h4>
-                        <p>You haven't made any bookings. Start your journey today!</p>
-                        <?= $this->Html->link(
-                            '<i class="fas fa-car me-2"></i>Browse Cars',
-                            ['controller' => 'Cars', 'action' => 'index'],
-                            ['class' => 'btn-book', 'escape' => false]
-                        ) ?>
+            <?php else: ?>
+                <!-- Empty State -->
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="bookings-empty">
+                            <i class="fas fa-calendar-alt"></i>
+                            <h4>No Reservations Yet</h4>
+                            <p>You haven't made any bookings. Start your journey today!</p>
+                            <?= $this->Html->link(
+                                '<i class="fas fa-car me-2"></i>Browse Cars',
+                                ['controller' => 'Cars', 'action' => 'index'],
+                                ['class' => 'btn-book', 'escape' => false]
+                            ) ?>
+                        </div>
                     </div>
                 </div>
-            </div>
-        <?php endif; ?>
+            <?php endif; ?>
+        </div>
     </div>
 </div>
+
+<script>
+    // Simple search and filter
+    function filterBookings() {
+        const searchInput = document.getElementById('bookingSearch');
+        const statusFilter = document.getElementById('statusFilter');
+        const filter = searchInput.value.toLowerCase();
+        const status = statusFilter.value.toLowerCase();
+        const rows = document.querySelectorAll('.booking-row');
+
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            const rowStatus = row.getAttribute('data-status');
+            
+            const matchesSearch = text.includes(filter);
+            const matchesStatus = status === '' || rowStatus === status;
+
+            row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
+        });
+    }
+</script>

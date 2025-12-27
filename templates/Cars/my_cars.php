@@ -14,7 +14,7 @@ $this->assign('title', 'The Garage');
        DASHBOARD LAYOUT - Fixed Height Container
        ======================================== */
     .platinum-studio-wrapper {
-        background-color: #f8fafc;
+        background-color: #f1f5f9;
         background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px);
         background-size: 24px 24px;
         height: 80vh;
@@ -74,18 +74,24 @@ $this->assign('title', 'The Garage');
     }
 
     /* ========================================
-       2-COLUMN RESPONSIVE GRID
+       3-COLUMN RESPONSIVE GRID
        ======================================== */
     .car-grid {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 24px;
+        gap: 20px;
         padding-bottom: 40px;
     }
 
     @media (min-width: 768px) {
         .car-grid {
             grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (min-width: 1200px) {
+        .car-grid {
+            grid-template-columns: repeat(3, 1fr);
         }
     }
 
@@ -133,24 +139,25 @@ $this->assign('title', 'The Garage');
     }
 
     /* ========================================
-       HERO SECTION - FERRARI BANNER
+       HERO SECTION - CINEMATIC GARAGE
        ======================================== */
     .catalog-hero {
-        background-color: #0d1117;
+        background-color: #0f172a;
         background-image: url('<?= $this->Url->image('ferrari-background.png') ?>');
-        background-size: 80%;
-        background-position: center bottom;
+        background-size: cover;
+        background-position: center center;
         background-repeat: no-repeat;
-        padding: 80px 0 140px;
+        min-height: 400px;
+        padding: 100px 0;
         position: relative;
-        border-radius: 30px;
         overflow: hidden;
-        margin-bottom: 30px;
         margin-top: -3rem;
-        box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
-        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
+    /* Navy Gradient Overlay */
     .catalog-hero::before {
         content: '';
         position: absolute;
@@ -158,59 +165,82 @@ $this->assign('title', 'The Garage');
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, transparent 50%, rgba(0, 0, 0, 0.5) 100%);
-        z-index: 0;
+        background: linear-gradient(
+            to bottom,
+            rgba(15, 23, 42, 0.90) 0%,
+            rgba(15, 23, 42, 0.75) 50%,
+            rgba(15, 23, 42, 0.60) 100%
+        );
+        z-index: 1;
         pointer-events: none;
     }
 
-    .hero-title {
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+    }
+
+    .hero-eyebrow {
         font-family: 'Montserrat', sans-serif;
-        font-weight: 800;
+        font-size: 0.7rem;
+        font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 3px;
-        color: white;
-        text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+        letter-spacing: 0.2em;
+        color: #94a3b8;
+        margin-bottom: 16px;
+    }
+
+    .hero-title {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: 3.5rem;
+        color: #ffffff;
+        margin: 0 0 12px;
+        text-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .hero-title span {
+        color: #fbbf24;
     }
 
     .hero-subtitle {
         font-family: 'Montserrat', sans-serif;
         font-weight: 400;
+        font-size: 1.1rem;
         letter-spacing: 1px;
-        color: rgba(255,255,255,0.85);
-        text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+        color: #cbd5e1;
     }
 
     /* ========================================
-       FILTER SIDEBAR
+       FILTER SIDEBAR - Executive Control Panel
        ======================================== */
     .filter-card {
         background: #ffffff;
         border: 1px solid #e2e8f0;
         border-radius: 16px;
         padding: 24px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
         font-family: 'Montserrat', sans-serif;
     }
 
     .filter-header {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid #e5e7eb;
-        margin-bottom: 15px;
-    }
-
-    .filter-header i {
-        color: #6b7280;
-        font-size: 1rem;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #f1f5f9;
+        margin-bottom: 16px;
     }
 
     .filter-header h5 {
-        font-size: 1.1rem;
+        font-size: 0.65rem;
         font-weight: 700;
-        color: #1f2937;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: #94a3b8;
         margin: 0;
+    }
+
+    .filter-header i {
+        display: none;
     }
 
     .filter-accordion-header {
@@ -222,11 +252,10 @@ $this->assign('title', 'The Garage');
     }
 
     .filter-accordion-title {
-        font-size: 0.85rem;
+        font-family: 'Playfair Display', serif;
+        font-size: 0.95rem;
         font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: #6b7280;
+        color: #0f172a;
         margin: 0;
     }
 
@@ -254,24 +283,29 @@ $this->assign('title', 'The Garage');
     .filter-list-item {
         display: flex;
         align-items: center;
-        padding: 10px 12px;
-        margin-bottom: 4px;
+        padding: 8px 0;
         cursor: pointer;
-        color: #374151;
-        font-size: 0.95rem;
-        border-radius: 8px;
+        color: #64748b;
+        font-size: 0.85rem;
         transition: all 0.2s ease;
     }
 
     .filter-list-item:hover {
-        background: #f9fafb;
-        color: #111827;
+        color: #0f172a;
     }
 
     .filter-list-item.active {
-        background: #eff6ff;
-        color: #3b82f6;
-        font-weight: 500;
+        color: #0f172a;
+        font-weight: 600;
+    }
+
+    .filter-list-item.active::before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        background: #0f172a;
+        border-radius: 2px;
+        margin-right: 10px;
     }
 
     /* ========================================
@@ -336,28 +370,29 @@ $this->assign('title', 'The Garage');
         transform: scale(1.05);
     }
 
-    /* Availability Badge - Corner */
+    /* Availability Badge - Ghost Style */
     .availability-badge {
         position: absolute;
         top: 12px;
         left: 12px;
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 0.7rem;
+        padding: 5px 10px;
+        border-radius: 6px;
+        font-size: 0.6rem;
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 1px;
+        letter-spacing: 0.5px;
         z-index: 5;
+        background: transparent;
     }
 
     .badge-available {
-        background: rgba(34, 197, 94, 0.95);
-        color: white;
+        border: 1.5px solid #10b981;
+        color: #10b981;
     }
 
     .badge-maintenance {
-        background: rgba(239, 68, 68, 0.95);
-        color: white;
+        border: 1.5px solid #ef4444;
+        color: #ef4444;
     }
 
     /* Special Badges - Top Right */
@@ -391,16 +426,9 @@ $this->assign('title', 'The Garage');
         flex-direction: column;
     }
 
+    /* Car Category - HIDDEN (Redundant) */
     .car-category {
-        display: inline-block;
-        padding: 4px 10px;
-        border-radius: 20px;
-        font-size: 0.65rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 8px;
-        width: fit-content;
+        display: none;
     }
 
     .car-name {
@@ -410,11 +438,11 @@ $this->assign('title', 'The Garage');
         margin: 0 0 4px;
     }
 
-    /* Serif Price Tag - Playfair Display */
+    /* Luxury Serif Price Tag */
     .car-price {
         font-family: 'Playfair Display', serif;
-        font-size: 1.15rem;
-        font-weight: 500;
+        font-size: 1.25rem;
+        font-weight: 700;
         color: #0f172a;
         margin-bottom: 12px;
     }
@@ -526,11 +554,12 @@ $this->assign('title', 'The Garage');
     }
 </style>
 
-<!-- Hero Section - Ferrari Banner -->
+<!-- Hero Section - Cinematic Garage -->
 <section class="catalog-hero">
-    <div class="container text-center position-relative" style="z-index: 1;">
-        <h1 class="display-5 mb-2 hero-title">The <span style="color: #ef4444;">Garage</span></h1>
-        <p class="lead hero-subtitle">Unveil the Engineering.</p>
+    <div class="hero-content">
+        <div class="hero-eyebrow">Explore Our Collection</div>
+        <h1 class="hero-title">The <span>Garage</span></h1>
+        <p class="hero-subtitle">Unveil the Engineering.</p>
     </div>
 </section>
 
@@ -543,8 +572,7 @@ $this->assign('title', 'The Garage');
             <div class="sidebar-column">
                 <div class="filter-card">
                     <div class="filter-header">
-                        <i class="fas fa-filter"></i>
-                        <h5>Filter</h5>
+                        <h5>Refine Search</h5>
                     </div>
                     <div class="filter-accordion">
                         <div class="filter-accordion-header" onclick="toggleAccordion(this)">
