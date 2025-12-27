@@ -59,21 +59,22 @@ public function index()
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id)
-{
-    $invoice = $this->Invoices->get($id, [
-        'contain' => ['Bookings' => ['Users', 'Cars']]
-    ]);
+    {
+        // FIX: Added 'Payments' to the contain array
+        $invoice = $this->Invoices->get($id, [
+            'contain' => ['Bookings' => ['Users', 'Cars', 'Payments']] 
+        ]);
 
-    if ($this->request->getQuery('pdf')) {
-        $this->viewBuilder()
-            ->setClassName('CakePdf.Pdf')
-            ->setOption('pdfConfig', [
-                'filename' => 'Invoice_' . $invoice->id . '.pdf'
-            ]);
+        if ($this->request->getQuery('pdf')) {
+            $this->viewBuilder()
+                ->setClassName('CakePdf.Pdf')
+                ->setOption('pdfConfig', [
+                    'filename' => 'Invoice_' . $invoice->id . '.pdf'
+                ]);
+        }
+
+        $this->set(compact('invoice'));
     }
-
-    $this->set(compact('invoice'));
-}
 
     /**
      * Add method

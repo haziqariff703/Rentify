@@ -126,11 +126,19 @@ class PaymentsController extends AppController
     /**
      * Add Payment (Simulation)
      */
-    public function add()
+   public function add()
     {
         $payment = $this->Payments->newEmptyEntity();
         $bookingId = $this->request->getQuery('booking_id');
         $amount = $this->request->getQuery('amount');
+
+        // Fetch Booking Details (Required for Order Summary)
+        $booking = null;
+        if ($bookingId) {
+            $booking = $this->fetchTable('Bookings')->get($bookingId, [
+                'contain' => ['Cars']
+            ]);
+        }
 
         if ($this->request->is('post')) {
             $data = $this->request->getData();
@@ -139,15 +147,29 @@ class PaymentsController extends AppController
 
             // --- PAYMENT METHOD LOGIC ---
             if ($data['payment_method'] === 'card') {
-                // Remove dashes and check for '4242' or 16 digits
+                // Card Logic
                 $cardInput = str_replace(['-', ' '], '', $data['card_number'] ?? '');
                 if (str_starts_with($cardInput, '4242') || strlen($cardInput) === 16) {
                     $isValid = true;
                 } else {
                     $this->Flash->error(__('Card Declined. Use Test Code: 4242-4242-4242-4242'));
                 }
+            } elseif ($data['payment_method'] === 'online_transfer') {
+                // --- NEW FPX LOGIC ---
+                // Capture the selected bank name
+                $bankName = $data['bank_name'] ?? '';
+                
+                if (!empty($bankName)) {
+                    // Save specific bank: "online_transfer_maybank"
+                    $cleanBankName = strtolower(str_replace(' ', '', $bankName));
+                    $payment->payment_method = 'online_transfer_' . $cleanBankName;
+                    $isValid = true;
+                } else {
+                    $this->Flash->error(__('Please select a bank to proceed.'));
+                    $isValid = false;
+                }
             } else {
-                // Cash & Online Transfer are automatically "Approved" for simulation
+                // Cash
                 $isValid = true;
             }
 
@@ -156,7 +178,7 @@ class PaymentsController extends AppController
                 $payment->payment_status = 'paid';
 
                 if ($this->Payments->save($payment)) {
-                    // Update Invoice -> Paid
+                    // Update Invoice
                     $invoicesTable = $this->fetchTable('Invoices');
                     $invoice = $invoicesTable->find()->where(['booking_id' => $payment->booking_id])->first();
                     if ($invoice) {
@@ -164,14 +186,14 @@ class PaymentsController extends AppController
                         $invoicesTable->save($invoice);
                     }
 
-                    // Update Booking -> Confirmed
+                    // Update Booking
                     $bookingsTable = $this->fetchTable('Bookings');
-                    $booking = $bookingsTable->get($payment->booking_id);
-                    $booking->booking_status = 'confirmed';
-                    $bookingsTable->save($booking);
+                    $bookingRec = $bookingsTable->get($payment->booking_id);
+                    $bookingRec->booking_status = 'confirmed';
+                    $bookingsTable->save($bookingRec);
 
-                    $this->Flash->success(__('Payment Successful! Booking Confirmed. Please leave a review!'));
-                    return $this->redirect(['controller' => 'Reviews', 'action' => 'addReview', $payment->booking_id]);
+                    $this->Flash->success(__('Payment Successful! Booking Confirmed.'));
+                    return $this->redirect(['controller' => 'Invoices', 'action' => 'view', $invoice->id]);
                 }
             }
         }
@@ -180,6 +202,8 @@ class PaymentsController extends AppController
             $bookingId = $payment->booking_id;
             $amount = $payment->amount;
         }
-        $this->set(compact('payment', 'bookingId', 'amount'));
+        
+        // Pass $booking to view for summary
+        $this->set(compact('payment', 'bookingId', 'amount', 'booking'));
     }
 }

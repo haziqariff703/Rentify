@@ -565,17 +565,35 @@ document.addEventListener('DOMContentLoaded', function() {
     // Car data (will be populated via AJAX)
     const carsData = <?= json_encode($this->request->getAttribute('carsData') ?? []) ?>;
 
-    // Initialize Flatpickr
+    // Initialize Flatpickr with Linked Date Logic
     function initPickers(disabledDates = []) {
-        const config = {
+        // Start Date Picker
+        pickerStart = flatpickr("#start-date", {
             dateFormat: "Y-m-d",
             minDate: "today",
             disable: disabledDates,
-            onChange: updatePriceCalculation
-        };
+            onChange: function(selectedDates, dateStr, instance) {
+                // --- FIX 1: Prevent Return Date from being before Pick-up Date ---
+                pickerEnd.set('minDate', dateStr);
+                
+                // If the current return date is now invalid (before new start date), clear it
+                if (endDateInput.value && endDateInput.value < dateStr) {
+                    pickerEnd.clear();
+                    // Reset summary duration since date is invalid
+                    document.getElementById('duration').textContent = '0 days'; 
+                }
+                
+                updatePriceCalculation();
+            }
+        });
 
-        pickerStart = flatpickr("#start-date", config);
-        pickerEnd = flatpickr("#end-date", config);
+        // Return Date Picker
+        pickerEnd = flatpickr("#end-date", {
+            dateFormat: "Y-m-d",
+            minDate: "today", 
+            disable: disabledDates,
+            onChange: updatePriceCalculation
+        });
     }
 
     initPickers();
@@ -590,19 +608,16 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Fetch car details
         fetch('<?= $this->Url->build(['controller' => 'Bookings', 'action' => 'getCarDetails']) ?>/' + carId)
             .then(response => response.json())
             .then(data => {
                 selectedCar = data;
                 
-                // Update preview
                 document.getElementById('car-preview-image').src = '<?= $this->Url->image('') ?>' + data.image;
                 document.getElementById('car-preview-name').textContent = data.name;
                 document.getElementById('car-preview-price').textContent = 'RM ' + parseFloat(data.price_per_day).toFixed(2) + '/day';
                 carPreview.classList.add('active');
 
-                // Update summary
                 document.getElementById('summary-car-thumb').style.backgroundImage = 'url(<?= $this->Url->image('') ?>' + data.image + ')';
                 document.getElementById('summary-car-thumb').style.backgroundSize = 'cover';
                 document.getElementById('summary-car-thumb').style.backgroundPosition = 'center';
@@ -613,17 +628,23 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .catch(err => console.error('Error fetching car:', err));
 
-        // Fetch blocked dates
         fetch('<?= $this->Url->build(['controller' => 'Bookings', 'action' => 'getBookedDates']) ?>/' + carId)
             .then(response => response.json())
             .then(data => {
+                // Re-init pickers with new blocked dates, preserving current logic
+                const currentStart = startDateInput.value;
+                const currentEnd = endDateInput.value;
+                
                 pickerStart.destroy();
                 pickerEnd.destroy();
                 initPickers(data.dates);
+                
+                // Restore values if they don't conflict (optional simple restore)
+                if(currentStart) pickerStart.setDate(currentStart);
+                if(currentEnd) pickerEnd.setDate(currentEnd);
             });
     });
 
-    // Add-on toggle
     addonItems.forEach(item => {
         item.addEventListener('click', function() {
             this.classList.toggle('selected');
@@ -645,11 +666,17 @@ document.addEventListener('DOMContentLoaded', function() {
         if (startDate && endDate) {
             const start = new Date(startDate);
             const end = new Date(endDate);
-            days = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+            
+            const diffTime = end - start;
+            
+            // --- FIX 2: Inclusive Day Calculation ---
+            // (Jan 1 to Jan 1) = 0 diff + 1 = 1 Day
+            // (Jan 1 to Jan 2) = 1 diff + 1 = 2 Days
+            days = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+            
             if (days < 1) days = 1;
         }
 
-        // Calculate add-ons
         let addonsPerDay = 0;
         document.querySelectorAll('.addon-item.selected').forEach(item => {
             addonsPerDay += parseInt(item.dataset.price);
@@ -661,7 +688,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const taxes = (subtotal + addonsTotal) * 0.06;
         const total = subtotal + addonsTotal + taxes;
 
-        // Update UI
         document.getElementById('duration').textContent = days + (days === 1 ? ' day' : ' days');
         document.getElementById('addons-total').textContent = 'RM ' + addonsTotal.toFixed(2);
         document.getElementById('taxes').textContent = 'RM ' + taxes.toFixed(2);
@@ -682,7 +708,6 @@ document.addEventListener('DOMContentLoaded', function() {
         resetSummary();
     }
 
-    // Trigger if car is pre-selected
     if (carSelect.value) {
         carSelect.dispatchEvent(new Event('change'));
     }

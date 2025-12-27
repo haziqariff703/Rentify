@@ -1,198 +1,332 @@
 <?php
 /**
+ * Invoice View - Calculated Add-ons & Fixed Display
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Invoice $invoice
  */
 $booking = $invoice->booking;
 $user = $booking->user;
 $car = $booking->car;
+
+// 1. FIND PAYMENT & FORMAT METHOD STRING
+$paymentInfo = null;
+$methodDisplay = '-';
+
+if (!empty($booking->payments)) {
+    foreach ($booking->payments as $p) {
+        if ($p->payment_status === 'paid' || $p->payment_status === 'refunded') {
+            $paymentInfo = $p;
+            
+            // Format the raw database string into human text
+            $raw = $p->payment_method;
+            if ($raw === 'card') {
+                $methodDisplay = 'Credit/Debit Card';
+            } elseif (str_contains($raw, 'online_transfer')) {
+                $parts = explode('_', $raw);
+                $bank = isset($parts[2]) ? ucfirst($parts[2]) : 'Transfer';
+                $methodDisplay = 'FPX Online (' . $bank . ')';
+            } elseif ($raw === 'cash') {
+                $methodDisplay = 'Cash at Counter';
+            } else {
+                $methodDisplay = ucfirst(str_replace('_', ' ', $raw));
+            }
+            break;
+        }
+    }
+}
+
+// 2. REVERSE CALCULATOR (Smart Breakdown)
+$subtotal = 0; 
+$tax = 0; 
+$addons = 0; 
+$days = 0; 
+$baseCost = 0;
+
+if ($booking && $booking->car) {
+    // A. Calculate Days (Inclusive: Jan 1 to Jan 2 = 2 Days)
+    $days = $booking->end_date->diffInDays($booking->start_date) + 1;
+
+    // B. Calculate Base Rental Cost
+    $baseCost = $booking->car->price_per_day * $days;
+
+    // C. Reverse Tax Calculation (Total / 1.06)
+    $preTaxTotal = $invoice->amount / 1.06;
+
+    // D. Derive Add-ons (PreTaxTotal - BaseCarCost)
+    $addons = $preTaxTotal - $baseCost;
+
+    // Safety: If floating point math makes it -0.00001, set to 0
+    if ($addons < 0.01) $addons = 0;
+
+    // E. Calculate Tax Amount
+    $tax = $invoice->amount - $preTaxTotal;
+}
 ?>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-<div class="row mb-3 no-print">
-    <div class="col-md-12 text-end">
-        <?= $this->Html->link('Back', ['action' => 'index'], ['class' => 'btn btn-secondary me-2']) ?>
-        <?php if(strtolower($invoice->status) == 'unpaid'): ?>
-            <?= $this->Html->link(
-                '💳 Pay Now', 
-                [
-                    'controller' => 'Payments', 
-                    'action' => 'add', 
-                    // Send Booking ID and Amount to the payment page
-                    '?' => ['booking_id' => $invoice->booking_id, 'amount' => $invoice->amount]
-                ], 
-                ['class' => 'btn btn-success me-2']
-            ) ?>
-        <?php endif; ?>
-        <button onclick="window.print()" class="btn btn-danger">
-            <i class="fas fa-file-pdf"></i> Download PDF
-        </button>
+<div class="container mt-4 mb-4" data-html2canvas-ignore="true">
+    <div class="d-flex justify-content-between align-items-center">
+        <?= $this->Html->link(
+            '<i class="fas fa-arrow-left me-2"></i>Back',
+            ['action' => 'index'],
+            ['class' => 'btn btn-outline-secondary rounded-pill px-4', 'escape' => false]
+        ) ?>
+        
+        <div class="d-flex gap-2">
+            <?php if(strtolower($invoice->status) === 'unpaid' && strtolower($booking->booking_status) !== 'cancelled'): ?>
+                <?= $this->Html->link(
+                    '<i class="fas fa-credit-card me-2"></i>Pay Now', 
+                    [
+                        'controller' => 'Payments', 
+                        'action' => 'add', 
+                        '?' => ['booking_id' => $invoice->booking_id, 'amount' => $invoice->amount]
+                    ], 
+                    ['class' => 'btn btn-success rounded-pill px-4 fw-bold', 'escape' => false]
+                ) ?>
+            <?php endif; ?>
+
+            <button onclick="downloadPDF()" class="btn btn-dark rounded-pill px-4">
+                <i class="fas fa-download me-2"></i>Save as PDF
+            </button>
+        </div>
     </div>
 </div>
 
-<div class="invoice-container">
-    
-    <div class="invoice-header">
-        <div class="row align-items-center">
+<div class="invoice-wrapper">
+    <div id="invoice-to-print" class="invoice-paper">
+        
+        <div class="row mb-5">
             <div class="col-6">
-                <h1 class="text-primary" style="font-weight: 800; letter-spacing: 2px; margin: 0;">RENTIFY</h1>
-                <p class="text-muted mb-0">Premium Car Rental</p>
+                <div class="brand-logo text-primary">RENTIFY</div>
+                <div class="text-muted small mt-2">
+                    <strong>Rentify Sdn Bhd</strong> (12345-X)<br>
+                    Level 15, Menara Tech<br>
+                    Shah Alam, Selangor, 40000
+                </div>
             </div>
             <div class="col-6 text-end">
-                <h3 style="font-weight: 300; margin: 0;">INVOICE</h3>
-                <p class="mb-0"><strong>#<?= h($invoice->invoice_number) ?></strong></p>
-                <p class="mb-1 text-muted small"><?= h($invoice->created->format('d M Y')) ?></p>
+                <h1 class="fw-bold text-uppercase mb-1" style="color: #1e293b; letter-spacing: 2px;">Invoice</h1>
+                <div class="text-primary fw-bold fs-5">#<?= h($invoice->invoice_number) ?></div>
+                <div class="text-muted small mt-1">Issued: <?= h($invoice->created->format('d M Y')) ?></div>
                 
-                <?php if(strtolower($invoice->status) == 'paid'): ?>
-                    <span class="badge bg-success" style="font-size: 0.8rem;">PAID</span>
+                <div class="mt-3">
+                    <?php if (strtolower($invoice->status) === 'paid'): ?>
+                        <div class="stamp is-paid">PAID</div>
+                    <?php elseif (strtolower($invoice->status) === 'cancelled'): ?>
+                        <div class="stamp is-cancelled">VOID</div>
+                    <?php else: ?>
+                        <div class="stamp is-due">UNPAID</div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+
+        <hr class="border-light my-4">
+
+        <div class="row mb-5">
+            <div class="col-6">
+                <label class="small text-uppercase fw-bold text-muted mb-2">Billed To:</label>
+                <h5 class="fw-bold mb-1"><?= h($user->name) ?></h5>
+                <div class="text-muted small"><?= h($user->email) ?></div>
+                <div class="text-muted small"><?= h($user->phone ?? '') ?></div>
+            </div>
+            <div class="col-6 text-end">
+                
+                <?php if ($paymentInfo): ?>
+                    <div class="receipt-box">
+                        <label class="receipt-header">
+                            <i class="fas fa-check-circle me-1"></i> Payment Receipt
+                        </label>
+                        
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-muted small">Paid Via:</span>
+                            <span class="fw-bold text-dark small">
+                                <?= h($methodDisplay) ?>
+                            </span>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted small">Date:</span>
+                            <span class="fw-bold text-dark small">
+                                <?= h($paymentInfo->created->format('d M Y, h:i A')) ?>
+                            </span>
+                        </div>
+                    </div>
                 <?php else: ?>
-                    <span class="badge bg-danger" style="font-size: 0.8rem;">UNPAID</span>
+                    <div class="mt-2">
+                        <label class="small text-uppercase fw-bold text-muted mb-2">Total Due:</label>
+                        <h2 class="fw-bold text-danger">RM <?= number_format($invoice->amount, 2) ?></h2>
+                    </div>
                 <?php endif; ?>
             </div>
         </div>
-        <hr style="margin: 20px 0; border-top: 2px solid #eee;">
-    </div>
 
-    <div class="invoice-body">
-        <div class="row mb-4">
-            <div class="col-6">
-                <h6 class="text-uppercase text-secondary fw-bold" style="font-size: 0.75rem; letter-spacing: 1px;">Bill To:</h6>
-                <p class="mb-0 fw-bold text-dark"><?= h($user->name) ?></p>
-                <p class="mb-0 text-muted small"><?= h($user->email) ?></p>
-                <p class="text-muted small"><?= h($user->phone ?? '-') ?></p>
-            </div>
-            <div class="col-6 text-end">
-                <h6 class="text-uppercase text-secondary fw-bold" style="font-size: 0.75rem; letter-spacing: 1px;">Pay To:</h6>
-                <p class="mb-0 fw-bold text-dark">Rentify Sdn Bhd</p>
-                <p class="mb-0 text-muted small">Maybank: 5555-0000-1234</p>
-                <p class="text-muted small">rentify@business.com</p>
-            </div>
+        <div class="table-container mb-5">
+            <table class="w-100 custom-table">
+                <thead>
+                    <tr>
+                        <th class="text-start ps-3">Description</th>
+                        <th class="text-center">Rate</th>
+                        <th class="text-center">Duration</th>
+                        <th class="text-end pe-3">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="ps-3 py-3">
+                            <div class="fw-bold text-dark"><?= h($car->brand . ' ' . $car->car_model) ?></div>
+                            <div class="small text-muted">Plate: <?= h($car->plate_number) ?></div>
+                            <div class="small text-muted mt-1">
+                                <?= h($booking->start_date->format('d M')) ?> - <?= h($booking->end_date->format('d M Y')) ?>
+                            </div>
+                        </td>
+                        <td class="text-center py-3">RM <?= number_format($car->price_per_day, 2) ?></td>
+                        <td class="text-center py-3"><?= $days ?> Days</td>
+                        <td class="text-end pe-3 py-3 fw-bold">RM <?= number_format($baseCost, 2) ?></td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="ps-3 py-3">
+                            <div class="fw-bold text-dark">Add-on Services</div>
+                            <div class="small text-muted">Optional Extras (Insurance, GPS, etc.)</div>
+                        </td>
+                        <td class="text-center py-3">-</td>
+                        <td class="text-center py-3">-</td>
+                        <td class="text-end pe-3 py-3 fw-bold">
+                            <?php if ($addons > 0): ?>
+                                RM <?= number_format($addons, 2) ?>
+                            <?php else: ?>
+                                -
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
-        <table class="table custom-table mb-4">
-            <thead>
-                <tr>
-                    <th style="width: 45%">Description</th>
-                    <th class="text-center">Dates</th>
-                    <th class="text-end">Amount (RM)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="py-3">
-                        <strong class="text-dark"><?= h($car->brand . ' ' . $car->car_model) ?></strong><br>
-                        <span class="text-muted small">Plate: <?= h($car->plate_number) ?></span>
-                    </td>
-                    <td class="text-center py-3 align-middle small">
-                        <?= h($booking->start_date->format('d M')) ?> - <?= h($booking->end_date->format('d M Y')) ?>
-                    </td>
-                    <td class="text-end py-3 align-middle fw-bold">
-                        <?= number_format($invoice->amount, 2) ?>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="row justify-content-end mb-4">
+        <div class="row justify-content-end mb-5">
             <div class="col-5">
-                <div class="d-flex justify-content-between mb-1 small">
-                    <span class="text-muted">Subtotal:</span>
-                    <span class="fw-bold">RM <?= number_format($invoice->amount, 2) ?></span>
+                <div class="d-flex justify-content-between mb-2 small text-muted">
+                    <span>Subtotal</span>
+                    <span>RM <?= number_format($baseCost + $addons, 2) ?></span>
                 </div>
-                <div class="d-flex justify-content-between mb-2 border-bottom pb-2 small">
-                    <span class="text-muted">Tax (0%):</span>
-                    <span class="fw-bold">RM 0.00</span>
+                <div class="d-flex justify-content-between mb-2 small text-muted border-bottom pb-2">
+                    <span>SST (6%)</span>
+                    <span>RM <?= number_format($tax, 2) ?></span>
                 </div>
-                <div class="d-flex justify-content-between align-items-center">
-                    <span class="fs-5 fw-bold text-dark">Total:</span>
-                    <span class="fs-4 fw-bold text-primary">RM <?= number_format($invoice->amount, 2) ?></span>
+                <div class="d-flex justify-content-between align-items-center mt-2">
+                    <span class="fw-bold fs-5 text-dark">Total</span>
+                    <span class="fw-bold fs-4 text-primary">RM <?= number_format($invoice->amount, 2) ?></span>
                 </div>
             </div>
         </div>
-        
-        <div class="terms-section p-3 rounded" style="background-color: #f8f9fa; margin-top: auto; border: 1px solid #eee;">
-            <h6 class="fw-bold small mb-2">Terms & Conditions</h6>
-            <ul class="text-muted small mb-0 ps-3" style="font-size: 0.8rem;">
-                <li>Payment is due within 24 hours.</li>
-                <li>Late returns incur a RM 50.00 daily fee.</li>
-                <li>Please reference Invoice #<?= h($invoice->invoice_number) ?> in transfer.</li>
-            </ul>
-        </div>
-    </div>
 
-    <div class="invoice-footer text-center mt-4">
-        <p class="fw-bold mb-0 small">Thank you for choosing Rentify!</p>
-        <p class="text-muted" style="font-size: 0.7rem;">Questions? Contact support@rentify.com</p>
+        <div class="mt-auto pt-4 border-top">
+            <div class="row align-items-center">
+                <div class="col-8">
+                    <h6 class="fw-bold small mb-1">Terms & Conditions</h6>
+                    <p class="small text-muted mb-0">
+                        Payment is due within 24 hours of booking. Late returns will be charged at the daily rate plus a RM50 penalty. Please keep this invoice for your records.
+                    </p>
+                </div>
+                <div class="col-4 text-end">
+                    <div class="brand-logo small text-muted opacity-50">RENTIFY</div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
 <style>
-    /* SCREEN STYLES */
-    .invoice-container {
+    body { background-color: #f3f4f6; font-family: 'Inter', sans-serif; }
+
+    .invoice-wrapper {
+        display: flex;
+        justify-content: center;
+        padding-bottom: 50px;
+    }
+    .invoice-paper {
         background: white;
-        padding: 40px; 
-        border: 1px solid #ddd;
+        width: 210mm; 
+        min-height: 297mm; 
+        padding: 15mm;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .brand-logo { font-weight: 800; font-size: 1.5rem; letter-spacing: -1px; }
+
+    /* Receipt Box Styling */
+    .receipt-box {
+        background-color: #f0fdf4;
+        border: 1px solid #bbf7d0;
         border-radius: 8px;
-        max-width: 800px;
-        margin: 0 auto;
-        
-        /* Flexbox to keep content distributed */
-        display: flex;
-        flex-direction: column;
-        
-        /* Reduced Height to fit safer on A4 */
-        min-height: 250mm; 
+        padding: 15px;
+        display: inline-block;
+        text-align: left;
+        min-width: 240px;
+        border-left: 4px solid #059669;
     }
-
-    .invoice-body {
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .custom-table thead th {
-        background-color: #343a40;
-        color: white;
-        padding: 10px;
-        font-size: 0.8rem;
+    .receipt-header {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #166534;
         text-transform: uppercase;
+        margin-bottom: 8px;
+        border-bottom: 1px solid #bbf7d0;
+        padding-bottom: 4px;
     }
 
-    /* PRINT STYLES - CRITICAL FIXES */
-    @media print {
-        /* 1. Remove browser margins so our design fits */
-        @page { margin: 0; size: auto; }
-        
-        /* 2. Hide everything else */
-        body * { visibility: hidden; }
-        .invoice-container, .invoice-container * { visibility: visible; }
-        
-        /* 3. Position and Size */
-        .invoice-container {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100vh; /* Force full page height */
-            margin: 0;
-            padding: 30px 40px; /* Adjust padding for paper */
-            border: none;
-            box-shadow: none;
-            min-height: auto; /* Let content flow naturally if needed */
-        }
-        
-        .no-print { display: none !important; }
-        
-        /* Ensure Colors Print */
-        .custom-table thead th {
-            -webkit-print-color-adjust: exact;
-            background-color: #343a40 !important;
-            color: white !important;
-        }
-        
-        .bg-primary, .bg-success, .bg-danger {
-            -webkit-print-color-adjust: exact;
-        }
+    /* Table */
+    .custom-table { width: 100%; border-collapse: collapse; }
+    .custom-table thead th {
+        background-color: #f8fafc;
+        color: #64748b;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+        padding: 12px;
+        border-bottom: 2px solid #e2e8f0;
     }
+    .custom-table tbody td {
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: middle;
+    }
+
+    /* Stamps */
+    .stamp {
+        display: inline-block;
+        padding: 5px 20px;
+        font-weight: 800;
+        font-size: 0.9rem;
+        letter-spacing: 2px;
+        border: 3px solid;
+        border-radius: 8px;
+        transform: rotate(-3deg);
+    }
+    .is-paid { color: #059669; border-color: #059669; background: #ecfdf5; }
+    .is-due { color: #dc2626; border-color: #dc2626; background: #fef2f2; }
+    .is-cancelled { color: #94a3b8; border-color: #94a3b8; text-decoration: line-through; }
 </style>
+
+<script>
+    function downloadPDF() {
+        const element = document.getElementById('invoice-to-print');
+        
+        const opt = {
+            margin:       0, 
+            filename:     'Invoice_<?= $invoice->invoice_number ?>.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2, useCORS: true }, 
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opt).from(element).save();
+    }
+</script>

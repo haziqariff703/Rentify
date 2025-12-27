@@ -1,4 +1,5 @@
 <?php
+
 /**
  * My Bookings - Active vs History Split
  * @var \App\View\AppView $this
@@ -31,13 +32,11 @@ foreach ($bookings as $booking) {
        ======================================== */
     .bookings-corporate-wrapper {
         background-color: #f8fafc;
-        background-image: repeating-linear-gradient(
-            135deg,
-            transparent,
-            transparent 10px,
-            rgba(148, 163, 184, 0.05) 10px,
-            rgba(148, 163, 184, 0.05) 11px
-        );
+        background-image: repeating-linear-gradient(135deg,
+                transparent,
+                transparent 10px,
+                rgba(148, 163, 184, 0.05) 10px,
+                rgba(148, 163, 184, 0.05) 11px);
         background-attachment: fixed;
         min-height: 100vh;
         padding: 50px 0 80px;
@@ -143,7 +142,7 @@ foreach ($bookings as $booking) {
         right: 0;
         width: 60px;
         height: 100%;
-        background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+        background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
         pointer-events: none;
     }
 
@@ -180,7 +179,9 @@ foreach ($bookings as $booking) {
         margin-bottom: 12px;
     }
 
-    .ticket-car-info { flex: 1; }
+    .ticket-car-info {
+        flex: 1;
+    }
 
     .ticket-car-name {
         font-family: 'Montserrat', sans-serif;
@@ -219,10 +220,22 @@ foreach ($bookings as $booking) {
         letter-spacing: 0.5px;
     }
 
-    .status-text.confirmed { color: #065f46; }
-    .status-text.pending { color: #92400e; }
-    .status-text.completed { color: #1e40af; }
-    .status-text.cancelled, .status-text.refunded { color: #991b1b; }
+    .status-text.confirmed {
+        color: #065f46;
+    }
+
+    .status-text.pending {
+        color: #92400e;
+    }
+
+    .status-text.completed {
+        color: #1e40af;
+    }
+
+    .status-text.cancelled,
+    .status-text.refunded {
+        color: #991b1b;
+    }
 
     .status-dot {
         width: 10px;
@@ -231,15 +244,42 @@ foreach ($bookings as $booking) {
         animation: pulse-ring 2s infinite;
     }
 
-    .status-dot.confirmed { background: #10b981; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2); }
-    .status-dot.pending { background: #f59e0b; box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2); }
-    .status-dot.completed { background: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2); }
-    .status-dot.cancelled, .status-dot.refunded { background: #ef4444; box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2); }
+    .status-dot.confirmed {
+        background: #10b981;
+        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+    }
+
+    .status-dot.pending {
+        background: #f59e0b;
+        box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2);
+    }
+
+    .status-dot.completed {
+        background: #3b82f6;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+    }
+
+    .status-dot.cancelled,
+    .status-dot.refunded {
+        background: #ef4444;
+        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
+    }
 
     @keyframes pulse-ring {
-        0% { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
-        50% { box-shadow: 0 0 0 8px transparent; opacity: 0.5; }
-        100% { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
+        0% {
+            box-shadow: 0 0 0 0 currentColor;
+            opacity: 1;
+        }
+
+        50% {
+            box-shadow: 0 0 0 8px transparent;
+            opacity: 0.5;
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 currentColor;
+            opacity: 1;
+        }
     }
 
     /* Dates Section */
@@ -253,7 +293,9 @@ foreach ($bookings as $booking) {
         margin-bottom: 12px;
     }
 
-    .date-block { flex: 1; }
+    .date-block {
+        flex: 1;
+    }
 
     .date-label {
         font-family: 'Montserrat', sans-serif;
@@ -612,20 +654,22 @@ foreach ($bookings as $booking) {
                         </div>
 
                         <?php foreach ($activeBookings as $booking): ?>
-                            <?php 
-                                $statusClass = match ($booking->booking_status) {
-                                    'pending' => 'pending',
-                                    'confirmed' => 'confirmed',
-                                    'active' => 'confirmed',
-                                    default => 'pending'
-                                };
+                            <?php
+                            $isCancelled = in_array($booking->booking_status, ['cancelled', 'refunded']);
+                            
+                            $statusClass = match ($booking->booking_status) {
+                                'pending' => 'pending',
+                                'confirmed' => 'confirmed',
+                                'active' => 'confirmed',
+                                default => 'pending'
+                            };
 
-                                $statusLabel = match ($booking->booking_status) {
-                                    'pending' => 'Pending',
-                                    'confirmed' => 'Confirmed',
-                                    'active' => 'Active',
-                                    default => ucfirst($booking->booking_status)
-                                };
+                            $statusLabel = match ($booking->booking_status) {
+                                'pending' => 'Pending',
+                                'confirmed' => 'Confirmed',
+                                'active' => 'Active',
+                                default => ucfirst($booking->booking_status)
+                            };
                             ?>
 
                             <!-- Composite Ticket Card -->
@@ -683,15 +727,15 @@ foreach ($bookings as $booking) {
                                         <div class="ticket-actions">
                                             <?= $this->Html->link(
                                                 '<i class="fas fa-file-invoice"></i>',
-                                                ['action' => 'view', $booking->id],
-                                                ['class' => 'ticket-btn-icon', 'escape' => false, 'title' => 'View Receipt']
+                                                ['action' => 'viewBookings', $booking->id],
+                                                ['class' => 'ticket-btn-icon', 'escape' => false, 'title' => 'View Booking']
                                             ) ?>
 
                                             <?php
                                             $unpaidInvoice = null;
                                             if (!empty($booking->invoices)) {
                                                 foreach ($booking->invoices as $inv) {
-                                                    if ($inv->status === 'unpaid') {
+                                                    if ($inv->status === 'unpaid' && !$isCancelled) {
                                                         $unpaidInvoice = $inv;
                                                         break;
                                                     }
@@ -707,9 +751,9 @@ foreach ($bookings as $booking) {
                                             <?php endif; ?>
 
                                             <?php if ($booking->booking_status !== 'completed'): ?>
-                                                <?php 
-                                                    $today = date('Y-m-d');
-                                                    $startDate = $booking->start_date ? $booking->start_date->format('Y-m-d') : '';
+                                                <?php
+                                                $today = date('Y-m-d');
+                                                $startDate = $booking->start_date ? $booking->start_date->format('Y-m-d') : '';
                                                 ?>
                                                 <?php if ($startDate > $today): ?>
                                                     <?= $this->Form->postLink(
@@ -745,22 +789,22 @@ foreach ($bookings as $booking) {
                             </div>
 
                             <?php foreach ($historyBookings as $booking): ?>
-                                <?php 
-                                    $statusClass = match ($booking->booking_status) {
-                                        'completed' => 'completed',
-                                        'cancelled' => 'cancelled',
-                                        'refunded' => 'refunded',
-                                        'rejected' => 'rejected',
-                                        default => 'cancelled'
-                                    };
+                                <?php
+                                $statusClass = match ($booking->booking_status) {
+                                    'completed' => 'completed',
+                                    'cancelled' => 'cancelled',
+                                    'refunded' => 'refunded',
+                                    'rejected' => 'rejected',
+                                    default => 'cancelled'
+                                };
 
-                                    $statusLabel = match ($booking->booking_status) {
-                                        'completed' => 'Completed',
-                                        'cancelled' => 'Cancelled',
-                                        'refunded' => 'Refunded',
-                                        'rejected' => 'Rejected',
-                                        default => ucfirst($booking->booking_status)
-                                    };
+                                $statusLabel = match ($booking->booking_status) {
+                                    'completed' => 'Completed',
+                                    'cancelled' => 'Cancelled',
+                                    'refunded' => 'Refunded',
+                                    'rejected' => 'Rejected',
+                                    default => ucfirst($booking->booking_status)
+                                };
                                 ?>
                                 <div class="history-row">
                                     <div class="history-date">
@@ -785,7 +829,9 @@ foreach ($bookings as $booking) {
 
                     <!-- Pagination -->
                     <div class="d-flex justify-content-center mt-4">
-                        <nav><ul class="pagination"><?= $this->Paginator->numbers() ?></ul></nav>
+                        <nav>
+                            <ul class="pagination"><?= $this->Paginator->numbers() ?></ul>
+                        </nav>
                     </div>
                 </div>
             </div>

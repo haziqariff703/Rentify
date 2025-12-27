@@ -307,7 +307,7 @@
                                 <td><?= h($booking->car_id) ?></td>
                                 <td><?= h($booking->start_date->format('d M Y')) ?></td>
                                 <td><?= h($booking->end_date->format('d M Y')) ?></td>
-                                <td>RM <?= $this->Number->format($booking->total_price, ['places' => 2]) ?></td>
+                                <td>RM <?= $this->Number->format($booking->total_price ?? 0, ['places' => 2]) ?></td>
                                 <td>
                                     <?php
                                     $statusClass = match ($booking->booking_status) {
