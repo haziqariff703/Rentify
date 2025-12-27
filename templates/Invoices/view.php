@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Invoice View - Calculated Add-ons & Fixed Display
  * @var \App\View\AppView $this
@@ -16,7 +17,7 @@ if (!empty($booking->payments)) {
     foreach ($booking->payments as $p) {
         if ($p->payment_status === 'paid' || $p->payment_status === 'refunded') {
             $paymentInfo = $p;
-            
+
             // Format the raw database string into human text
             $raw = $p->payment_method;
             if ($raw === 'card') {
@@ -36,10 +37,10 @@ if (!empty($booking->payments)) {
 }
 
 // 2. REVERSE CALCULATOR (Smart Breakdown)
-$subtotal = 0; 
-$tax = 0; 
-$addons = 0; 
-$days = 0; 
+$subtotal = 0;
+$tax = 0;
+$addons = 0;
+$days = 0;
 $baseCost = 0;
 
 if ($booking && $booking->car) {
@@ -64,7 +65,7 @@ if ($booking && $booking->car) {
 ?>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <div class="container mt-4 mb-4" data-html2canvas-ignore="true">
     <div class="d-flex justify-content-between align-items-center">
@@ -73,16 +74,16 @@ if ($booking && $booking->car) {
             ['action' => 'index'],
             ['class' => 'btn btn-outline-secondary rounded-pill px-4', 'escape' => false]
         ) ?>
-        
+
         <div class="d-flex gap-2">
-            <?php if(strtolower($invoice->status) === 'unpaid' && strtolower($booking->booking_status) !== 'cancelled'): ?>
+            <?php if (strtolower($invoice->status) === 'unpaid' && strtolower($booking->booking_status) !== 'cancelled'): ?>
                 <?= $this->Html->link(
-                    '<i class="fas fa-credit-card me-2"></i>Pay Now', 
+                    '<i class="fas fa-credit-card me-2"></i>Pay Now',
                     [
-                        'controller' => 'Payments', 
-                        'action' => 'add', 
+                        'controller' => 'Payments',
+                        'action' => 'add',
                         '?' => ['booking_id' => $invoice->booking_id, 'amount' => $invoice->amount]
-                    ], 
+                    ],
                     ['class' => 'btn btn-success rounded-pill px-4 fw-bold', 'escape' => false]
                 ) ?>
             <?php endif; ?>
@@ -96,10 +97,10 @@ if ($booking && $booking->car) {
 
 <div class="invoice-wrapper">
     <div id="invoice-to-print" class="invoice-paper">
-        
+
         <div class="row mb-5">
             <div class="col-6">
-                <div class="brand-logo text-primary">RENTIFY</div>
+                <img src="<?= $this->Url->webroot('img/rentify_logo_black.png') ?>" alt="Rentify" class="brand-logo-img" style="height: 150px; width: auto;">
                 <div class="text-muted small mt-2">
                     <strong>Rentify Sdn Bhd</strong> (12345-X)<br>
                     Level 15, Menara Tech<br>
@@ -110,7 +111,7 @@ if ($booking && $booking->car) {
                 <h1 class="fw-bold text-uppercase mb-1" style="color: #1e293b; letter-spacing: 2px;">Invoice</h1>
                 <div class="text-primary fw-bold fs-5">#<?= h($invoice->invoice_number) ?></div>
                 <div class="text-muted small mt-1">Issued: <?= h($invoice->created->format('d M Y')) ?></div>
-                
+
                 <div class="mt-3">
                     <?php if (strtolower($invoice->status) === 'paid'): ?>
                         <div class="stamp is-paid">PAID</div>
@@ -133,13 +134,13 @@ if ($booking && $booking->car) {
                 <div class="text-muted small"><?= h($user->phone ?? '') ?></div>
             </div>
             <div class="col-6 text-end">
-                
+
                 <?php if ($paymentInfo): ?>
                     <div class="receipt-box">
                         <label class="receipt-header">
                             <i class="fas fa-check-circle me-1"></i> Payment Receipt
                         </label>
-                        
+
                         <div class="d-flex justify-content-between mb-1">
                             <span class="text-muted small">Paid Via:</span>
                             <span class="fw-bold text-dark small">
@@ -186,7 +187,7 @@ if ($booking && $booking->car) {
                         <td class="text-center py-3"><?= $days ?> Days</td>
                         <td class="text-end pe-3 py-3 fw-bold">RM <?= number_format($baseCost, 2) ?></td>
                     </tr>
-                    
+
                     <tr>
                         <td class="ps-3 py-3">
                             <div class="fw-bold text-dark">Add-on Services</div>
@@ -232,101 +233,140 @@ if ($booking && $booking->car) {
                     </p>
                 </div>
                 <div class="col-4 text-end">
-                    <div class="brand-logo small text-muted opacity-50">RENTIFY</div>
+                    <img src="<?= $this->Url->webroot('img/rentify_logo_black.png') ?>" alt="Rentify" class="brand-logo-img opacity-50" style="height: 150px; width: auto;">
                 </div>
             </div>
+
         </div>
-
     </div>
-</div>
 
-<style>
-    body { background-color: #f3f4f6; font-family: 'Inter', sans-serif; }
+    <style>
+        body {
+            background-color: #f3f4f6;
+            font-family: 'Syne', sans-serif;
+        }
 
-    .invoice-wrapper {
-        display: flex;
-        justify-content: center;
-        padding-bottom: 50px;
-    }
-    .invoice-paper {
-        background: white;
-        width: 210mm; 
-        min-height: 297mm; 
-        padding: 15mm;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        position: relative;
-        display: flex;
-        flex-direction: column;
-    }
+        .invoice-wrapper {
+            display: flex;
+            justify-content: center;
+            padding-bottom: 50px;
+        }
 
-    .brand-logo { font-weight: 800; font-size: 1.5rem; letter-spacing: -1px; }
+        .invoice-paper {
+            background: white;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 15mm;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
 
-    /* Receipt Box Styling */
-    .receipt-box {
-        background-color: #f0fdf4;
-        border: 1px solid #bbf7d0;
-        border-radius: 8px;
-        padding: 15px;
-        display: inline-block;
-        text-align: left;
-        min-width: 240px;
-        border-left: 4px solid #059669;
-    }
-    .receipt-header {
-        display: block;
-        font-size: 0.75rem;
-        font-weight: 700;
-        color: #166534;
-        text-transform: uppercase;
-        margin-bottom: 8px;
-        border-bottom: 1px solid #bbf7d0;
-        padding-bottom: 4px;
-    }
+        .brand-logo {
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -1px;
+        }
 
-    /* Table */
-    .custom-table { width: 100%; border-collapse: collapse; }
-    .custom-table thead th {
-        background-color: #f8fafc;
-        color: #64748b;
-        text-transform: uppercase;
-        font-size: 0.75rem;
-        letter-spacing: 0.5px;
-        padding: 12px;
-        border-bottom: 2px solid #e2e8f0;
-    }
-    .custom-table tbody td {
-        border-bottom: 1px solid #f1f5f9;
-        vertical-align: middle;
-    }
 
-    /* Stamps */
-    .stamp {
-        display: inline-block;
-        padding: 5px 20px;
-        font-weight: 800;
-        font-size: 0.9rem;
-        letter-spacing: 2px;
-        border: 3px solid;
-        border-radius: 8px;
-        transform: rotate(-3deg);
-    }
-    .is-paid { color: #059669; border-color: #059669; background: #ecfdf5; }
-    .is-due { color: #dc2626; border-color: #dc2626; background: #fef2f2; }
-    .is-cancelled { color: #94a3b8; border-color: #94a3b8; text-decoration: line-through; }
-</style>
+        /* Receipt Box Styling */
+        .receipt-box {
+            background-color: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 15px;
+            display: inline-block;
+            text-align: left;
+            min-width: 240px;
+            border-left: 4px solid #059669;
+        }
 
-<script>
-    function downloadPDF() {
-        const element = document.getElementById('invoice-to-print');
-        
-        const opt = {
-            margin:       0, 
-            filename:     'Invoice_<?= $invoice->invoice_number ?>.pdf',
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true }, 
-            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
+        .receipt-header {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #166534;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #bbf7d0;
+            padding-bottom: 4px;
+        }
 
-        html2pdf().set(opt).from(element).save();
-    }
-</script>
+        /* Table */
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .custom-table thead th {
+            background-color: #f8fafc;
+            color: #64748b;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            padding: 12px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .custom-table tbody td {
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+
+        /* Stamps */
+        .stamp {
+            display: inline-block;
+            padding: 5px 20px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            border: 3px solid;
+            border-radius: 8px;
+            transform: rotate(-3deg);
+        }
+
+        .is-paid {
+            color: #059669;
+            border-color: #059669;
+            background: #ecfdf5;
+        }
+
+        .is-due {
+            color: #dc2626;
+            border-color: #dc2626;
+            background: #fef2f2;
+        }
+
+        .is-cancelled {
+            color: #94a3b8;
+            border-color: #94a3b8;
+            text-decoration: line-through;
+        }
+    </style>
+
+    <script>
+        function downloadPDF() {
+            const element = document.getElementById('invoice-to-print');
+
+            const opt = {
+                margin: 0,
+                filename: 'Invoice_<?= $invoice->invoice_number ?>.pdf',
+                image: {
+                    type: 'jpeg',
+                    quality: 0.98
+                },
+                html2canvas: {
+                    scale: 2,
+                    useCORS: true
+                },
+                jsPDF: {
+                    unit: 'mm',
+                    format: 'a4',
+                    orientation: 'portrait'
+                }
+            };
+
+            html2pdf().set(opt).from(element).save();
+        }
+    </script>

@@ -12,7 +12,7 @@
                 }
                 ?>
                 <a href="<?= $homeLink ?>" class="footer-brand">
-                    <?= $this->Html->image('rentify_logo.png', ['alt' => 'Rentify Logo', 'class' => 'footer-logo']) ?>
+                    <?= $this->Html->image('rentify_logo_white.png', ['alt' => 'Rentify Logo', 'class' => 'footer-logo']) ?>
                 </a>
 
                 <p class="footer-description">

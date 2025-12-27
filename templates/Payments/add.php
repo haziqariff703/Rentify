@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Professional Payment Gateway
  * @var \App\View\AppView $this
@@ -9,7 +10,11 @@ $bookingId = $this->request->getQuery('booking_id');
 $amount = $this->request->getQuery('amount');
 
 // --- REVERSE CALCULATOR (To show breakdown) ---
-$subtotal = 0; $tax = 0; $addons = 0; $days = 0; $baseCost = 0;
+$subtotal = 0;
+$tax = 0;
+$addons = 0;
+$days = 0;
+$baseCost = 0;
 if ($booking && $booking->car) {
     $days = $booking->end_date->diffInDays($booking->start_date) ?: 1;
     $baseCost = $booking->car->price_per_day * $days;
@@ -19,23 +24,23 @@ if ($booking && $booking->car) {
 }
 ?>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <div class="payment-wrapper">
     <div class="container py-5">
         <div class="row g-4 justify-content-center">
-            
+
             <div class="col-lg-7">
                 <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
                     <div class="card-header bg-white p-4 border-bottom">
                         <h5 class="mb-0 fw-bold text-dark"><i class="fas fa-lock text-primary me-2"></i>Secure Checkout</h5>
                     </div>
-                    
+
                     <div class="card-body p-4">
                         <?= $this->Form->create($payment, ['id' => 'paymentForm']) ?>
                         <?= $this->Form->hidden('booking_id', ['value' => $bookingId]) ?>
                         <?= $this->Form->hidden('amount', ['value' => $amount]) ?>
-                        
+
                         <label class="form-label fw-bold text-muted small text-uppercase mb-3">Choose Payment Method</label>
                         <div class="payment-tabs mb-4">
                             <input type="radio" name="payment_method" id="method_card" value="card" checked class="btn-check">
@@ -85,7 +90,7 @@ if ($booking && $booking->car) {
                             </div>
                             <input type="hidden" name="bank_name" id="bank_name">
                             <label class="form-label small fw-bold text-muted mb-2">SELECT YOUR BANK</label>
-                            
+
                             <div class="bank-grid">
                                 <div class="bank-option" onclick="selectBank(this, 'Maybank2u')">
                                     <div class="bank-logo">Maybank2u</div>
@@ -124,9 +129,9 @@ if ($booking && $booking->car) {
                         <div class="d-grid mt-4">
                             <?= $this->Form->button('Confirm Payment RM ' . number_format($amount, 2), ['class' => 'btn btn-primary btn-lg fw-bold py-3 shadow-sm']) ?>
                         </div>
-                        
+
                         <?= $this->Form->end() ?>
-                        
+
                         <div class="text-center mt-3">
                             <?= $this->Html->link('Cancel Transaction', ['controller' => 'Invoices', 'action' => 'myInvoices'], ['class' => 'text-muted text-decoration-none small']) ?>
                         </div>
@@ -138,35 +143,44 @@ if ($booking && $booking->car) {
                 <div class="card shadow-sm border-0 rounded-4 bg-white">
                     <div class="card-body p-4">
                         <h6 class="fw-bold text-muted text-uppercase mb-4">Order Summary</h6>
-                        
-                        <?php if ($booking): ?>
-                        <div class="d-flex align-items-center mb-4 pb-4 border-bottom">
-                            <div class="bg-light rounded-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
-                                <i class="fas fa-car fa-lg text-secondary"></i>
-                            </div>
-                            <div class="ms-3">
-                                <h6 class="fw-bold mb-0 text-dark"><?= h($booking->car->brand ?? '') ?> <?= h($booking->car->car_model ?? 'Vehicle') ?></h6>
-                                <small class="text-muted"><?= $days ?> Day Rental</small>
-                            </div>
-                        </div>
 
-                        <div class="d-flex justify-content-between mb-2">
-                            <span class="text-muted">Car Rental</span>
-                            <span class="fw-semibold">RM <?= number_format($baseCost, 2) ?></span>
-                        </div>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span class="text-muted">Add-ons</span>
-                            <span class="fw-semibold">RM <?= number_format($addons, 2) ?></span>
-                        </div>
-                        <div class="d-flex justify-content-between mb-3">
-                            <span class="text-muted">Service Tax (6%)</span>
-                            <span class="fw-semibold text-danger">RM <?= number_format($tax, 2) ?></span>
-                        </div>
-                        
-                        <div class="d-flex justify-content-between pt-3 border-top">
-                            <span class="fw-bold fs-5">Total</span>
-                            <span class="fw-bold fs-5 text-primary">RM <?= number_format($amount, 2) ?></span>
-                        </div>
+                        <?php if ($booking): ?>
+                            <div class="d-flex align-items-center mb-4 pb-4 border-bottom">
+                                <div class="car-image-wrapper rounded-3 overflow-hidden" style="width: 80px; height: 60px; flex-shrink: 0;">
+                                    <?php if (!empty($booking->car->image)): ?>
+                                        <img src="<?= $this->Url->webroot('img/' . h($booking->car->image)) ?>"
+                                            alt="<?= h($booking->car->brand ?? '') ?> <?= h($booking->car->car_model ?? 'Vehicle') ?>"
+                                            class="car-booking-image w-100 h-100"
+                                            style="object-fit: cover;">
+                                    <?php else: ?>
+                                        <div class="bg-light d-flex align-items-center justify-content-center w-100 h-100">
+                                            <i class="fas fa-car fa-lg text-secondary"></i>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="ms-3">
+                                    <h6 class="fw-bold mb-0 text-dark"><?= h($booking->car->brand ?? '') ?> <?= h($booking->car->car_model ?? 'Vehicle') ?></h6>
+                                    <small class="text-muted"><?= $days ?> Day Rental</small>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">Car Rental</span>
+                                <span class="fw-semibold">RM <?= number_format($baseCost, 2) ?></span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">Add-ons</span>
+                                <span class="fw-semibold">RM <?= number_format($addons, 2) ?></span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span class="text-muted">Service Tax (6%)</span>
+                                <span class="fw-semibold text-danger">RM <?= number_format($tax, 2) ?></span>
+                            </div>
+
+                            <div class="d-flex justify-content-between pt-3 border-top">
+                                <span class="fw-bold fs-5">Total</span>
+                                <span class="fw-bold fs-5 text-primary">RM <?= number_format($amount, 2) ?></span>
+                            </div>
                         <?php else: ?>
                             <div class="text-center text-muted py-3">Summary Unavailable</div>
                             <div class="d-flex justify-content-between pt-3 border-top">
@@ -185,14 +199,17 @@ if ($booking && $booking->car) {
 </div>
 
 <style>
-    body { background-color: #f3f4f6; font-family: 'Inter', sans-serif; }
-    
+    body {
+        background-color: #f3f4f6;
+        font-family: 'Syne', sans-serif;
+    }
+
     .payment-tabs {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         gap: 10px;
     }
-    
+
     .payment-tab {
         border: 2px solid #e5e7eb;
         border-radius: 12px;
@@ -208,8 +225,8 @@ if ($booking && $booking->car) {
         font-weight: 600;
         color: #6b7280;
     }
-    
-    .btn-check:checked + .payment-tab {
+
+    .btn-check:checked+.payment-tab {
         border-color: #2563eb;
         background-color: #eff6ff;
         color: #2563eb;
@@ -221,7 +238,7 @@ if ($booking && $booking->car) {
         grid-template-columns: repeat(3, 1fr);
         gap: 10px;
     }
-    
+
     .bank-option {
         border: 1px solid #e5e7eb;
         border-radius: 8px;
@@ -231,12 +248,12 @@ if ($booking && $booking->car) {
         transition: all 0.2s;
         background: white;
     }
-    
+
     .bank-option:hover {
         background-color: #f9fafb;
         border-color: #d1d5db;
     }
-    
+
     .bank-option.selected {
         border-color: #2563eb;
         background-color: #eff6ff;
@@ -262,7 +279,7 @@ if ($booking && $booking->car) {
             document.getElementById('section_card').style.display = 'none';
             document.getElementById('section_fpx').style.display = 'none';
             document.getElementById('section_cash').style.display = 'none';
-            
+
             // Show selected
             if (this.value === 'card') document.getElementById('section_card').style.display = 'block';
             if (this.value === 'online_transfer') document.getElementById('section_fpx').style.display = 'block';
@@ -282,9 +299,9 @@ if ($booking && $booking->car) {
 
     // 3. Card Formatting
     const cardInput = document.getElementById('card_number');
-    if(cardInput) {
-        cardInput.addEventListener('input', function (e) {
-            let value = e.target.value.replace(/\D/g, ''); 
+    if (cardInput) {
+        cardInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
             let formattedValue = '';
             for (let i = 0; i < value.length; i++) {
                 if (i > 0 && i % 4 === 0) formattedValue += ' ';
@@ -293,9 +310,9 @@ if ($booking && $booking->car) {
             e.target.value = formattedValue;
         });
     }
-    
+
     const expiryInput = document.getElementById('expiry');
-    if(expiryInput) {
+    if (expiryInput) {
         expiryInput.addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, '');
             if (value.length > 2) value = value.substring(0, 2) + '/' + value.substring(2, 4);

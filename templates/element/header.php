@@ -17,7 +17,7 @@
 
             <!-- Logo -->
             <a class="navbar-brand d-flex align-items-center mb-0" href="<?= $homeLink ?>">
-                <?= $this->Html->image('rentify_logo.png', ['alt' => 'Rentify Logo']) ?>
+                <?= $this->Html->image('rentify_logo_white.png', ['alt' => 'Rentify Logo']) ?>
             </a>
         </div>
 
