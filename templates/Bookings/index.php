@@ -67,7 +67,7 @@ $isAdmin = $identity && $identity->role === 'admin';
                         <td class="price-cell">RM <?= $booking->total_price === null ? '0' : $this->Number->format($booking->total_price) ?></td>
                         <td>
                             <?php
-                            $statusClass = match ($booking->booking_status) {
+                            $statusClass = match ($booking->display_status) {
                                 'pending' => 'pending',
                                 'confirmed' => 'confirmed',
                                 'cancelled' => 'cancelled',
@@ -75,7 +75,7 @@ $isAdmin = $identity && $identity->role === 'admin';
                                 default => 'default'
                             };
                             ?>
-                            <span class="status-badge <?= $statusClass ?>"><?= ucfirst(h($booking->booking_status)) ?></span>
+                            <span class="status-badge <?= $statusClass ?>"><?= ucfirst(h($booking->display_status)) ?></span>
                         </td>
                         <td class="actions-cell">
                             <?= $this->Html->link(
