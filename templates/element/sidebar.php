@@ -400,14 +400,14 @@
         <li class="sidebar-menu-item">
             <a href="<?= $this->Url->build(['controller' => 'Bookings', 'action' => $sidebarIsAdmin ? 'index' : 'myBookings']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Bookings') ? 'active' : '' ?>" data-index="2">
                 <i class="fa-solid fa-calendar-check sidebar-menu-icon"></i>
-                <span class="sidebar-menu-text"><?= $sidebarIsAdmin ? 'Bookings' : 'My Bookings' ?></span>
+                <span class="sidebar-menu-text"><?= $isAdmin ? 'Bookings' : 'My Bookings' ?></span>
             </a>
         </li>
 
         <li class="sidebar-menu-item">
-            <a href="<?= $this->Url->build(['controller' => 'Invoices', 'action' => 'myInvoices']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Invoices') ? 'active' : '' ?>" data-index="4">
+            <a href="<?= $this->Url->build(['controller' => 'Invoices', 'action' => $isAdmin ? 'index' : 'myInvoices']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Invoices') ? 'active' : '' ?>" data-index="4">
                 <i class="fa-solid fa-receipt sidebar-menu-icon"></i>
-                <span class="sidebar-menu-text"><?= $sidebarIsAdmin ? 'Invoices' : 'My Invoices' ?></span>
+                <span class="sidebar-menu-text"><?= $isAdmin ? 'Invoices' : 'My Invoices' ?></span>
             </a>
         </li>
 
