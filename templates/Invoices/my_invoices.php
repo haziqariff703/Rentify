@@ -1,4 +1,5 @@
 <?php
+
 /**
  * My Invoices - Private Banking Executive Edition
  * @var \App\View\AppView $this
@@ -532,7 +533,7 @@ foreach ($invoices as $invoice) {
                                 <?php foreach ($invoices as $invoice): ?>
                                     <tr class="invoice-row">
                                         <td data-label="Invoice #">
-                                            <a href="<?= $this->Url->build(['action' => 'view', $invoice->id]) ?>" class="invoice-number">
+                                            <a href="<?= $this->Url->build(['action' => 'viewInvoices', $invoice->id]) ?>" class="invoice-number">
                                                 #<?= h($invoice->invoice_number) ?>
                                             </a>
                                         </td>
@@ -554,8 +555,8 @@ foreach ($invoices as $invoice) {
                                             RM <?= number_format($invoice->amount, 2) ?>
                                         </td>
                                         <td data-label="Status">
-                                            <?php 
-                                            $statusClass = match(strtolower($invoice->status)) {
+                                            <?php
+                                            $statusClass = match (strtolower($invoice->status)) {
                                                 'paid' => 'paid',
                                                 'unpaid' => 'unpaid',
                                                 'cancelled' => 'cancelled',
@@ -570,13 +571,13 @@ foreach ($invoices as $invoice) {
                                             <?php if (strtolower($invoice->status) === 'unpaid'): ?>
                                                 <?= $this->Html->link(
                                                     'Pay Now',
-                                                    ['action' => 'view', $invoice->id],
+                                                    ['action' => 'viewInvoices', $invoice->id],
                                                     ['class' => 'pay-btn']
                                                 ) ?>
                                             <?php else: ?>
                                                 <?= $this->Html->link(
                                                     '<i class="fas fa-file-pdf"></i>',
-                                                    ['action' => 'view', $invoice->id],
+                                                    ['action' => 'viewInvoices', $invoice->id],
                                                     ['class' => 'icon-btn', 'escape' => false, 'title' => 'View PDF']
                                                 ) ?>
                                             <?php endif; ?>
@@ -597,7 +598,9 @@ foreach ($invoices as $invoice) {
 
                 <!-- Pagination -->
                 <div class="d-flex justify-content-center mt-5">
-                    <nav><ul class="pagination"><?= $this->Paginator->numbers() ?></ul></nav>
+                    <nav>
+                        <ul class="pagination"><?= $this->Paginator->numbers() ?></ul>
+                    </nav>
                 </div>
 
             <?php else: ?>

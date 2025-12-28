@@ -126,7 +126,7 @@ class PaymentsController extends AppController
     /**
      * Add Payment (Simulation)
      */
-   public function add()
+    public function add()
     {
         $payment = $this->Payments->newEmptyEntity();
         $bookingId = $this->request->getQuery('booking_id');
@@ -158,7 +158,7 @@ class PaymentsController extends AppController
                 // --- NEW FPX LOGIC ---
                 // Capture the selected bank name
                 $bankName = $data['bank_name'] ?? '';
-                
+
                 if (!empty($bankName)) {
                     // Save specific bank: "online_transfer_maybank"
                     $cleanBankName = strtolower(str_replace(' ', '', $bankName));
@@ -193,7 +193,7 @@ class PaymentsController extends AppController
                     $bookingsTable->save($bookingRec);
 
                     $this->Flash->success(__('Payment Successful! Booking Confirmed.'));
-                    return $this->redirect(['controller' => 'Invoices', 'action' => 'view', $invoice->id]);
+                    return $this->redirect(['controller' => 'Invoices', 'action' => 'viewInvoices', $invoice->id]);
                 }
             }
         }
@@ -202,7 +202,7 @@ class PaymentsController extends AppController
             $bookingId = $payment->booking_id;
             $amount = $payment->amount;
         }
-        
+
         // Pass $booking to view for summary
         $this->set(compact('payment', 'bookingId', 'amount', 'booking'));
     }

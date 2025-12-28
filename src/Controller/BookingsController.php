@@ -12,12 +12,12 @@ class BookingsController extends AppController
     {
         parent::beforeFilter($event);
         $this->Authentication->allowUnauthenticated(['getBookedDates', 'getCarDetails']);
-        
+
         $user = $this->Authentication->getIdentity();
         $action = $this->request->getParam('action');
 
         if ($action === 'index' && (!$user || $user->role !== 'admin')) {
-             return $this->redirect(['action' => 'myBookings']);
+            return $this->redirect(['action' => 'myBookings']);
         }
     }
 
@@ -91,7 +91,7 @@ class BookingsController extends AppController
                 // 2. Calculate Price
                 $startDate = $booking->start_date;
                 $endDate   = $booking->end_date;
-                
+
                 // OLD Logic (Delete this or comment it out):
                 // $days = $endDate->diffInDays($startDate);
                 // if ($days == 0) $days = 1;
@@ -102,14 +102,14 @@ class BookingsController extends AppController
                 $days = $endDate->diffInDays($startDate) + 1;
 
                 $car = $this->Bookings->Cars->get($booking->car_id);
-                
+
                 // --- FINANCIAL LOGIC ---
                 $subtotal = $days * $car->price_per_day;
                 $taxRate = 0.06; // 6% SST
                 $taxAmount = $subtotal * $taxRate;
                 $totalPrice = $subtotal + $taxAmount;
 
-                $booking->total_price = $totalPrice; 
+                $booking->total_price = $totalPrice;
                 // -----------------------
 
                 $booking->user_id = $this->Authentication->getIdentity()->getIdentifier();
@@ -126,7 +126,7 @@ class BookingsController extends AppController
                     $invoicesTable->save($invoice);
 
                     $this->Flash->success(__('Booking successful! Invoice generated (incl. 6% Tax).'));
-                    return $this->redirect(['controller' => 'Invoices', 'action' => 'view', $invoice->id]);
+                    return $this->redirect(['controller' => 'Invoices', 'action' => 'viewInvoices', $invoice->id]);
                 }
                 $this->Flash->error(__('Unable to add booking.'));
             }

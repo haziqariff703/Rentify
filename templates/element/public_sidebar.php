@@ -1,7 +1,10 @@
 <!-- Google Fonts - Poppins -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- Bootstrap Icons -->
+<!-- Font Awesome 7 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.1.0/css/all.min.css">
+
+<!-- Bootstrap Icons (for hamburger menu) -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
 <style>
@@ -276,21 +279,21 @@
     <ul class="sidebar-menu" id="sidebarMenu">
         <li class="sidebar-menu-item">
             <a href="<?= $this->Url->build(['controller' => 'Pages', 'action' => 'display', 'home']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Pages' && $this->request->getParam('action') == 'display') ? 'active' : '' ?>" data-index="0">
-                <i class="bi bi-house-door sidebar-menu-icon"></i>
+                <i class="fa-solid fa-house sidebar-menu-icon"></i>
                 <span class="sidebar-menu-text">Home</span>
             </a>
         </li>
 
         <li class="sidebar-menu-item">
             <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Cars') ? 'active' : '' ?>" data-index="1">
-                <i class="bi bi-car-front sidebar-menu-icon"></i>
+                <i class="fa-solid fa-car sidebar-menu-icon"></i>
                 <span class="sidebar-menu-text">Fleet</span>
             </a>
         </li>
 
         <li class="sidebar-menu-item">
             <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'login']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Users' && in_array($this->request->getParam('action'), ['login', 'add'])) ? 'active' : '' ?>" data-index="2">
-                <i class="bi bi-box-arrow-in-right sidebar-menu-icon"></i>
+                <i class="fa-solid fa-right-to-bracket sidebar-menu-icon"></i>
                 <span class="sidebar-menu-text">Login</span>
             </a>
         </li>

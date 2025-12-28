@@ -1,7 +1,10 @@
 <!-- Google Fonts - Poppins -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- Bootstrap Icons -->
+<!-- Font Awesome 7 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.1.0/css/all.min.css">
+
+<!-- Bootstrap Icons (for hamburger menu) -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
 <style>
@@ -348,45 +351,63 @@
 
 <div class="glassmorphism-sidebar" id="sidebar">
     <!-- Sidebar Menu -->
+    <?php
+    // Determine if user is admin for sidebar menu customization
+    $sidebarIdentity = $this->request->getAttribute('identity');
+    $sidebarIsAdmin = $sidebarIdentity && $sidebarIdentity->get('role') === 'admin';
+    ?>
     <ul class="sidebar-menu" id="sidebarMenu">
         <li class="sidebar-menu-item">
-            <a href="<?= $this->Url->build(['controller' => 'Pages', 'action' => 'display', 'home']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Pages' && $this->request->getParam('action') == 'display') ? 'active' : '' ?>" data-index="0">
-                <i class="bi bi-house-door sidebar-menu-icon"></i>
-                <span class="sidebar-menu-text">Home</span>
-            </a>
-        </li>
-
-        <li class="sidebar-menu-item">
-            <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Cars') ? 'active' : '' ?>" data-index="1">
-                <i class="bi bi-car-front sidebar-menu-icon"></i>
-                <span class="sidebar-menu-text">Fleet</span>
-            </a>
-        </li>
-
-        <?php
-        $sidebarIdentity = $this->request->getAttribute('identity');
-        $sidebarIsAdmin = $sidebarIdentity && $sidebarIdentity->get('role') === 'admin';
-        ?>
-        <li class="sidebar-menu-item">
-            <a href="<?= $this->Url->build(['controller' => 'Bookings', 'action' => $sidebarIsAdmin ? 'index' : 'myBookings']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Bookings') ? 'active' : '' ?>" data-index="2">
-                <i class="bi bi-calendar-check sidebar-menu-icon"></i>
-                <span class="sidebar-menu-text"><?= $sidebarIsAdmin ? 'Bookings' : 'My Bookings' ?></span>
-            </a>
+            <?php if ($sidebarIsAdmin): ?>
+                <a href="<?= $this->Url->build(['controller' => 'Admins', 'action' => 'dashboard']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Admins' && $this->request->getParam('action') == 'dashboard') ? 'active' : '' ?>" data-index="0">
+                    <i class="fa-solid fa-gauge-high sidebar-menu-icon"></i>
+                    <span class="sidebar-menu-text">Dashboard</span>
+                </a>
+            <?php else: ?>
+                <a href="<?= $this->Url->build(['controller' => 'Pages', 'action' => 'display', 'home']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Pages' && $this->request->getParam('action') == 'display') ? 'active' : '' ?>" data-index="0">
+                    <i class="fa-solid fa-house sidebar-menu-icon"></i>
+                    <span class="sidebar-menu-text">Home</span>
+                </a>
+            <?php endif; ?>
         </li>
 
         <?php if ($this->request->getAttribute('identity')): ?>
             <li class="sidebar-menu-item">
                 <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'view', $this->request->getAttribute('identity')->getIdentifier()]) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Users' && $this->request->getParam('action') == 'view') ? 'active' : '' ?>" data-index="3">
-                    <i class="bi bi-person-circle sidebar-menu-icon"></i>
+                    <i class="fa-solid fa-circle-user sidebar-menu-icon"></i>
                     <span class="sidebar-menu-text">My Account</span>
                 </a>
             </li>
         <?php endif; ?>
 
         <li class="sidebar-menu-item">
-            <a href="<?= $this->Url->build(['controller' => 'Invoices', 'action' => 'index']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Invoices') ? 'active' : '' ?>" data-index="4">
-                <i class="bi bi-receipt sidebar-menu-icon"></i>
-                <span class="sidebar-menu-text">Invoices</span>
+            <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Cars') ? 'active' : '' ?>" data-index="1">
+                <i class="fa-solid fa-car sidebar-menu-icon"></i>
+                <span class="sidebar-menu-text">Fleet</span>
+            </a>
+        </li>
+
+
+        <?php if ($sidebarIsAdmin): ?>
+            <li class="sidebar-menu-item">
+                <a href="<?= $this->Url->build(['controller' => 'Maintenances', 'action' => 'index']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Maintenances') ? 'active' : '' ?>" data-index="1">
+                    <i class="fa-solid fa-wrench sidebar-menu-icon"></i>
+                    <span class="sidebar-menu-text">Maintenances</span>
+                </a>
+            </li>
+        <?php endif; ?>
+
+        <li class="sidebar-menu-item">
+            <a href="<?= $this->Url->build(['controller' => 'Bookings', 'action' => $sidebarIsAdmin ? 'index' : 'myBookings']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Bookings') ? 'active' : '' ?>" data-index="2">
+                <i class="fa-solid fa-calendar-check sidebar-menu-icon"></i>
+                <span class="sidebar-menu-text"><?= $sidebarIsAdmin ? 'Bookings' : 'My Bookings' ?></span>
+            </a>
+        </li>
+
+        <li class="sidebar-menu-item">
+            <a href="<?= $this->Url->build(['controller' => 'Invoices', 'action' => 'myInvoices']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Invoices') ? 'active' : '' ?>" data-index="4">
+                <i class="fa-solid fa-receipt sidebar-menu-icon"></i>
+                <span class="sidebar-menu-text"><?= $sidebarIsAdmin ? 'Invoices' : 'My Invoices' ?></span>
             </a>
         </li>
 
@@ -396,14 +417,14 @@
         ?>
         <li class="sidebar-menu-item">
             <a href="<?= $this->Url->build(['controller' => 'Reviews', 'action' => $isAdmin ? 'index' : 'myReviews']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Reviews') ? 'active' : '' ?>" data-index="5">
-                <i class="bi bi-star sidebar-menu-icon"></i>
+                <i class="fa-solid fa-star sidebar-menu-icon"></i>
                 <span class="sidebar-menu-text"><?= $isAdmin ? 'Reviews' : 'My Reviews' ?></span>
             </a>
         </li>
 
         <li class="sidebar-menu-item">
             <a href="<?= $this->Url->build(['controller' => 'Payments', 'action' => $isAdmin ? 'index' : 'myPayments']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Payments') ? 'active' : '' ?>" data-index="6">
-                <i class="bi bi-credit-card sidebar-menu-icon"></i>
+                <i class="fa-solid fa-credit-card sidebar-menu-icon"></i>
                 <span class="sidebar-menu-text"><?= $isAdmin ? 'Payments' : 'My Payments' ?></span>
             </a>
         </li>
@@ -411,14 +432,14 @@
         <?php if ($this->request->getAttribute('identity')): ?>
             <li class="sidebar-menu-item">
                 <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'logout']) ?>" class="sidebar-menu-link" data-index="7">
-                    <i class="bi bi-box-arrow-right sidebar-menu-icon"></i>
+                    <i class="fa-solid fa-right-from-bracket sidebar-menu-icon"></i>
                     <span class="sidebar-menu-text">Logout</span>
                 </a>
             </li>
         <?php else: ?>
             <li class="sidebar-menu-item">
                 <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'login']) ?>" class="sidebar-menu-link" data-index="9">
-                    <i class="bi bi-box-arrow-in-right sidebar-menu-icon"></i>
+                    <i class="fa-solid fa-right-to-bracket sidebar-menu-icon"></i>
                     <span class="sidebar-menu-text">Login</span>
                 </a>
             </li>
@@ -427,6 +448,7 @@
 
     <!-- Sidebar Footer with User Info -->
     <?php if ($this->request->getAttribute('identity')): ?>
+        <?php $isAdmin = $this->request->getAttribute('identity')->get('role') === 'admin'; ?>
         <div class="sidebar-footer">
             <div class="sidebar-user-info">
                 <div class="sidebar-user-avatar">
@@ -436,7 +458,7 @@
                     <div class="sidebar-user-name">
                         <?= h($this->request->getAttribute('identity')->get('email')) ?>
                     </div>
-                    <div class="sidebar-user-role">User</div>
+                    <div class="sidebar-user-role"><?= $isAdmin ? 'Admin' : 'User' ?></div>
                 </div>
             </div>
         </div>

@@ -321,7 +321,7 @@
                                     <span class="status-badge <?= $statusClass ?>"><?= ucfirst(h($booking->booking_status)) ?></span>
                                 </td>
                                 <td>
-                                    <?= $this->Html->link('View', ['controller' => 'Bookings', 'action' => 'view', $booking->id], ['class' => 'action-btn action-btn-view']) ?>
+                                    <?= $this->Html->link('View', ['controller' => 'Bookings', 'action' => 'viewBookings', $booking->id], ['class' => 'action-btn action-btn-view']) ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

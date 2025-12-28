@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -15,11 +16,11 @@ class InvoicesController extends AppController
      *
      * @return \Cake\Http\Response|null|void Renders view
      */
-public function index()
+    public function index()
     {
         // 1. Check User Role
         $user = $this->Authentication->getIdentity();
-        
+
         // If not admin, force them to their own page
         if ($user && $user->role !== 'admin') {
             return $this->redirect(['action' => 'myInvoices']);
@@ -62,7 +63,7 @@ public function index()
     {
         // FIX: Added 'Payments' to the contain array
         $invoice = $this->Invoices->get($id, [
-            'contain' => ['Bookings' => ['Users', 'Cars', 'Payments']] 
+            'contain' => ['Bookings' => ['Users', 'Cars', 'Payments']]
         ]);
 
         if ($this->request->getQuery('pdf')) {
@@ -71,6 +72,31 @@ public function index()
                 ->setOption('pdfConfig', [
                     'filename' => 'Invoice_' . $invoice->id . '.pdf'
                 ]);
+        }
+
+        $this->set(compact('invoice'));
+    }
+
+    /**
+     * View Invoices - USER VIEW
+     * Allows customers to view their own invoice details with PDF download.
+     *
+     * @param string|null $id Invoice id.
+     * @return \Cake\Http\Response|null|void Renders view
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function viewInvoices($id = null)
+    {
+        $user = $this->Authentication->getIdentity();
+
+        $invoice = $this->Invoices->get($id, [
+            'contain' => ['Bookings' => ['Users', 'Cars', 'Payments']]
+        ]);
+
+        // Authorization: Ensure user owns this invoice
+        if ($invoice->booking->user_id !== $user->getIdentifier()) {
+            $this->Flash->error(__('You are not authorized to view this invoice.'));
+            return $this->redirect(['action' => 'myInvoices']);
         }
 
         $this->set(compact('invoice'));
@@ -139,5 +165,4 @@ public function index()
 
         return $this->redirect(['action' => 'index']);
     }
-
 }
