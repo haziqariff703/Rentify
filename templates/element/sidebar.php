@@ -400,32 +400,28 @@
         <li class="sidebar-menu-item">
             <a href="<?= $this->Url->build(['controller' => 'Bookings', 'action' => $sidebarIsAdmin ? 'index' : 'myBookings']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Bookings') ? 'active' : '' ?>" data-index="2">
                 <i class="fa-solid fa-calendar-check sidebar-menu-icon"></i>
-                <span class="sidebar-menu-text"><?= $isAdmin ? 'Bookings' : 'My Bookings' ?></span>
+                <span class="sidebar-menu-text"><?= $sidebarIsAdmin ? 'Bookings' : 'My Bookings' ?></span>
             </a>
         </li>
 
         <li class="sidebar-menu-item">
-            <a href="<?= $this->Url->build(['controller' => 'Invoices', 'action' => $isAdmin ? 'index' : 'myInvoices']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Invoices') ? 'active' : '' ?>" data-index="4">
+            <a href="<?= $this->Url->build(['controller' => 'Invoices', 'action' => $sidebarIsAdmin ? 'index' : 'myInvoices']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Invoices') ? 'active' : '' ?>" data-index="4">
                 <i class="fa-solid fa-receipt sidebar-menu-icon"></i>
-                <span class="sidebar-menu-text"><?= $isAdmin ? 'Invoices' : 'My Invoices' ?></span>
+                <span class="sidebar-menu-text"><?= $sidebarIsAdmin ? 'Invoices' : 'My Invoices' ?></span>
             </a>
         </li>
 
-        <?php
-        $identity = $this->request->getAttribute('identity');
-        $isAdmin = $identity && $identity->get('role') === 'admin';
-        ?>
         <li class="sidebar-menu-item">
-            <a href="<?= $this->Url->build(['controller' => 'Reviews', 'action' => $isAdmin ? 'index' : 'myReviews']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Reviews') ? 'active' : '' ?>" data-index="5">
+            <a href="<?= $this->Url->build(['controller' => 'Reviews', 'action' => $sidebarIsAdmin ? 'index' : 'myReviews']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Reviews') ? 'active' : '' ?>" data-index="5">
                 <i class="fa-solid fa-star sidebar-menu-icon"></i>
-                <span class="sidebar-menu-text"><?= $isAdmin ? 'Reviews' : 'My Reviews' ?></span>
+                <span class="sidebar-menu-text"><?= $sidebarIsAdmin ? 'Reviews' : 'My Reviews' ?></span>
             </a>
         </li>
 
         <li class="sidebar-menu-item">
-            <a href="<?= $this->Url->build(['controller' => 'Payments', 'action' => $isAdmin ? 'index' : 'myPayments']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Payments') ? 'active' : '' ?>" data-index="6">
+            <a href="<?= $this->Url->build(['controller' => 'Payments', 'action' => $sidebarIsAdmin ? 'index' : 'myPayments']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Payments') ? 'active' : '' ?>" data-index="6">
                 <i class="fa-solid fa-credit-card sidebar-menu-icon"></i>
-                <span class="sidebar-menu-text"><?= $isAdmin ? 'Payments' : 'My Payments' ?></span>
+                <span class="sidebar-menu-text"><?= $sidebarIsAdmin ? 'Payments' : 'My Payments' ?></span>
             </a>
         </li>
 
@@ -447,18 +443,17 @@
     </ul>
 
     <!-- Sidebar Footer with User Info -->
-    <?php if ($this->request->getAttribute('identity')): ?>
-        <?php $isAdmin = $this->request->getAttribute('identity')->get('role') === 'admin'; ?>
+    <?php if ($sidebarIdentity): ?>
         <div class="sidebar-footer">
             <div class="sidebar-user-info">
                 <div class="sidebar-user-avatar">
-                    <?= strtoupper(substr($this->request->getAttribute('identity')->get('email'), 0, 1)) ?>
+                    <?= strtoupper(substr($sidebarIdentity->get('email'), 0, 1)) ?>
                 </div>
                 <div class="sidebar-user-details">
                     <div class="sidebar-user-name">
-                        <?= h($this->request->getAttribute('identity')->get('email')) ?>
+                        <?= h($sidebarIdentity->get('email')) ?>
                     </div>
-                    <div class="sidebar-user-role"><?= $isAdmin ? 'Admin' : 'User' ?></div>
+                    <div class="sidebar-user-role"><?= $sidebarIsAdmin ? 'Admin' : 'User' ?></div>
                 </div>
             </div>
         </div>
