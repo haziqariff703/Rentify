@@ -26,14 +26,17 @@
         border-right: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
         z-index: 9999;
-        overflow-y: auto;
-        overflow-x: hidden;
+        overflow: hidden;
+        /* Changed from auto - children handle overflow */
         font-family: 'Poppins', sans-serif;
         /* Hidden off-screen by default */
         transform: translateX(-100%);
         transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         opacity: 1;
         pointer-events: auto;
+        /* Flexbox layout for fixed footer */
+        display: flex;
+        flex-direction: column;
     }
 
     /* Sidebar Active State - Slides in */
@@ -125,6 +128,20 @@
         padding: 80px 0 20px 0;
         margin: 0;
         position: relative;
+        /* Scrollable menu area */
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        /* Hide scrollbar but keep functionality */
+        scrollbar-width: none;
+        /* Firefox */
+        -ms-overflow-style: none;
+        /* IE/Edge */
+    }
+
+    /* Hide scrollbar for Chrome, Safari, Opera */
+    .sidebar-menu::-webkit-scrollbar {
+        display: none;
     }
 
     /* Animated Sliding Pill */
@@ -232,12 +249,12 @@
     }
 
     .sidebar-footer {
-        position: absolute;
-        bottom: 0;
+        /* Fixed at bottom using flexbox - no absolute positioning */
+        flex-shrink: 0;
         width: 100%;
         padding: 20px;
         border-top: 1px solid rgba(255, 255, 255, 0.1);
-        background: rgba(0, 0, 0, 0.1);
+        background: rgba(0, 0, 0, 0.2);
         transition: all 0.3s ease;
     }
 
@@ -352,89 +369,139 @@
 <div class="glassmorphism-sidebar" id="sidebar">
     <!-- Sidebar Menu -->
     <?php
-    // Determine if user is admin for sidebar menu customization
+    // === SIDEBAR CONFIGURATION ===
     $sidebarIdentity = $this->request->getAttribute('identity');
     $sidebarIsAdmin = $sidebarIdentity && $sidebarIdentity->get('role') === 'admin';
+    $currentController = $this->request->getParam('controller');
+    $currentAction = $this->request->getParam('action');
+
+    // Define menu items with visibility rules
+    $menuItems = [
+        [
+            'controller' => $sidebarIsAdmin ? 'Admins' : 'Pages',
+            'action' => $sidebarIsAdmin ? 'dashboard' : 'display',
+            'params' => $sidebarIsAdmin ? [] : ['home'],
+            'icon' => $sidebarIsAdmin ? 'fa-gauge-high' : 'fa-house',
+            'label' => $sidebarIsAdmin ? 'Dashboard' : 'Home',
+            'visible' => true,
+            'activeMatch' => $sidebarIsAdmin ? 'Admins:dashboard' : 'Pages:display',
+        ],
+        [
+            'controller' => 'Users',
+            'action' => 'view',
+            'params' => $sidebarIdentity ? [$sidebarIdentity->getIdentifier()] : [],
+            'icon' => 'fa-circle-user',
+            'label' => 'My Account',
+            'visible' => (bool)$sidebarIdentity,
+            'activeMatch' => 'Users:view',
+        ],
+        [
+            'controller' => 'Cars',
+            'action' => 'index',
+            'params' => [],
+            'icon' => 'fa-car',
+            'label' => 'Fleet',
+            'visible' => true,
+            'activeMatch' => 'Cars',
+        ],
+        [
+            'controller' => 'Maintenances',
+            'action' => 'index',
+            'params' => [],
+            'icon' => 'fa-wrench',
+            'label' => 'Maintenances',
+            'visible' => $sidebarIsAdmin,
+            'activeMatch' => 'Maintenances',
+        ],
+
+        [
+            'controller' => 'Users',
+            'action' => 'index',
+            'params' => [],
+            'icon' => 'fa-users',
+            'label' => 'Users',
+            'visible' => $sidebarIsAdmin,
+            'activeMatch' => 'Users:index',
+        ],
+
+        [
+            'controller' => 'Bookings',
+            'action' => $sidebarIsAdmin ? 'index' : 'myBookings',
+            'params' => [],
+            'icon' => 'fa-calendar-check',
+            'label' => $sidebarIsAdmin ? 'Bookings' : 'My Bookings',
+            'visible' => true,
+            'activeMatch' => 'Bookings',
+        ],
+        [
+            'controller' => 'Invoices',
+            'action' => $sidebarIsAdmin ? 'index' : 'myInvoices',
+            'params' => [],
+            'icon' => 'fa-receipt',
+            'label' => $sidebarIsAdmin ? 'Invoices' : 'My Invoices',
+            'visible' => true,
+            'activeMatch' => 'Invoices',
+        ],
+        [
+            'controller' => 'Reviews',
+            'action' => $sidebarIsAdmin ? 'index' : 'myReviews',
+            'params' => [],
+            'icon' => 'fa-star',
+            'label' => $sidebarIsAdmin ? 'Reviews' : 'My Reviews',
+            'visible' => true,
+            'activeMatch' => 'Reviews',
+        ],
+        [
+            'controller' => 'Payments',
+            'action' => $sidebarIsAdmin ? 'index' : 'myPayments',
+            'params' => [],
+            'icon' => 'fa-credit-card',
+            'label' => $sidebarIsAdmin ? 'Payments' : 'My Payments',
+            'visible' => true,
+            'activeMatch' => 'Payments',
+        ],
+    ];
+
+    // Helper function for active state check
+    $isMenuActive = function ($match, $controller, $action) {
+        if (strpos($match, ':') !== false) {
+            list($c, $a) = explode(':', $match);
+            return $controller == $c && $action == $a;
+        }
+        return $controller == $match;
+    };
     ?>
     <ul class="sidebar-menu" id="sidebarMenu">
-        <li class="sidebar-menu-item">
-            <?php if ($sidebarIsAdmin): ?>
-                <a href="<?= $this->Url->build(['controller' => 'Admins', 'action' => 'dashboard']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Admins' && $this->request->getParam('action') == 'dashboard') ? 'active' : '' ?>" data-index="0">
-                    <i class="fa-solid fa-gauge-high sidebar-menu-icon"></i>
-                    <span class="sidebar-menu-text">Dashboard</span>
-                </a>
-            <?php else: ?>
-                <a href="<?= $this->Url->build(['controller' => 'Pages', 'action' => 'display', 'home']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Pages' && $this->request->getParam('action') == 'display') ? 'active' : '' ?>" data-index="0">
-                    <i class="fa-solid fa-house sidebar-menu-icon"></i>
-                    <span class="sidebar-menu-text">Home</span>
-                </a>
+        <?php $index = 0; ?>
+        <?php foreach ($menuItems as $item): ?>
+            <?php if ($item['visible']): ?>
+                <li class="sidebar-menu-item">
+                    <a href="<?= $this->Url->build(array_merge(
+                                    ['controller' => $item['controller'], 'action' => $item['action']],
+                                    $item['params']
+                                )) ?>"
+                        class="sidebar-menu-link <?= $isMenuActive($item['activeMatch'], $currentController, $currentAction) ? 'active' : '' ?>"
+                        data-index="<?= $index++ ?>">
+                        <i class="fa-solid <?= $item['icon'] ?> sidebar-menu-icon"></i>
+                        <span class="sidebar-menu-text"><?= $item['label'] ?></span>
+                    </a>
+                </li>
             <?php endif; ?>
-        </li>
+        <?php endforeach; ?>
 
-        <?php if ($this->request->getAttribute('identity')): ?>
+        <!-- Login/Logout -->
+        <?php if ($sidebarIdentity): ?>
             <li class="sidebar-menu-item">
-                <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'view', $this->request->getAttribute('identity')->getIdentifier()]) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Users' && $this->request->getParam('action') == 'view') ? 'active' : '' ?>" data-index="3">
-                    <i class="fa-solid fa-circle-user sidebar-menu-icon"></i>
-                    <span class="sidebar-menu-text">My Account</span>
-                </a>
-            </li>
-        <?php endif; ?>
-
-        <li class="sidebar-menu-item">
-            <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Cars') ? 'active' : '' ?>" data-index="1">
-                <i class="fa-solid fa-car sidebar-menu-icon"></i>
-                <span class="sidebar-menu-text">Fleet</span>
-            </a>
-        </li>
-
-
-        <?php if ($sidebarIsAdmin): ?>
-            <li class="sidebar-menu-item">
-                <a href="<?= $this->Url->build(['controller' => 'Maintenances', 'action' => 'index']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Maintenances') ? 'active' : '' ?>" data-index="1">
-                    <i class="fa-solid fa-wrench sidebar-menu-icon"></i>
-                    <span class="sidebar-menu-text">Maintenances</span>
-                </a>
-            </li>
-        <?php endif; ?>
-
-        <li class="sidebar-menu-item">
-            <a href="<?= $this->Url->build(['controller' => 'Bookings', 'action' => $sidebarIsAdmin ? 'index' : 'myBookings']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Bookings') ? 'active' : '' ?>" data-index="2">
-                <i class="fa-solid fa-calendar-check sidebar-menu-icon"></i>
-                <span class="sidebar-menu-text"><?= $sidebarIsAdmin ? 'Bookings' : 'My Bookings' ?></span>
-            </a>
-        </li>
-
-        <li class="sidebar-menu-item">
-            <a href="<?= $this->Url->build(['controller' => 'Invoices', 'action' => $sidebarIsAdmin ? 'index' : 'myInvoices']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Invoices') ? 'active' : '' ?>" data-index="4">
-                <i class="fa-solid fa-receipt sidebar-menu-icon"></i>
-                <span class="sidebar-menu-text"><?= $sidebarIsAdmin ? 'Invoices' : 'My Invoices' ?></span>
-            </a>
-        </li>
-
-        <li class="sidebar-menu-item">
-            <a href="<?= $this->Url->build(['controller' => 'Reviews', 'action' => $sidebarIsAdmin ? 'index' : 'myReviews']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Reviews') ? 'active' : '' ?>" data-index="5">
-                <i class="fa-solid fa-star sidebar-menu-icon"></i>
-                <span class="sidebar-menu-text"><?= $sidebarIsAdmin ? 'Reviews' : 'My Reviews' ?></span>
-            </a>
-        </li>
-
-        <li class="sidebar-menu-item">
-            <a href="<?= $this->Url->build(['controller' => 'Payments', 'action' => $sidebarIsAdmin ? 'index' : 'myPayments']) ?>" class="sidebar-menu-link <?= ($this->request->getParam('controller') == 'Payments') ? 'active' : '' ?>" data-index="6">
-                <i class="fa-solid fa-credit-card sidebar-menu-icon"></i>
-                <span class="sidebar-menu-text"><?= $sidebarIsAdmin ? 'Payments' : 'My Payments' ?></span>
-            </a>
-        </li>
-
-        <?php if ($this->request->getAttribute('identity')): ?>
-            <li class="sidebar-menu-item">
-                <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'logout']) ?>" class="sidebar-menu-link" data-index="7">
+                <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'logout']) ?>"
+                    class="sidebar-menu-link" data-index="<?= $index++ ?>">
                     <i class="fa-solid fa-right-from-bracket sidebar-menu-icon"></i>
                     <span class="sidebar-menu-text">Logout</span>
                 </a>
             </li>
         <?php else: ?>
             <li class="sidebar-menu-item">
-                <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'login']) ?>" class="sidebar-menu-link" data-index="9">
+                <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'login']) ?>"
+                    class="sidebar-menu-link" data-index="<?= $index++ ?>">
                     <i class="fa-solid fa-right-to-bracket sidebar-menu-icon"></i>
                     <span class="sidebar-menu-text">Login</span>
                 </a>
