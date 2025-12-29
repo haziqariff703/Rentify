@@ -34,7 +34,6 @@ $cakeDescription = 'Rentify - Admin Panel';
 
     <!-- Admin CSS with cache-busting -->
     <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/components.css') ?>?v=<?= time() ?>">
-    <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/sidebar.css') ?>?v=<?= time() ?>">
     <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/dashboard.css') ?>?v=<?= time() ?>">
     <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/shared.css') ?>?v=<?= time() ?>">
     <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/custom.css') ?>?v=<?= time() ?>">

@@ -39,6 +39,10 @@ All notable changes to the Rentify project will be documented in this file.
 -   Fixed PHP syntax errors with if/endif blocks in sidebar
 -   Fixed InvoicesController missing admin layout causing DataTables not to load
 
+### Removed
+
+-   Deleted unused `webroot/css/sidebar.css` (138 lines) - sidebar uses inline styles in `element/sidebar.php`
+
 ## [2025-12-28]
 
 ### Changed
