@@ -60,15 +60,29 @@ class MaintenancesController extends AppController
     public function add()
     {
         $maintenance = $this->Maintenances->newEmptyEntity();
+
+        // Pre-fill car_id if coming from review
+        $carId = $this->request->getQuery('car_id');
+        if ($carId) {
+            $maintenance->car_id = $carId;
+        }
+
         if ($this->request->is('post')) {
             $maintenance = $this->Maintenances->patchEntity($maintenance, $this->request->getData());
             if ($this->Maintenances->save($maintenance)) {
-                // Update Car Status to 'Maintenance'
+                // Update Car Status based on maintenance status
                 $car = $this->Maintenances->Cars->get($maintenance->car_id);
-                $car->status = 'Maintenance';
-                $this->Maintenances->Cars->save($car);
-
-                $this->Flash->success(__('The maintenance has been saved and the car status updated to Maintenance.'));
+                if ($maintenance->status === 'scheduled') {
+                    $car->status = 'maintenance';
+                    $this->Maintenances->Cars->save($car);
+                    $this->Flash->success(__('Maintenance scheduled. Car status updated to Maintenance.'));
+                } elseif ($maintenance->status === 'completed') {
+                    $car->status = 'available';
+                    $this->Maintenances->Cars->save($car);
+                    $this->Flash->success(__('Maintenance completed. Car is now Available.'));
+                } else {
+                    $this->Flash->success(__('The maintenance has been saved.'));
+                }
 
                 return $this->redirect(['action' => 'index']);
             }
@@ -91,7 +105,19 @@ class MaintenancesController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $maintenance = $this->Maintenances->patchEntity($maintenance, $this->request->getData());
             if ($this->Maintenances->save($maintenance)) {
-                $this->Flash->success(__('The maintenance has been saved.'));
+                // Auto-update car status based on maintenance status
+                $car = $this->Maintenances->Cars->get($maintenance->car_id);
+                if ($maintenance->status === 'scheduled') {
+                    $car->status = 'maintenance';
+                    $this->Maintenances->Cars->save($car);
+                    $this->Flash->success(__('Maintenance updated. Car status set to Maintenance.'));
+                } elseif ($maintenance->status === 'completed') {
+                    $car->status = 'available';
+                    $this->Maintenances->Cars->save($car);
+                    $this->Flash->success(__('Maintenance completed. Car is now Available.'));
+                } else {
+                    $this->Flash->success(__('The maintenance has been saved.'));
+                }
 
                 return $this->redirect(['action' => 'index']);
             }

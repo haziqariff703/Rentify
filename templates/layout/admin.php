@@ -39,6 +39,7 @@ $cakeDescription = 'Rentify - Admin Panel';
     <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/shared.css') ?>?v=<?= time() ?>">
     <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/custom.css') ?>?v=<?= time() ?>">
     <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/crud.css') ?>?v=<?= time() ?>">
+    <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/datatables-custom.css') ?>?v=<?= time() ?>">
 
     <style>
         body {
@@ -117,6 +118,9 @@ $cakeDescription = 'Rentify - Admin Panel';
 
     <!-- FullCalendar -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+
+    <!-- DataTables Custom Initialization -->
+    <script src="<?= $this->Url->assetUrl('js/datatables-init.js') ?>?v=<?= time() ?>"></script>
 </body>
 
 </html>

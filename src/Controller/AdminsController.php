@@ -177,6 +177,23 @@ class AdminsController extends AppController
             ->limit(5)
             ->all();
 
+        // --- Maintenance Alerts (Dynamic) ---
+        $scheduledMaintenances = $maintenancesTable->find()
+            ->where(['status' => 'scheduled'])
+            ->count();
+
+        // --- Issue Reviews (Low ratings that may need attention) ---
+        $issueReviews = $reviewsTable->find()
+            ->contain(['Cars', 'Users'])
+            ->where(['Reviews.rating <=' => 2])
+            ->order(['Reviews.created' => 'DESC'])
+            ->limit(5)
+            ->all();
+
+        $issueReviewsCount = $reviewsTable->find()
+            ->where(['Reviews.rating <=' => 2])
+            ->count();
+
         $this->set(compact(
             'totalCars',
             'totalBookings',
@@ -196,7 +213,10 @@ class AdminsController extends AppController
             'currentlyRentedCars',
             'maintenanceCars',
             'carsDueToday',
-            'topCars'
+            'topCars',
+            'scheduledMaintenances',
+            'issueReviews',
+            'issueReviewsCount'
         ));
     }
 
