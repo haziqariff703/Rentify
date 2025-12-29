@@ -7,8 +7,8 @@ $this->assign('title', 'The Garage');
 ?>
 
 <style>
-    /* Google Fonts - Montserrat + Playfair Display */
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap');
+    /* Google Fonts - Montserrat (Bold & Punchy) + Inter (Readable Body) */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@500;600;700;800;900&display=swap');
 
     /* ========================================
        DASHBOARD LAYOUT - Fixed Height Container
@@ -74,25 +74,13 @@ $this->assign('title', 'The Garage');
     }
 
     /* ========================================
-       3-COLUMN RESPONSIVE GRID
+       SINGLE-COLUMN CARD STACK
        ======================================== */
-    .car-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 20px;
+    .car-list {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
         padding-bottom: 40px;
-    }
-
-    @media (min-width: 768px) {
-        .car-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-
-    @media (min-width: 1200px) {
-        .car-grid {
-            grid-template-columns: repeat(3, 1fr);
-        }
     }
 
     /* ========================================
@@ -139,25 +127,24 @@ $this->assign('title', 'The Garage');
     }
 
     /* ========================================
-       HERO SECTION - CINEMATIC GARAGE
+       HERO SECTION - FERRARI BANNER
        ======================================== */
     .catalog-hero {
-        background-color: #0f172a;
+        background-color: #0d1117;
         background-image: url('<?= $this->Url->image('ferrari-background.png') ?>');
-        background-size: cover;
-        background-position: center center;
+        background-size: 80%;
+        background-position: center bottom;
         background-repeat: no-repeat;
-        min-height: 400px;
-        padding: 100px 0;
+        padding: 80px 0 140px;
         position: relative;
+        border-radius: 30px;
         overflow: hidden;
+        margin-bottom: 30px;
         margin-top: -3rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
+        z-index: 10;
     }
 
-    /* Navy Gradient Overlay */
     .catalog-hero::before {
         content: '';
         position: absolute;
@@ -165,77 +152,58 @@ $this->assign('title', 'The Garage');
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(
-            to bottom,
-            rgba(15, 23, 42, 0.90) 0%,
-            rgba(15, 23, 42, 0.75) 50%,
-            rgba(15, 23, 42, 0.60) 100%
-        );
-        z-index: 1;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, transparent 50%, rgba(0, 0, 0, 0.5) 100%);
+        z-index: 0;
         pointer-events: none;
     }
 
-    .hero-content {
-        position: relative;
-        z-index: 2;
-        text-align: center;
-    }
-
-    .hero-eyebrow {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.7rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.2em;
-        color: #94a3b8;
-        margin-bottom: 16px;
-    }
-
     .hero-title {
-        font-family: 'Playfair Display', serif;
-        font-weight: 700;
-        font-size: 3.5rem;
-        color: #ffffff;
-        margin: 0 0 12px;
-        text-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 2.5rem;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        color: white;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+        margin: 0 0 8px;
     }
 
     .hero-title span {
-        color: #fbbf24;
+        color: #ef4444;
     }
 
     .hero-subtitle {
         font-family: 'Montserrat', sans-serif;
         font-weight: 400;
-        font-size: 1.1rem;
         letter-spacing: 1px;
-        color: #cbd5e1;
+        color: rgba(255,255,255,0.85);
+        text-shadow: 0 2px 8px rgba(0,0,0,0.7);
     }
 
     /* ========================================
-       FILTER SIDEBAR - Executive Control Panel
+       FILTER SIDEBAR - Bold High-Contrast
        ======================================== */
     .filter-card {
         background: #ffffff;
-        border: 1px solid #e2e8f0;
+        border: 2px solid #e2e8f0;
         border-radius: 16px;
         padding: 24px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
         font-family: 'Montserrat', sans-serif;
     }
 
     .filter-header {
         padding-bottom: 16px;
-        border-bottom: 1px solid #f1f5f9;
+        border-bottom: 2px solid #f1f5f9;
         margin-bottom: 16px;
     }
 
     .filter-header h5 {
-        font-size: 0.65rem;
-        font-weight: 700;
+        font-size: 0.75rem;
+        font-weight: 800;
         text-transform: uppercase;
-        letter-spacing: 0.15em;
-        color: #94a3b8;
+        letter-spacing: 0.1em;
+        color: #000000;
         margin: 0;
     }
 
@@ -252,16 +220,19 @@ $this->assign('title', 'The Garage');
     }
 
     .filter-accordion-title {
-        font-family: 'Playfair Display', serif;
-        font-size: 0.95rem;
-        font-weight: 600;
-        color: #0f172a;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #000000;
         margin: 0;
     }
 
     .filter-accordion-toggle {
         font-size: 0.8rem;
-        color: #9ca3af;
+        font-weight: 600;
+        color: #475569;
     }
 
     .filter-accordion-content {
@@ -283,80 +254,78 @@ $this->assign('title', 'The Garage');
     .filter-list-item {
         display: flex;
         align-items: center;
-        padding: 8px 0;
+        padding: 10px 0;
         cursor: pointer;
-        color: #64748b;
-        font-size: 0.85rem;
+        color: #1e293b;
+        font-size: 0.9rem;
+        font-weight: 500;
         transition: all 0.2s ease;
     }
 
     .filter-list-item:hover {
-        color: #0f172a;
+        color: #000000;
     }
 
     .filter-list-item.active {
-        color: #0f172a;
-        font-weight: 600;
+        color: #000000;
+        font-weight: 700;
     }
 
     .filter-list-item.active::before {
         content: '';
-        width: 8px;
-        height: 8px;
-        background: #0f172a;
+        width: 10px;
+        height: 10px;
+        background: #000000;
         border-radius: 2px;
-        margin-right: 10px;
+        margin-right: 12px;
     }
 
     /* ========================================
-       GRID CAR CARDS - Luxury Physics
+       HORIZONTAL CAR CARDS - Premium Layout
        ======================================== */
     .car-item {
-        height: 100%;
+        width: 100%;
     }
 
     .car-card {
-        /* Studio Atmosphere - Vignette background */
-        background: radial-gradient(circle at center, #ffffff 0%, #f8fafc 100%);
+        background: #ffffff;
         border-radius: 16px;
         overflow: hidden;
         display: flex;
         flex-direction: column;
         font-family: 'Montserrat', sans-serif;
-        /* Phantom Borders */
-        border: 1px solid #f1f5f9;
-        height: 100%;
-        /* Hover transition */
-        transition: transform 0.3s ease-out, box-shadow 0.3s ease-out, border-color 0.3s ease-out;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    @media (min-width: 768px) {
+        .car-card {
+            flex-direction: row;
+            min-height: 220px;
+        }
     }
 
     .car-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-        /* Phantom border disappears on hover */
-        border-color: transparent;
+        transform: translateY(-4px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
     }
 
-    /* Car Image - 16:9 Aspect Ratio with Inner Shadow */
+    /* Car Image Section - 40% Width */
     .car-image-container {
         width: 100%;
-        aspect-ratio: 16 / 9;
+        height: 200px;
         position: relative;
         overflow: hidden;
         flex-shrink: 0;
-        border-radius: 16px 16px 0 0;
     }
 
-    /* Inner shadow overlay for image blend */
-    .car-image-container::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 40px;
-        background: linear-gradient(to bottom, transparent, rgba(248, 250, 252, 0.5));
-        pointer-events: none;
+    @media (min-width: 768px) {
+        .car-image-container {
+            width: 40%;
+            height: auto;
+            min-height: 220px;
+        }
     }
 
     .car-image {
@@ -370,29 +339,28 @@ $this->assign('title', 'The Garage');
         transform: scale(1.05);
     }
 
-    /* Availability Badge - Ghost Style */
+    /* Availability Badge - SOLID Bold Style */
     .availability-badge {
         position: absolute;
         top: 12px;
         left: 12px;
-        padding: 5px 10px;
+        padding: 6px 14px;
         border-radius: 6px;
-        font-size: 0.6rem;
+        font-size: 0.7rem;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         z-index: 5;
-        background: transparent;
     }
 
     .badge-available {
-        border: 1.5px solid #10b981;
-        color: #10b981;
+        background: #059669;
+        color: #ffffff;
     }
 
     .badge-maintenance {
-        border: 1.5px solid #ef4444;
-        color: #ef4444;
+        background: #dc2626;
+        color: #ffffff;
     }
 
     /* Special Badges - Top Right */
@@ -400,9 +368,9 @@ $this->assign('title', 'The Garage');
         position: absolute;
         top: 12px;
         right: 12px;
-        padding: 6px 10px;
+        padding: 6px 12px;
         border-radius: 6px;
-        font-size: 0.65rem;
+        font-size: 0.7rem;
         font-weight: 700;
         text-transform: uppercase;
         z-index: 5;
@@ -418,32 +386,60 @@ $this->assign('title', 'The Garage');
         color: white;
     }
 
-    /* Car Details */
+    /* Car Details Section - 60% Width */
     .car-details {
         flex: 1;
-        padding: 20px;
+        padding: 24px;
         display: flex;
         flex-direction: column;
+        justify-content: space-between;
     }
 
-    /* Car Category - HIDDEN (Redundant) */
+    @media (min-width: 768px) {
+        .car-details {
+            width: 60%;
+        }
+    }
+
+    /* Car Category - HIDDEN */
     .car-category {
         display: none;
     }
 
+    /* Car Name - ExtraBold */
     .car-name {
-        font-size: 1.1rem;
-        font-weight: 700;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.4rem;
+        font-weight: 800;
         color: #0f172a;
-        margin: 0 0 4px;
+        margin: 0 0 8px;
     }
 
-    /* Luxury Serif Price Tag */
+    /* Reviews Stars */
+    .car-reviews {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 16px;
+    }
+
+    .car-reviews .stars {
+        color: #f59e0b;
+        font-size: 0.85rem;
+    }
+
+    .car-reviews .count {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.8rem;
+        color: #64748b;
+    }
+
+    /* Bold Punchy Price Tag - Balanced */
     .car-price {
-        font-family: 'Playfair Display', serif;
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #0f172a;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: #1e3a5f;
         margin-bottom: 12px;
     }
 
@@ -454,7 +450,7 @@ $this->assign('title', 'The Garage');
         font-size: 0.7rem;
     }
 
-    /* Specs Row */
+    /* Specs Row - Readable Inter */
     .car-specs {
         display: flex;
         flex-wrap: wrap;
@@ -466,13 +462,33 @@ $this->assign('title', 'The Garage');
         display: flex;
         align-items: center;
         gap: 6px;
-        font-size: 0.75rem;
-        color: #64748b;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: #475569;
     }
 
     .spec-item i {
-        color: #94a3b8;
-        font-size: 0.8rem;
+        color: #64748b;
+        font-size: 0.85rem;
+    }
+
+    /* Footer: Price + Actions */
+    .car-footer {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: auto;
+        padding-top: 16px;
+        border-top: 1px solid #f1f5f9;
+    }
+
+    @media (min-width: 768px) {
+        .car-footer {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+        }
     }
 
     /* Action Row */
@@ -554,12 +570,11 @@ $this->assign('title', 'The Garage');
     }
 </style>
 
-<!-- Hero Section - Cinematic Garage -->
+<!-- Hero Section - Ferrari Banner -->
 <section class="catalog-hero">
-    <div class="hero-content">
-        <div class="hero-eyebrow">Explore Our Collection</div>
-        <h1 class="hero-title">The <span>Garage</span></h1>
-        <p class="hero-subtitle">Unveil the Engineering.</p>
+    <div class="container text-center position-relative" style="z-index: 1;">
+        <h1 class="display-5 mb-2 hero-title">The <span>Garage</span></h1>
+        <p class="lead hero-subtitle">Unveil the Engineering.</p>
     </div>
 </section>
 
@@ -602,13 +617,13 @@ $this->assign('title', 'The Garage');
                         <div class="filter-accordion-content">
                             <ul class="filter-list">
                                 <li class="filter-list-item active" onclick="filterAvailability('all', this)">
-                                    <span class="me-2">📋</span> All Cars
+                                    All Cars
                                 </li>
                                 <li class="filter-list-item" onclick="filterAvailability('available', this)">
-                                    <span class="me-2">🟢</span> Available
+                                    Available
                                 </li>
                                 <li class="filter-list-item" onclick="filterAvailability('maintenance', this)">
-                                    <span class="me-2">🔴</span> Maintenance
+                                    Maintenance
                                 </li>
                             </ul>
                         </div>
@@ -628,49 +643,54 @@ $this->assign('title', 'The Garage');
                     </div>
                 </div>
 
-                <div class="car-grid">
+                <div class="car-list">
                     <?php foreach ($cars as $car): ?>
                         <div class="car-item" data-category="<?= h($car->category ? $car->category->name : 'Uncategorized') ?>" data-availability="<?= h($car->availability) ?>">
                             <div class="car-card">
                                 
-                                <!-- Car Image -->
+                                <!-- Car Image - 40% Width -->
                                 <div class="car-image-container">
                                     <?php if ($car->image): ?>
                                         <?= $this->Html->image($car->image, ['class' => 'car-image', 'alt' => $car->car_model]) ?>
                                     <?php else: ?>
-                                        <div class="car-image d-flex align-items-center justify-content-center bg-secondary">
+                                        <div class="car-image d-flex align-items-center justify-content-center bg-secondary" style="height:100%;">
                                             <i class="fas fa-car fa-3x text-white opacity-50"></i>
                                         </div>
                                     <?php endif; ?>
 
                                     <!-- Availability Badge -->
                                     <?php if ($car->availability === 'maintenance'): ?>
-                                        <span class="availability-badge badge-maintenance">🔴 Maintenance</span>
+                                        <span class="availability-badge badge-maintenance">Maintenance</span>
                                     <?php else: ?>
-                                        <span class="availability-badge badge-available">🟢 Available</span>
+                                        <span class="availability-badge badge-available">Available</span>
                                     <?php endif; ?>
 
                                     <!-- Special Badges -->
                                     <?php if ($car->price_per_day >= 300): ?>
-                                        <span class="special-badge badge-hot">🔥 Premium</span>
+                                        <span class="special-badge badge-hot">Premium</span>
                                     <?php elseif ($car->id % 3 === 0): ?>
-                                        <span class="special-badge badge-top-rated">⭐ Top Rated</span>
+                                        <span class="special-badge badge-top-rated">Top Rated</span>
                                     <?php endif; ?>
                                 </div>
 
-                                <!-- Car Details -->
+                                <!-- Car Details - 60% Width -->
                                 <div class="car-details">
-                                    <span class="car-category" style="background: <?= h($car->badge_color ?: '#3b82f6') ?>20; color: <?= h($car->badge_color ?: '#3b82f6') ?>;">
-                                        <?= h($car->category ? $car->category->name : 'Car') ?>
-                                    </span>
-                                    
-                                    <h3 class="car-name"><?= h($car->brand . ' ' . $car->car_model) ?></h3>
-                                    <div class="car-price">
-                                        RM <?= number_format($car->price_per_day, 2) ?>
-                                        <small>/ day</small>
+                                    <!-- Header: Name + Reviews -->
+                                    <div class="car-header">
+                                        <h3 class="car-name"><?= h($car->brand . ' ' . $car->car_model) ?></h3>
+                                        <div class="car-reviews">
+                                            <span class="stars">
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star-half-alt"></i>
+                                            </span>
+                                            <span class="count">(<?= rand(12, 89) ?> reviews)</span>
+                                        </div>
                                     </div>
 
-                                    <!-- Specs -->
+                                    <!-- Specs Row -->
                                     <div class="car-specs">
                                         <div class="spec-item">
                                             <i class="fas fa-cogs"></i>
@@ -686,20 +706,26 @@ $this->assign('title', 'The Garage');
                                         </div>
                                     </div>
 
-                                    <!-- Actions -->
-                                    <div class="car-actions">
-                                        <?php if ($car->availability !== 'maintenance'): ?>
-                                            <a href="<?= $this->Url->build(['controller' => 'Bookings', 'action' => 'add', $car->id]) ?>" class="btn-book">
-                                                Book Now
-                                            </a>
-                                        <?php else: ?>
-                                            <button class="btn-book disabled" disabled>
-                                                Maintenance
+                                    <!-- Footer: Price + Actions -->
+                                    <div class="car-footer">
+                                        <div class="car-price">
+                                            RM <?= number_format($car->price_per_day, 2) ?>
+                                            <small>/ day</small>
+                                        </div>
+                                        <div class="car-actions">
+                                            <?php if ($car->availability !== 'maintenance'): ?>
+                                                <a href="<?= $this->Url->build(['controller' => 'Bookings', 'action' => 'add', $car->id]) ?>" class="btn-book">
+                                                    Book Now
+                                                </a>
+                                            <?php else: ?>
+                                                <button class="btn-book disabled" disabled>
+                                                    Maintenance
+                                                </button>
+                                            <?php endif; ?>
+                                            <button type="button" class="btn-specs" onclick="showCarModal(<?= $car->id ?>)">
+                                                <i class="fas fa-info-circle"></i>
                                             </button>
-                                        <?php endif; ?>
-                                        <button type="button" class="btn-specs" onclick="showCarModal(<?= $car->id ?>)">
-                                            <i class="fas fa-info-circle"></i>
-                                        </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -711,43 +737,72 @@ $this->assign('title', 'The Garage');
     </div>
 </section>
 
-<!-- Car Details Modal -->
-<div id="carModal" class="car-modal" onclick="closeModalOutside(event)">
-    <div class="car-modal-content">
-        <button class="car-modal-close" onclick="closeCarModal()">&times;</button>
-        <div class="car-modal-body">
-            <div class="car-modal-image" id="modalImage"></div>
-            <div class="car-modal-details">
-                <span class="badge rounded-pill mb-2" id="modalBadge">Category</span>
-                <h2 class="car-modal-title" id="modalTitle">Car Name</h2>
-                <div class="car-modal-price" id="modalPrice">RM 0 / day</div>
-
-                <div class="car-modal-specs">
-                    <div class="spec-row">
-                        <i class="fas fa-tachometer-alt"></i>
-                        <span id="modalEngine">Engine</span>
+<!-- Premium Spec Sheet Modal -->
+<div id="carModal" class="spec-modal" onclick="closeModalOutside(event)">
+    <div class="spec-modal-content">
+        <!-- Close Button -->
+        <button class="spec-modal-close" onclick="closeCarModal()">
+            <i class="fas fa-times"></i>
+        </button>
+        
+        <!-- Modal Body: 50/50 Split -->
+        <div class="spec-modal-body">
+            <!-- Left: Full-Height Image -->
+            <div class="spec-modal-image" id="modalImage"></div>
+            
+            <!-- Right: Details -->
+            <div class="spec-modal-details">
+                <!-- Header -->
+                <div class="spec-header">
+                    <h2 class="spec-title" id="modalTitle">Car Name</h2>
+                    <div class="spec-reviews">
+                        <span class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </span>
+                        <span class="count">(43 reviews)</span>
                     </div>
-                    <div class="spec-row">
-                        <i class="fas fa-stopwatch"></i>
-                        <span id="modalZeroSixty">0-60</span>
-                    </div>
-                    <div class="spec-row">
-                        <i class="fas fa-cogs"></i>
-                        <span id="modalTransmission">Transmission</span>
-                    </div>
-                    <div class="spec-row">
-                        <i class="fas fa-chair"></i>
-                        <span id="modalSeats">Seats</span>
-                    </div>
-                    <div class="spec-row">
-                        <i class="fas fa-calendar"></i>
-                        <span id="modalYear">Year</span>
+                    <!-- Badges -->
+                    <div class="spec-badges" id="modalBadges">
+                        <span class="spec-badge" id="modalBadge">Category</span>
                     </div>
                 </div>
 
-                <div class="car-modal-actions">
-                    <a href="#" id="modalBookBtn" class="btn btn-primary rounded-pill fw-bold">Book This Car</a>
-                    <a href="#" id="modalReviewBtn" class="btn btn-outline-secondary rounded-pill">View Reviews</a>
+                <!-- 2x2 Specs Grid -->
+                <div class="spec-grid">
+                    <div class="spec-card">
+                        <div class="spec-label">ENGINE</div>
+                        <div class="spec-value" id="modalEngine">1.3L</div>
+                    </div>
+                    <div class="spec-card">
+                        <div class="spec-label">0-100 KM/H</div>
+                        <div class="spec-value" id="modalZeroSixty">11s</div>
+                    </div>
+                    <div class="spec-card">
+                        <div class="spec-label">SEATS</div>
+                        <div class="spec-value" id="modalSeats">4</div>
+                    </div>
+                    <div class="spec-card">
+                        <div class="spec-label">YEAR</div>
+                        <div class="spec-value" id="modalYear">2020</div>
+                    </div>
+                </div>
+
+                <!-- Footer: Price + Actions -->
+                <div class="spec-footer">
+                    <div class="spec-price">
+                        <span class="price-amount" id="modalPrice">RM 120.00</span>
+                        <span class="price-unit">/ day</span>
+                    </div>
+                    <a href="#" id="modalBookBtn" class="spec-book-btn">
+                        Book This Car
+                    </a>
+                    <a href="#" id="modalReviewBtn" class="spec-review-link">
+                        Read Full Reviews →
+                    </a>
                 </div>
             </div>
         </div>
@@ -755,120 +810,253 @@ $this->assign('title', 'The Garage');
 </div>
 
 <style>
-    /* Modal Styles */
-    .car-modal {
+    /* ========================================
+       PREMIUM SPEC SHEET MODAL
+       ======================================== */
+    .spec-modal {
         display: none;
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.7);
-        backdrop-filter: blur(8px);
+        background: rgba(0, 0, 0, 0.75);
+        backdrop-filter: blur(10px);
         z-index: 9999;
         align-items: center;
         justify-content: center;
+        padding: 20px;
     }
 
-    .car-modal.show {
+    .spec-modal.show {
         display: flex;
     }
 
-    .car-modal-content {
-        background: rgba(255, 255, 255, 0.98);
-        backdrop-filter: blur(20px);
+    .spec-modal-content {
+        background: #ffffff;
         border-radius: 24px;
-        max-width: 800px;
-        width: 90%;
+        max-width: 960px;
+        width: 100%;
         max-height: 90vh;
         overflow: hidden;
         position: relative;
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4);
     }
 
-    .car-modal-close {
+    .spec-modal-close {
         position: absolute;
-        top: 15px;
+        top: 20px;
         right: 20px;
-        font-size: 2rem;
-        background: none;
+        width: 44px;
+        height: 44px;
+        background: rgba(255, 255, 255, 0.95);
         border: none;
+        border-radius: 50%;
         cursor: pointer;
         color: #64748b;
+        font-size: 1.2rem;
         z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
-    .car-modal-close:hover {
+    .spec-modal-close:hover {
+        background: #ffffff;
         color: #ef4444;
+        transform: scale(1.1);
     }
 
-    .car-modal-body {
+    /* Modal Body: 50/50 Split */
+    .spec-modal-body {
         display: flex;
         flex-direction: column;
+        min-height: 500px;
     }
 
     @media (min-width: 768px) {
-        .car-modal-body {
+        .spec-modal-body {
             flex-direction: row;
         }
     }
 
-    .car-modal-image {
-        flex: 1;
-        min-height: 250px;
+    /* Left: Full-Height Image */
+    .spec-modal-image {
+        width: 100%;
+        height: 280px;
         background-size: cover;
         background-position: center;
         background-color: #1e293b;
     }
 
-    .car-modal-details {
-        flex: 1;
-        padding: 30px;
+    @media (min-width: 768px) {
+        .spec-modal-image {
+            width: 50%;
+            height: auto;
+            min-height: 500px;
+        }
+    }
+
+    /* Right: Details */
+    .spec-modal-details {
+        width: 100%;
+        padding: 32px;
+        display: flex;
+        flex-direction: column;
         font-family: 'Montserrat', sans-serif;
     }
 
-    .car-modal-title {
+    @media (min-width: 768px) {
+        .spec-modal-details {
+            width: 50%;
+            padding: 40px;
+        }
+    }
+
+    /* Header */
+    .spec-header {
+        margin-bottom: 24px;
+    }
+
+    .spec-title {
+        font-family: 'Montserrat', sans-serif;
         font-weight: 800;
-        font-size: 1.8rem;
-        color: #1e293b;
-        margin-bottom: 5px;
+        font-size: 2rem;
+        color: #0f172a;
+        margin: 0 0 8px;
     }
 
-    .car-modal-price {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #3b82f6;
-        margin-bottom: 20px;
-    }
-
-    .car-modal-specs {
-        display: grid;
-        gap: 12px;
-        margin-bottom: 25px;
-    }
-
-    .spec-row {
+    .spec-reviews {
         display: flex;
         align-items: center;
-        gap: 12px;
-        color: #475569;
+        gap: 8px;
+        margin-bottom: 12px;
     }
 
-    .spec-row i {
-        width: 24px;
-        color: #3b82f6;
+    .spec-reviews .stars {
+        color: #f59e0b;
+        font-size: 0.9rem;
     }
 
-    .car-modal-actions {
+    .spec-reviews .count {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.85rem;
+        color: #64748b;
+    }
+
+    .spec-badges {
         display: flex;
-        flex-direction: column;
-        gap: 10px;
+        flex-wrap: wrap;
+        gap: 8px;
     }
 
-    @media (min-width: 768px) {
-        .car-modal-actions {
-            flex-direction: row;
-        }
+    .spec-badge {
+        background: #f1f5f9;
+        color: #475569;
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 6px 12px;
+        border-radius: 20px;
+    }
+
+    /* 2x2 Specs Grid */
+    .spec-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+
+    .spec-card {
+        background: #f8fafc;
+        border: 1px solid #f1f5f9;
+        border-radius: 12px;
+        padding: 16px;
+        text-align: center;
+    }
+
+    .spec-label {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.6rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #94a3b8;
+        margin-bottom: 4px;
+    }
+
+    .spec-value {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    /* Footer: Price + Actions */
+    .spec-footer {
+        margin-top: auto;
+    }
+
+    .spec-price {
+        margin-bottom: 16px;
+    }
+
+    .price-amount {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 2.5rem;
+        color: #1e3a5f;
+    }
+
+    .price-unit {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 500;
+        font-size: 1rem;
+        color: #94a3b8;
+    }
+
+    .spec-book-btn {
+        display: block;
+        width: 100%;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        color: #ffffff;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        text-align: center;
+        text-decoration: none;
+        padding: 18px 24px;
+        border-radius: 14px;
+        transition: all 0.3s ease;
+    }
+
+    .spec-book-btn:hover {
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.3);
+    }
+
+    .spec-review-link {
+        display: block;
+        text-align: center;
+        margin-top: 16px;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: #64748b;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+    .spec-review-link:hover {
+        color: #0f172a;
     }
 </style>
 
@@ -901,16 +1089,14 @@ $this->assign('title', 'The Garage');
         if (!car) return;
 
         document.getElementById('modalTitle').textContent = car.brand + ' ' + car.car_model;
-        document.getElementById('modalPrice').textContent = 'RM ' + parseFloat(car.price_per_day).toFixed(2) + ' / day';
+        document.getElementById('modalPrice').textContent = 'RM ' + parseFloat(car.price_per_day).toFixed(2);
         document.getElementById('modalEngine').textContent = car.engine || 'N/A';
         document.getElementById('modalZeroSixty').textContent = car.zero_to_sixty || 'N/A';
-        document.getElementById('modalTransmission').textContent = car.transmission || 'Auto';
-        document.getElementById('modalSeats').textContent = (car.seats || 'N/A') + ' Seats';
+        document.getElementById('modalSeats').textContent = car.seats || 'N/A';
         document.getElementById('modalYear').textContent = car.year || 'N/A';
 
         const badge = document.getElementById('modalBadge');
         badge.textContent = car.category;
-        badge.style.background = car.badge_color || '#3b82f6';
 
         const imageDiv = document.getElementById('modalImage');
         if (car.image) {

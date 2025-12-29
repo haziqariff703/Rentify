@@ -25,8 +25,8 @@ foreach ($bookings as $booking) {
 ?>
 
 <style>
-    /* Google Fonts - Montserrat + Playfair Display */
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap');
+    /* Google Fonts - Montserrat (Bold & Punchy) + Inter */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@500;600;700;800;900&display=swap');
 
     /* ========================================
        PAGE WRAPPER
@@ -44,80 +44,96 @@ foreach ($bookings as $booking) {
     }
 
     /* ========================================
-       DARK NAVY HEADER SECTION
+       MIDNIGHT HEADER - McLaren Textured
        ======================================== */
-    .navy-header {
-        background: #0f172a;
-        padding: 50px 0 60px;
+    .midnight-header {
+        background-image:
+            linear-gradient(to bottom, 
+                rgba(15, 23, 42, 0.95) 0%,
+                rgba(15, 23, 42, 0.90) 40%,
+                rgba(15, 23, 42, 0.60) 100%),
+            url('<?= $this->Url->image('my_mclaren.jpg') ?>');
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        padding: 80px 0 100px;
         position: relative;
     }
 
-    .header-subtitle {
+    .header-eyebrow {
         font-family: 'Montserrat', sans-serif;
         font-size: 0.7rem;
-        font-weight: 600;
+        font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 4px;
-        color: #64748b;
-        margin-bottom: 8px;
+        letter-spacing: 0.25em;
+        color: rgba(147, 197, 253, 0.4);
+        margin-bottom: 12px;
         text-align: center;
     }
 
     .header-title {
-        font-family: 'Playfair Display', serif;
-        font-weight: 700;
-        font-size: 2.8rem;
-        letter-spacing: -1px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 3rem;
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
         color: #ffffff;
         margin: 0;
         text-align: center;
     }
 
+    @media (min-width: 768px) {
+        .header-title {
+            font-size: 4.5rem;
+        }
+    }
+
     /* ========================================
-       STATS CARDS - Floating Overlap
+       FLOATING STATS CARDS - 3D Pop
        ======================================== */
     .stats-cards {
         display: flex;
         justify-content: center;
-        gap: 24px;
-        margin-top: -3rem;
+        gap: 0;
+        margin-top: -4rem;
         position: relative;
         z-index: 10;
     }
 
-    .stat-card {
+    .stats-container {
         background: #ffffff;
-        border-radius: 16px;
-        padding: 24px 40px;
-        min-width: 200px;
-        text-align: center;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        display: flex;
+        box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+        overflow: hidden;
     }
 
-    .stat-label {
-        font-family: 'Playfair Display', serif;
-        font-size: 0.75rem;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: #64748b;
-        margin-bottom: 8px;
+    .stat-card {
+        padding: 28px 48px;
+        text-align: center;
+        border-right: 1px solid #f1f5f9;
+    }
+
+    .stat-card:last-child {
+        border-right: none;
     }
 
     .stat-value {
-        font-family: 'Courier New', monospace;
-        font-size: 2rem;
-        font-weight: 700;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 3rem;
+        font-weight: 900;
         color: #0f172a;
+        line-height: 1;
+        margin-bottom: 8px;
     }
 
-    .stat-value.active {
-        color: #2563eb;
-    }
-
-    .stat-value.history {
-        color: #64748b;
+    .stat-label {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.6rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: #94a3b8;
     }
 
     /* ========================================
@@ -743,24 +759,26 @@ foreach ($bookings as $booking) {
 <!-- Executive Bookings Wrapper -->
 <div class="bookings-executive-wrapper">
 
-    <!-- Dark Navy Header Section -->
-    <div class="navy-header">
+    <!-- Midnight Header - McLaren Textured -->
+    <div class="midnight-header">
         <div class="container">
-            <div class="header-subtitle">Manage Your Journeys</div>
+            <div class="header-eyebrow">Manage Your Journeys</div>
             <h1 class="header-title">My Reservations</h1>
         </div>
     </div>
 
-    <!-- Stats Cards -->
+    <!-- Floating Stats Cards -->
     <div class="container">
         <div class="stats-cards">
-            <div class="stat-card">
-                <div class="stat-label">Upcoming Trips</div>
-                <div class="stat-value active"><?= count($activeBookings) ?></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Total History</div>
-                <div class="stat-value history"><?= count($historyBookings) ?></div>
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-value"><?= count($activeBookings) ?></div>
+                    <div class="stat-label">Upcoming Trips</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value"><?= count($historyBookings) ?></div>
+                    <div class="stat-label">Total History</div>
+                </div>
             </div>
         </div>
     </div>
