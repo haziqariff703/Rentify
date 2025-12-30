@@ -11,15 +11,18 @@ $this->assign('title', 'The Garage');
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@500;600;700;800;900&display=swap');
 
     /* ========================================
-       DASHBOARD LAYOUT - Fixed Height Container
+       DASHBOARD LAYOUT - Full Width Container
        ======================================== */
     .platinum-studio-wrapper {
-        background-color: #f1f5f9;
-        background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px);
-        background-size: 24px 24px;
-        height: 80vh;
-        overflow: hidden;
-        padding: 30px 0;
+        background-color: #f8fafc;
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;
+        margin-right: -50vw;
+        padding: 30px 48px;
+        min-height: 80vh;
     }
 
     /* Dashboard Row - 25% / 75% Split */
@@ -127,57 +130,64 @@ $this->assign('title', 'The Garage');
     }
 
     /* ========================================
-       HERO SECTION - FERRARI BANNER
+       HERO SECTION - FULL WIDTH FLEET BANNER
        ======================================== */
-    .catalog-hero {
-        background-color: #0d1117;
-        background-image: url('<?= $this->Url->image('ferrari-background.png') ?>');
-        background-size: 80%;
-        background-position: center bottom;
+    .fleet-banner {
+        background-image:
+            linear-gradient(to bottom, 
+                rgba(15, 23, 42, 0.95) 0%,
+                rgba(15, 23, 42, 0.90) 40%,
+                rgba(15, 23, 42, 0.60) 100%),
+            url('<?= $this->Url->image('ferrari-background.png') ?>');
+        background-size: cover;
+        background-position: center center;
         background-repeat: no-repeat;
-        padding: 80px 0 140px;
+        
+        /* Full Width Edge-to-Edge */
+        width: 100vw;
         position: relative;
-        border-radius: 30px;
-        overflow: hidden;
-        margin-bottom: 30px;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;
+        margin-right: -50vw;
         margin-top: -3rem;
-        box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
-        z-index: 10;
-    }
-
-    .catalog-hero::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, transparent 50%, rgba(0, 0, 0, 0.5) 100%);
-        z-index: 0;
-        pointer-events: none;
-    }
-
-    .hero-title {
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 800;
-        font-size: 2.5rem;
-        text-transform: uppercase;
-        letter-spacing: 3px;
+        
+        padding: 100px 0 120px;
+        text-align: center;
         color: white;
-        text-shadow: 0 2px 10px rgba(0,0,0,0.8);
-        margin: 0 0 8px;
+        margin-bottom: 40px;
     }
 
-    .hero-title span {
-        color: #ef4444;
+    .fleet-eyebrow {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: rgba(147, 197, 253, 0.7);
+        margin-bottom: 16px;
     }
 
-    .hero-subtitle {
+    .fleet-title {
         font-family: 'Montserrat', sans-serif;
-        font-weight: 400;
-        letter-spacing: 1px;
-        color: rgba(255,255,255,0.85);
-        text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+        font-weight: 900;
+        font-size: 3.5rem;
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
+        color: #ffffff;
+        margin: 0;
+        line-height: 1;
+    }
+
+    @media (min-width: 768px) {
+        .fleet-title {
+            font-size: 5rem;
+        }
+    }
+
+    .fleet-title .text-red {
+        color: #ef4444;
+        text-shadow: 0 0 40px rgba(239, 68, 68, 0.4);
     }
 
     /* ========================================
@@ -570,11 +580,11 @@ $this->assign('title', 'The Garage');
     }
 </style>
 
-<!-- Hero Section - Ferrari Banner -->
-<section class="catalog-hero">
-    <div class="container text-center position-relative" style="z-index: 1;">
-        <h1 class="display-5 mb-2 hero-title">The <span>Garage</span></h1>
-        <p class="lead hero-subtitle">Unveil the Engineering.</p>
+<!-- Full Width Fleet Banner -->
+<section class="fleet-banner">
+    <div class="container text-center">
+        <p class="fleet-eyebrow">Unveil the Engineering</p>
+        <h1 class="fleet-title">THE <span class="text-red">GARAGE</span></h1>
     </div>
 </section>
 

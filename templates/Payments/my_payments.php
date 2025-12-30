@@ -20,8 +20,8 @@ foreach ($payments as $payment) {
 ?>
 
 <style>
-    /* Google Fonts - Montserrat + Playfair Display */
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap');
+    /* Google Fonts - Montserrat (Bold & Punchy) + Inter */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@500;600;700;800;900&display=swap');
 
     /* ========================================
        PAGE WRAPPER
@@ -39,78 +39,97 @@ foreach ($payments as $payment) {
     }
 
     /* ========================================
-       DARK NAVY HEADER SECTION
+       ENGINE HERO HEADER
        ======================================== */
-    .navy-header {
-        background: #0f172a;
-        padding: 50px 0 60px;
+    .engine-header {
+        background-image:
+            linear-gradient(to bottom, 
+                rgba(15, 23, 42, 0.95) 0%,
+                rgba(15, 23, 42, 0.90) 40%,
+                rgba(15, 23, 42, 0.60) 100%),
+            url('<?= $this->Url->image('my_engine.jpg') ?>');
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        padding: 80px 0 100px;
         position: relative;
+        text-align: center;
     }
 
-    /* REMOVED: No fade gradient - clean hard line */
-
-    .header-subtitle {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.7rem;
+    .header-eyebrow {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.75rem;
         font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 4px;
-        color: #64748b;
-        margin-bottom: 8px;
-        text-align: center;
+        letter-spacing: 0.25em;
+        color: rgba(147, 197, 253, 0.6);
+        margin-bottom: 12px;
     }
 
     .header-title {
-        font-family: 'Playfair Display', serif;
-        font-weight: 700;
-        font-size: 2.8rem;
-        letter-spacing: -1px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 3rem;
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
         color: #ffffff;
         margin: 0;
-        text-align: center;
+    }
+
+    @media (min-width: 768px) {
+        .header-title {
+            font-size: 4.5rem;
+        }
     }
 
     /* ========================================
-       STATS CARDS - Floating Overlap
+       UNIFIED STATS CONTAINER
        ======================================== */
-    .stats-cards {
+    .stats-container {
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+        max-width: 700px;
+        margin: -4rem auto 40px;
         display: flex;
-        justify-content: center;
-        gap: 24px;
-        margin-top: -3rem;
+        align-items: center;
+        justify-content: space-evenly;
+        padding: 28px 0;
         position: relative;
         z-index: 10;
     }
 
-    .stat-card {
-        background: #ffffff;
-        border-radius: 16px;
-        padding: 24px 40px;
-        min-width: 200px;
+    .stat-item {
         text-align: center;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-        border: 1px solid #e2e8f0;
+        flex: 1;
     }
 
-    .stat-label {
-        font-family: 'Playfair Display', serif;
-        font-size: 0.75rem;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: #64748b;
-        margin-bottom: 8px;
+    .stat-divider {
+        width: 1px;
+        height: 50px;
+        background-color: #e2e8f0;
     }
 
     .stat-value {
-        font-family: 'Courier New', monospace;
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: #0f172a;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 2.5rem;
+        font-weight: 900;
+        color: #1e293b;
+        line-height: 1;
+        margin-bottom: 8px;
     }
 
-    .stat-value.money {
+    .stat-value.text-emerald {
         color: #059669;
+    }
+
+    .stat-label {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.65rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #94a3b8;
     }
 
     /* ========================================
@@ -298,6 +317,57 @@ foreach ($payments as $payment) {
     }
 
     /* ========================================
+       PAGINATION - MODERN PILL BUTTONS
+       ======================================== */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        list-style: none;
+        padding: 0;
+        margin: 40px 0;
+    }
+
+    .pagination li a,
+    .pagination li span {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        color: #475569;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 12px 24px;
+        border-radius: 50px;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .pagination li a:hover {
+        background: #0f172a;
+        border-color: #0f172a;
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.2);
+    }
+
+    .pagination li.active span,
+    .pagination li.current span {
+        background: #0f172a;
+        border-color: #0f172a;
+        color: #ffffff;
+    }
+
+    .pagination li.disabled span {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    /* ========================================
        EMPTY STATE
        ======================================== */
     .payments-empty {
@@ -381,24 +451,29 @@ foreach ($payments as $payment) {
 <!-- Executive Payments Wrapper -->
 <div class="payments-executive-wrapper">
 
-    <!-- Dark Navy Header Section -->
-    <div class="navy-header">
+    <!-- Engine Hero Header -->
+    <div class="engine-header">
         <div class="container">
-            <div class="header-subtitle">Financial Records</div>
+            <div class="header-eyebrow">Financial Records</div>
             <h1 class="header-title">Payment History</h1>
         </div>
     </div>
 
-    <!-- Stats Cards -->
+    <!-- Unified Stats Container -->
     <div class="container">
-        <div class="stats-cards">
-            <div class="stat-card">
-                <div class="stat-label">Total Transactions</div>
+        <div class="stats-container">
+            <div class="stat-item">
                 <div class="stat-value"><?= $totalTransactions ?></div>
+                <div class="stat-label">Total Transactions</div>
             </div>
-            <div class="stat-card">
+
+            <div class="stat-divider"></div>
+
+            <div class="stat-item">
+                <div class="stat-value text-emerald">
+                    RM <?= number_format($totalValuePaid, 2) ?>
+                </div>
                 <div class="stat-label">Total Value Paid</div>
-                <div class="stat-value money">RM <?= number_format($totalValuePaid, 2) ?></div>
             </div>
         </div>
     </div>
