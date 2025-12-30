@@ -25,8 +25,8 @@ foreach ($invoices as $invoice) {
 ?>
 
 <style>
-    /* Google Fonts - Montserrat + Playfair Display */
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap');
+    /* Google Fonts - Montserrat (Bold & Punchy) + Inter */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@500;600;700;800;900&display=swap');
 
     /* ========================================
        PAGE WRAPPER
@@ -44,85 +44,101 @@ foreach ($invoices as $invoice) {
     }
 
     /* ========================================
-       DARK NAVY HEADER SECTION
+       MERCEDES HERO HEADER
        ======================================== */
-    .navy-header {
-        background: #0f172a;
-        padding: 50px 0 60px;
+    .mercedes-header {
+        background-image:
+            linear-gradient(to bottom, 
+                rgba(15, 23, 42, 0.95) 0%,
+                rgba(15, 23, 42, 0.90) 40%,
+                rgba(15, 23, 42, 0.60) 100%),
+            url('<?= $this->Url->image('my_mercedes.jpg') ?>');
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        padding: 80px 0 100px;
         position: relative;
+        text-align: center;
     }
 
-    /* REMOVED: No more fade gradient - clean hard line */
-
-    .header-subtitle {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.7rem;
+    .header-eyebrow {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.75rem;
         font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 4px;
-        color: #64748b;
-        margin-bottom: 8px;
-        text-align: center;
+        letter-spacing: 0.25em;
+        color: rgba(147, 197, 253, 0.6);
+        margin-bottom: 12px;
     }
 
     .header-title {
-        font-family: 'Playfair Display', serif;
-        font-weight: 700;
-        font-size: 2.8rem;
-        letter-spacing: -1px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 3rem;
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
         color: #ffffff;
-        margin: 0 0 40px;
-        text-align: center;
+        margin: 0;
+    }
+
+    @media (min-width: 768px) {
+        .header-title {
+            font-size: 4.5rem;
+        }
     }
 
     /* ========================================
-       FINANCIAL SUMMARY CARDS - Floating Overlap
+       UNIFIED STATS CONTAINER
        ======================================== */
-    .summary-cards {
+    .stats-container {
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+        max-width: 900px;
+        margin: -4rem auto 40px;
         display: flex;
-        justify-content: center;
-        gap: 24px;
-        margin-top: -3rem;
+        align-items: center;
+        justify-content: space-evenly;
+        padding: 28px 0;
         position: relative;
         z-index: 10;
     }
 
-    .summary-card {
-        background: #ffffff;
-        border-radius: 16px;
-        padding: 24px 32px;
-        min-width: 200px;
+    .stat-item {
         text-align: center;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-        border: 1px solid #e2e8f0;
+        flex: 1;
     }
 
-    .summary-label {
-        font-family: 'Playfair Display', serif;
-        font-size: 0.75rem;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: #64748b;
+    .stat-divider {
+        width: 1px;
+        height: 50px;
+        background-color: #e2e8f0;
+    }
+
+    .stat-value {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 2rem;
+        font-weight: 900;
+        color: #1e293b;
+        line-height: 1;
         margin-bottom: 8px;
     }
 
-    .summary-value {
-        font-family: 'Courier New', monospace;
-        font-size: 1.5rem;
-        font-weight: 700;
+    .stat-value.text-emerald {
+        color: #059669;
     }
 
-    .summary-value.outstanding {
+    .stat-value.text-red {
         color: #dc2626;
     }
 
-    .summary-value.spend {
-        color: #d4a017;
-    }
-
-    .summary-value.due-date {
-        color: #64748b;
+    .stat-label {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.65rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #94a3b8;
     }
 
     /* ========================================
@@ -472,34 +488,40 @@ foreach ($invoices as $invoice) {
 <!-- Executive Invoices Wrapper -->
 <div class="invoices-executive-wrapper">
 
-    <!-- Dark Navy Header Section -->
-    <div class="navy-header">
+    <!-- Mercedes Hero Header -->
+    <div class="mercedes-header">
         <div class="container">
-            <div class="header-subtitle">Billing & Payments</div>
+            <div class="header-eyebrow">Billing & Payments</div>
             <h1 class="header-title">My Invoices</h1>
         </div>
     </div>
 
-    <!-- Financial Summary Cards -->
+    <!-- Unified Stats Container -->
     <div class="container">
-        <div class="summary-cards">
-            <div class="summary-card">
-                <div class="summary-label">Outstanding Due</div>
-                <div class="summary-value outstanding">
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-value <?= $totalOutstanding > 0 ? 'text-red' : 'text-emerald' ?>">
                     RM <?= number_format($totalOutstanding, 2) ?>
                 </div>
+                <div class="stat-label">Outstanding Due</div>
             </div>
-            <div class="summary-card">
-                <div class="summary-label">Total Spend YTD</div>
-                <div class="summary-value spend">
+
+            <div class="stat-divider"></div>
+
+            <div class="stat-item">
+                <div class="stat-value">
                     RM <?= number_format($totalSpendYTD, 2) ?>
                 </div>
+                <div class="stat-label">Total Spend YTD</div>
             </div>
-            <div class="summary-card">
-                <div class="summary-label">Next Due Date</div>
-                <div class="summary-value due-date">
+
+            <div class="stat-divider"></div>
+
+            <div class="stat-item">
+                <div class="stat-value">
                     <?= $nextDueDate ? $nextDueDate->format('M d, Y') : '—' ?>
                 </div>
+                <div class="stat-label">Next Due Date</div>
             </div>
         </div>
     </div>

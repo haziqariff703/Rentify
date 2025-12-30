@@ -21,8 +21,13 @@
             </a>
         </div>
 
-        <!-- Right Side - Login/Get Started -->
-        <div class="d-flex align-items-center gap-2">
+        <!-- Right Side - About Us & Login/Get Started -->
+        <div class="d-flex align-items-center gap-3">
+            <!-- About Us Link -->
+            <a href="<?= $this->Url->build(['controller' => 'Pages', 'action' => 'display', 'about_us']) ?>" class="btn btn-link text-white text-decoration-none d-none d-md-inline" style="font-weight: 400;">
+                About Us
+            </a>
+
             <?php if ($identity): ?>
                 <div class="dropdown">
                     <a class="btn btn-link text-white text-decoration-none dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
