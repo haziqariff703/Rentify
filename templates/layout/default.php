@@ -47,12 +47,8 @@ $cakeDescription = 'Rentify - Premium Car Rental';
 
 <body class=" bg-light text-dark d-flex flex-column min-vh-100 position-relative pb-4">
 
-    <!-- Glassmorphism Sidebar - Conditional based on authentication -->
-    <?php if ($this->request->getAttribute('identity')): ?>
-        <?= $this->element('sidebar') ?>
-    <?php else: ?>
-        <?= $this->element('public_sidebar') ?>
-    <?php endif; ?>
+    <!-- Glassmorphism Sidebar -->
+    <?= $this->element('sidebar') ?>
 
     <!-- Header Element -->
     <?= $this->element('header') ?>

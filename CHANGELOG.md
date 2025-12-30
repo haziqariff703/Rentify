@@ -6,6 +6,11 @@ All notable changes to the Rentify project will be documented in this file.
 
 ### Added
 
+-   **Structural & Quality Improvements**
+    -   Created `BookingService` to handle complex business logic (pricing, tax, invoices) (`src/Service/BookingService.php`)
+    -   Created `StatusHelper` for consistent UI badges across templates (`src/View/Helper/StatusHelper.php`)
+-   **Policy Engine & Service Integration**
+
 -   **Policy Engine & Service Integration**
     -   Added 7 policy fields to `car_categories`: security_deposit, insurance_tier, insurance_daily_rate, chauffeur_available, chauffeur_daily_rate, gps_available, gps_daily_rate
     -   Added 4 service selection fields to `bookings`: has_chauffeur, has_gps, has_full_insurance, security_deposit_amount
@@ -27,9 +32,19 @@ All notable changes to the Rentify project will be documented in this file.
 
 ### Changed
 
+-   **Architectural Refactoring**
+    -   Consolidated `sidebar.php` and `public_sidebar.php` into a single unified element
+    -   Refactored `BookingsController` to use `BookingService` for cleaner action logic
+    -   Replaced inline status badge logic in templates with `StatusHelper`
+-   Updated `CarCategory` entity with new policy fields and `hasMany('Cars')` relationship
+
 -   Updated `CarCategory` entity with new policy fields and `hasMany('Cars')` relationship
 -   Updated `CarCategoriesTable` with validation rules for all policy fields
 -   Updated `BookingsTable` with service selection validation and application rules
+
+### Removed
+
+-   Deleted redundant `public_sidebar.php` element
 
 ## [2025-12-29]
 

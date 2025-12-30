@@ -198,12 +198,8 @@
 
 <body>
 
-    <!-- Glassmorphism Sidebar - Conditional based on authentication -->
-    <?php if ($this->request->getAttribute('identity')): ?>
-        <?= $this->element('sidebar') ?>
-    <?php else: ?>
-        <?= $this->element('public_sidebar') ?>
-    <?php endif; ?>
+    <!-- Glassmorphism Sidebar -->
+    <?= $this->element('sidebar') ?>
 
     <!-- Header -->
     <?= $this->element('header') ?>

@@ -77,16 +77,7 @@
                         <td><?= $payment->payment_date ? (is_object($payment->payment_date) ? $payment->payment_date->format('M d, Y') : date('M d, Y', strtotime($payment->payment_date))) : '-' ?>
                         </td>
                         <td>
-                            <?php
-                            $status = strtolower($payment->payment_status ?? '');
-                            $statusClass = 'pending';
-                            if (in_array($status, ['completed', 'paid', 'success']))
-                                $statusClass = 'completed';
-                            elseif (in_array($status, ['failed', 'cancelled', 'rejected']))
-                                $statusClass = 'cancelled';
-                            ?>
-                            <span
-                                class="status-badge <?= $statusClass ?>"><?= h(ucfirst($payment->payment_status)) ?></span>
+                            <?= $this->Status->paymentBadge($payment->payment_status) ?>
                         </td>
                         <td><?= $payment->created ? $payment->created->format('M d, Y') : '-' ?></td>
                         <td class="actions-cell">

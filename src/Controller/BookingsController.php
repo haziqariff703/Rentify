@@ -8,6 +8,17 @@ use Cake\I18n\FrozenDate;
 
 class BookingsController extends AppController
 {
+    /**
+     * @var \App\Service\BookingService
+     */
+    protected $BookingService;
+
+    public function initialize(): void
+    {
+        parent::initialize();
+        $this->BookingService = new \App\Service\BookingService();
+    }
+
     public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         parent::beforeFilter($event);
@@ -87,85 +98,32 @@ class BookingsController extends AppController
             $booking = $this->Bookings->patchEntity($booking, $this->request->getData());
 
             // 1. Validation: Overlap Check
-            $exists = $this->Bookings->exists([
-                'car_id' => $booking->car_id,
-                'booking_status IN' => ['confirmed', 'pending'],
-                'OR' => [
-                    ['start_date <=' => $booking->end_date, 'end_date >=' => $booking->start_date]
-                ]
-            ]);
+            $isAvailable = $this->BookingService->isCarAvailable(
+                (int)$booking->car_id,
+                $booking->start_date,
+                $booking->end_date
+            );
 
-            if ($exists) {
+            if (!$isAvailable) {
                 $this->Flash->error(__('This car is already booked for those dates. Please choose another date.'));
             } else {
                 // 2. Calculate Price
-                $startDate = $booking->start_date;
-                $endDate   = $booking->end_date;
+                /** @var \App\Model\Entity\Booking $booking */
+                $priceData = $this->BookingService->calculatePrice($booking);
 
-                // Inclusive days: (End - Start) + 1
-                $days = $endDate->diffInDays($startDate) + 1;
-
-                $car = $this->Bookings->Cars->get($booking->car_id, contain: ['Categories']);
-                $category = $car->category;
-
-                // --- CALCULATE ADD-ON COSTS ---
-                $chauffeurCost = 0;
-                $gpsCost = 0;
-                $insuranceCost = 0;
-
-                // Chauffeur Service
-                if ($this->request->getData('has_chauffeur') && $category && $category->chauffeur_available) {
-                    $chauffeurCost = (float)$category->chauffeur_daily_rate * $days;
-                    $booking->has_chauffeur = true;
-                } else {
-                    $booking->has_chauffeur = false;
-                }
-
-                // GPS Navigation
-                if ($this->request->getData('has_gps') && $category && $category->gps_available) {
-                    $gpsCost = (float)$category->gps_daily_rate * $days;
-                    $booking->has_gps = true;
-                } else {
-                    $booking->has_gps = false;
-                }
-
-                // Full Insurance
-                if ($this->request->getData('has_full_insurance') && $category) {
-                    $insuranceCost = (float)$category->insurance_daily_rate * $days;
-                    $booking->has_full_insurance = true;
-                } else {
-                    $booking->has_full_insurance = false;
-                }
-
-                // Security deposit (stored but not added to price)
-                $booking->security_deposit_amount = $category ? (float)$category->security_deposit : 0;
-
-                // --- FINANCIAL LOGIC ---
-                $baseCost = $days * $car->price_per_day;
-                $addonsCost = $chauffeurCost + $gpsCost + $insuranceCost;
-                $subtotal = $baseCost + $addonsCost;
-                $taxRate = 0.06; // 6% SST
-                $taxAmount = $subtotal * $taxRate;
-                $totalPrice = $subtotal + $taxAmount;
-
-                $booking->total_price = $totalPrice;
+                $booking->total_price = $priceData['total_price'];
+                $booking->security_deposit_amount = $priceData['security_deposit'];
                 // -----------------------
 
                 $booking->user_id = $this->Authentication->getIdentity()->getIdentifier();
                 $booking->booking_status = 'pending';
 
                 if ($this->Bookings->save($booking)) {
-                    // 3. Auto-Invoice
-                    $invoicesTable = $this->fetchTable('Invoices');
-                    $invoice = $invoicesTable->newEmptyEntity();
-                    $invoice->booking_id = $booking->id;
-                    $invoice->invoice_number = 'INV-' . strtoupper(uniqid());
-                    $invoice->amount = $booking->total_price;
-                    $invoice->status = 'unpaid';
-                    $invoicesTable->save($invoice);
+                    // 3. Auto-Invoice via Service
+                    $this->BookingService->createInvoice($booking);
 
                     $this->Flash->success(__('Booking successful! Invoice generated (incl. 6% Tax).'));
-                    return $this->redirect(['controller' => 'Invoices', 'action' => 'viewInvoices', $invoice->id]);
+                    return $this->redirect(['controller' => 'Invoices', 'action' => 'viewInvoices', $booking->id]);
                 }
                 $this->Flash->error(__('Unable to add booking.'));
             }

@@ -439,7 +439,7 @@
             'params' => [],
             'icon' => 'fa-calendar-check',
             'label' => $sidebarIsAdmin ? 'Bookings' : 'My Bookings',
-            'visible' => true,
+            'visible' => (bool)$sidebarIdentity,
             'activeMatch' => 'Bookings',
         ],
         [
@@ -448,7 +448,7 @@
             'params' => [],
             'icon' => 'fa-receipt',
             'label' => $sidebarIsAdmin ? 'Invoices' : 'My Invoices',
-            'visible' => true,
+            'visible' => (bool)$sidebarIdentity,
             'activeMatch' => 'Invoices',
         ],
         [
@@ -457,7 +457,7 @@
             'params' => [],
             'icon' => 'fa-star',
             'label' => $sidebarIsAdmin ? 'Reviews' : 'My Reviews',
-            'visible' => true,
+            'visible' => (bool)$sidebarIdentity,
             'activeMatch' => 'Reviews',
         ],
         [
@@ -466,7 +466,7 @@
             'params' => [],
             'icon' => 'fa-credit-card',
             'label' => $sidebarIsAdmin ? 'Payments' : 'My Payments',
-            'visible' => true,
+            'visible' => (bool)$sidebarIdentity,
             'activeMatch' => 'Payments',
         ],
     ];

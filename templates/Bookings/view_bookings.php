@@ -625,7 +625,7 @@ if ($booking->start_date && $booking->end_date) {
                     <?php if (!empty($booking->invoices)): ?>
                         <?= $this->Html->link(
                             '<i class="fas fa-file-invoice"></i> View Invoice',
-                            ['controller' => 'Invoices', 'action' => 'view', $booking->invoices[0]->id],
+                            ['controller' => 'Invoices', 'action' => 'viewInvoices', $booking->invoices[0]->id],
                             ['class' => 'btn-action btn-primary', 'escape' => false]
                         ) ?>
                     <?php endif; ?>

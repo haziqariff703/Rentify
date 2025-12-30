@@ -56,15 +56,7 @@
                         <td><code class="invoice-number"><?= h($invoice->invoice_number) ?></code></td>
                         <td class="price-cell">RM <?= $this->Number->format($invoice->amount, ['places' => 2]) ?></td>
                         <td>
-                            <?php
-                            $status = strtolower($invoice->status ?? '');
-                            $statusClass = 'pending';
-                            if (in_array($status, ['paid', 'completed']))
-                                $statusClass = 'paid';
-                            elseif (in_array($status, ['cancelled', 'voided']))
-                                $statusClass = 'cancelled';
-                            ?>
-                            <span class="status-badge <?= $statusClass ?>"><?= h(ucfirst($invoice->status)) ?></span>
+                            <?= $this->Status->paymentBadge($invoice->status) ?>
                         </td>
                         <td><?= $invoice->created ? $invoice->created->format('M d, Y') : '-' ?></td>
                         <td class="actions-cell">

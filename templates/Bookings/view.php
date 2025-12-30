@@ -19,14 +19,6 @@ $locationLabels = [
     'south' => 'Southern Outlet'
 ];
 
-// Status colors
-$statusColors = [
-    'pending' => ['bg' => '#fef3c7', 'text' => '#92400e'],
-    'confirmed' => ['bg' => '#dcfce7', 'text' => '#166534'],
-    'completed' => ['bg' => '#dbeafe', 'text' => '#1e40af'],
-    'cancelled' => ['bg' => '#fee2e2', 'text' => '#991b1b']
-];
-$currentStatus = $statusColors[$booking->display_status] ?? ['bg' => '#e2e8f0', 'text' => '#475569'];
 ?>
 
 <div class="view-booking-container">
@@ -35,9 +27,7 @@ $currentStatus = $statusColors[$booking->display_status] ?? ['bg' => '#e2e8f0', 
         <div>
             <h2>Booking #<?= h($booking->id) ?></h2>
             <p class="text-muted">
-                <span class="status-badge" style="background: <?= $currentStatus['bg'] ?>; color: <?= $currentStatus['text'] ?>">
-                    <?= h(ucfirst($booking->display_status)) ?>
-                </span>
+                <?= $this->Status->bookingBadge($booking->display_status) ?>
                 <span class="date-badge">
                     <i class="fas fa-calendar me-1"></i>
                     <?= h($booking->created?->format('M d, Y')) ?>
@@ -149,9 +139,7 @@ $currentStatus = $statusColors[$booking->display_status] ?? ['bg' => '#e2e8f0', 
                     <tr>
                         <th><?= __('Status') ?></th>
                         <td>
-                            <span class="status-badge" style="background: <?= $currentStatus['bg'] ?>; color: <?= $currentStatus['text'] ?>">
-                                <?= h(ucfirst($booking->display_status)) ?>
-                            </span>
+                            <?= $this->Status->bookingBadge($booking->display_status) ?>
                         </td>
                     </tr>
                     <tr>
@@ -265,7 +253,7 @@ $currentStatus = $statusColors[$booking->display_status] ?? ['bg' => '#e2e8f0', 
                                     <tr>
                                         <td><code><?= h($invoice->invoice_number) ?></code></td>
                                         <td>RM <?= $this->Number->format($invoice->amount) ?></td>
-                                        <td><span class="badge <?= $invStatusClass ?>"><?= ucfirst(h($invoice->status)) ?></span></td>
+                                        <td><?= $this->Status->paymentBadge($invoice->status) ?></td>
                                         <td><?= h($invoice->created?->format('M d, Y')) ?></td>
                                         <td>
                                             <?= $this->Html->link('<i class="fas fa-eye"></i>', ['controller' => 'Invoices', 'action' => 'view', $invoice->id], ['class' => 'btn btn-sm btn-outline-primary', 'escape' => false]) ?>
@@ -319,7 +307,7 @@ $currentStatus = $statusColors[$booking->display_status] ?? ['bg' => '#e2e8f0', 
                                         <td><strong>RM <?= $this->Number->format($payment->amount) ?></strong></td>
                                         <td><?= h($payment->payment_method) ?></td>
                                         <td><?= h($payment->payment_date?->format('M d, Y')) ?></td>
-                                        <td><span class="badge <?= $payStatusClass ?>"><?= ucfirst(h($payment->payment_status)) ?></span></td>
+                                        <td><?= $this->Status->paymentBadge($payment->payment_status) ?></td>
                                         <td>
                                             <?= $this->Html->link('<i class="fas fa-eye"></i>', ['controller' => 'Payments', 'action' => 'view', $payment->id], ['class' => 'btn btn-sm btn-outline-primary', 'escape' => false]) ?>
                                             <?php if ($isAdmin): ?>
