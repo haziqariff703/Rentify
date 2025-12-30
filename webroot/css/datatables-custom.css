@@ -1,0 +1,607 @@
+/**
+ * DataTables Custom Styling
+ * Shared styles for all DataTables across the application
+ * Extracted from individual template files for better maintainability
+ */
+
+/* =====================================================
+   BASE DATATABLES STYLING
+   ===================================================== */
+
+/* Table Base Styles */
+.datatable-styled {
+    font-size: 0.9rem;
+    border-radius: 12px;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.datatable-styled thead {
+    overflow: visible;
+}
+
+/* Wrapper Styling */
+.datatable-styled_wrapper,
+#carsTable_wrapper,
+#bookingsTable_wrapper,
+#reviewsTable_wrapper,
+#maintenancesTable_wrapper,
+#usersTable_wrapper,
+#paymentsTable_wrapper,
+#invoicesTable_wrapper,
+#carCategoriesTable_wrapper {
+    padding: 10px 0;
+    overflow: visible;
+}
+
+/* Table Responsive Override */
+.table-responsive {
+    overflow: visible !important;
+}
+
+/* =====================================================
+   HEADER STYLING
+   ===================================================== */
+
+.datatable-styled thead th,
+#carsTable thead th,
+#bookingsTable thead th,
+#reviewsTable thead th,
+#maintenancesTable thead th,
+#usersTable thead th,
+#paymentsTable thead th,
+#invoicesTable thead th,
+#carCategoriesTable thead th {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    font-weight: 600;
+    padding: 12px 16px;
+    border: none;
+}
+
+/* Rounded Corners - First Column */
+.datatable-styled thead th:first-child,
+#carsTable thead th:first-child,
+#bookingsTable thead th:first-child,
+#reviewsTable thead th:first-child,
+#maintenancesTable thead th:first-child,
+#usersTable thead th:first-child,
+#paymentsTable thead th:first-child,
+#invoicesTable thead th:first-child,
+#carCategoriesTable thead th:first-child {
+    border-top-left-radius: 12px;
+}
+
+/* Rounded Corners - Last Column */
+.datatable-styled thead th:last-child,
+#carsTable thead th:last-child,
+#bookingsTable thead th:last-child,
+#reviewsTable thead th:last-child,
+#maintenancesTable thead th:last-child,
+#usersTable thead th:last-child,
+#paymentsTable thead th:last-child,
+#invoicesTable thead th:last-child,
+#carCategoriesTable thead th:last-child {
+    border-top-right-radius: 12px;
+}
+
+/* Bottom Row Rounded Corners */
+.datatable-styled tbody tr:last-child td:first-child,
+#carsTable tbody tr:last-child td:first-child,
+#bookingsTable tbody tr:last-child td:first-child,
+#reviewsTable tbody tr:last-child td:first-child,
+#maintenancesTable tbody tr:last-child td:first-child,
+#usersTable tbody tr:last-child td:first-child,
+#paymentsTable tbody tr:last-child td:first-child,
+#invoicesTable tbody tr:last-child td:first-child,
+#carCategoriesTable tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 12px;
+}
+
+.datatable-styled tbody tr:last-child td:last-child,
+#carsTable tbody tr:last-child td:last-child,
+#bookingsTable tbody tr:last-child td:last-child,
+#reviewsTable tbody tr:last-child td:last-child,
+#maintenancesTable tbody tr:last-child td:last-child,
+#usersTable tbody tr:last-child td:last-child,
+#paymentsTable tbody tr:last-child td:last-child,
+#invoicesTable tbody tr:last-child td:last-child,
+#carCategoriesTable tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 12px;
+}
+
+/* Row Hover Effect */
+.datatable-styled tbody tr:hover,
+#carsTable tbody tr:hover,
+#bookingsTable tbody tr:hover,
+#reviewsTable tbody tr:hover,
+#maintenancesTable tbody tr:hover,
+#usersTable tbody tr:hover,
+#paymentsTable tbody tr:hover,
+#invoicesTable tbody tr:hover,
+#carCategoriesTable tbody tr:hover {
+    background-color: #f0f9ff !important;
+}
+
+/* =====================================================
+   FILTER DROPDOWN STYLES
+   ===================================================== */
+
+/* Filterable Header */
+.datatable-styled thead th.filterable,
+#carsTable thead th.filterable,
+#bookingsTable thead th.filterable,
+#reviewsTable thead th.filterable,
+#maintenancesTable thead th.filterable,
+#usersTable thead th.filterable,
+#paymentsTable thead th.filterable,
+#invoicesTable thead th.filterable,
+#carCategoriesTable thead th.filterable {
+    position: relative;
+}
+
+.th-text {
+    margin-right: 8px;
+}
+
+.filter-icon {
+    font-size: 0.7rem;
+    opacity: 0.5;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 4px;
+    transition: all 0.2s;
+    margin-left: 8px;
+}
+
+.filter-icon:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.filter-icon.filter-active {
+    opacity: 1;
+    color: #fbbf24;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.column-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 150px;
+    max-height: 250px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    margin-top: 4px;
+}
+
+.filter-option {
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: #334155;
+    border-bottom: 1px solid #f1f5f9;
+    transition: background 0.15s;
+}
+
+.filter-option:last-child {
+    border-bottom: none;
+}
+
+.filter-option:hover {
+    background: #f0f9ff;
+    color: #1d4ed8;
+}
+
+.filter-option:first-child {
+    font-weight: 600;
+    color: #64748b;
+}
+
+/* =====================================================
+   DATATABLES CONTROLS
+   ===================================================== */
+
+/* Show Entries Dropdown */
+.dataTables_length label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dataTables_length select {
+    min-width: 70px;
+    padding: 6px 12px;
+    margin: 0 10px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+}
+
+/* Search Box */
+.dataTables_filter input {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 8px 16px;
+    margin-left: 8px;
+}
+
+.dataTables_filter input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Pagination */
+.dataTables_paginate .paginate_button {
+    border-radius: 6px !important;
+    margin: 0 2px !important;
+}
+
+.dataTables_paginate .paginate_button.current {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+    border-color: #3b82f6 !important;
+    color: white !important;
+}
+
+.dataTables_paginate .paginate_button:hover:not(.current) {
+    background: #e0e7ff !important;
+    border-color: #e0e7ff !important;
+    color: #3b82f6 !important;
+}
+
+/* Sort Icon Spacing */
+.datatable-styled thead th.sorting::after,
+.datatable-styled thead th.sorting_asc::after,
+.datatable-styled thead th.sorting_desc::after,
+#carsTable thead th.sorting::after,
+#carsTable thead th.sorting_asc::after,
+#carsTable thead th.sorting_desc::after,
+#bookingsTable thead th.sorting::after,
+#bookingsTable thead th.sorting_asc::after,
+#bookingsTable thead th.sorting_desc::after {
+    margin-left: 6px !important;
+}
+
+/* =====================================================
+   STATUS BADGES
+   ===================================================== */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Car Status Badges */
+.status-badge.available {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.status-badge.rented {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.status-badge.maintenance {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.status-badge.booked {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+/* Booking Status Badges */
+.status-badge.pending {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.status-badge.confirmed {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.status-badge.completed {
+    background-color: #e0e7ff;
+    color: #4338ca;
+}
+
+.status-badge.cancelled {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.status-badge.default {
+    background-color: #e2e8f0;
+    color: #475569;
+}
+
+/* Maintenance Status Badges */
+.status-badge.scheduled {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+/* =====================================================
+   COMMON CELL STYLES
+   ===================================================== */
+
+/* Price Cell */
+.price-cell {
+    font-weight: 600;
+    color: #059669;
+}
+
+/* Price Cell - Red variant (for costs) */
+.price-cell.cost {
+    color: #dc2626;
+}
+
+/* Actions Cell */
+.actions-cell {
+    white-space: nowrap;
+}
+
+.actions-cell .btn {
+    margin: 0 2px;
+}
+
+/* Comment Cell */
+.comment-cell {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #64748b;
+    font-size: 0.85rem;
+}
+
+/* Description Preview */
+.description-preview {
+    color: #64748b;
+    font-size: 0.85rem;
+}
+
+/* =====================================================
+   CAR-SPECIFIC STYLES
+   ===================================================== */
+
+/* Car Thumbnail */
+.car-thumbnail {
+    width: 70px;
+    height: 45px;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.car-thumbnail-placeholder {
+    width: 70px;
+    height: 45px;
+    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    font-size: 1.2rem;
+}
+
+/* Category Badge */
+.category-badge {
+    background-color: #e0e7ff;
+    color: #4338ca;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* Booking Count Badge */
+.booking-count-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+}
+
+.booking-count-badge.active {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.booking-count-badge.empty {
+    background-color: #f1f5f9;
+    color: #94a3b8;
+}
+
+/* =====================================================
+   RATING STARS
+   ===================================================== */
+
+.rating-stars {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 0.85rem;
+}
+
+.rating-stars .fa-star {
+    font-size: 0.75rem;
+}
+
+/* =====================================================
+   PAGE HEADER (CRUD)
+   ===================================================== */
+
+.crud-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.crud-page-header h2 {
+    margin: 0 0 4px 0;
+    color: #1e293b;
+}
+
+.crud-page-header p {
+    margin: 0;
+    color: #64748b;
+}
+
+.btn-add {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.btn-add:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    color: white;
+}
+
+/* Header Actions Group */
+.header-actions-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* =====================================================
+   LEGACY PAGE ITEM STYLES (for any remaining pagination)
+   ===================================================== */
+
+.page-item a {
+    color: #3b82f6;
+    text-decoration: none;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin: 0 2px;
+    transition: all 0.2s;
+}
+
+.page-item a:hover {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+    color: white;
+}
+
+.page-item.active a {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+    color: white;
+}
+
+.page-item.disabled a {
+    color: #94a3b8;
+    pointer-events: none;
+    background-color: #f8fafc;
+    border-color: #e2e8f0;
+}
+
+/* =====================================================
+   USER-SPECIFIC STYLES
+   ===================================================== */
+
+/* User Avatar */
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.user-avatar-placeholder {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #ecebeeff 0%, #ecebeeff 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* Role Badge */
+.role-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.role-badge.admin {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.role-badge.user,
+.role-badge.customer {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+/* IC Masked */
+.ic-masked {
+    font-size: 0.85rem;
+    background-color: #f1f5f9;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+/* Date Display */
+.date-display {
+    color: #64748b;
+    font-size: 0.85rem;
+}
+
+/* Users table purple hover */
+#usersTable tbody tr:hover {
+    background-color: #f5f3ff !important;
+}
+
+/* =====================================================
+   PAYMENT-SPECIFIC STYLES
+   ===================================================== */
+
+/* Payment Method Badge */
+.method-badge {
+    background-color: #e0e7ff;
+    color: #4338ca;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}

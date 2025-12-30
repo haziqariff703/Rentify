@@ -324,19 +324,42 @@ $greeting = match (true) {
                     <button class="btn btn-sm btn-light border">View</button>
                 </div>
 
-                <!-- Maintenance Alerts -->
+                <!-- Maintenance Alerts (Dynamic) -->
                 <div class="action-item">
                     <div class="d-flex align-items-center">
                         <div class="action-icon bg-soft-danger">
                             <i class="fas fa-tools"></i>
                         </div>
                         <div>
-                            <div class="fw-bold text-dark">Maintenance Required</div>
-                            <div class="small text-muted">2 cars reported issues</div>
+                            <div class="fw-bold text-dark">Scheduled Maintenance</div>
+                            <div class="small text-muted">
+                                <?= $maintenanceCars ?> cars in maintenance,
+                                <?= $scheduledMaintenances ?? 0 ?> scheduled
+                            </div>
                         </div>
                     </div>
-                    <button class="btn btn-sm btn-light border">Check</button>
+                    <a href="<?= $this->Url->build(['controller' => 'Maintenances', 'action' => 'index']) ?>"
+                        class="btn btn-sm btn-light border">View</a>
                 </div>
+
+                <!-- Issue Reports from Reviews -->
+                <?php if (($issueReviewsCount ?? 0) > 0): ?>
+                    <div class="action-item">
+                        <div class="d-flex align-items-center">
+                            <div class="action-icon bg-soft-warning">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold text-dark">Car Issues Reported</div>
+                                <div class="small text-muted">
+                                    <?= $issueReviewsCount ?> low-rating reviews to check
+                                </div>
+                            </div>
+                        </div>
+                        <a href="<?= $this->Url->build(['controller' => 'Reviews', 'action' => 'index', '?' => ['issues' => 1]]) ?>"
+                            class="btn btn-sm btn-warning text-white">Review</a>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
 

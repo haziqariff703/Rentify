@@ -180,9 +180,18 @@ class ReviewsController extends AppController
     {
         $query = $this->Reviews->find()
             ->contain(['Users', 'Cars', 'Bookings']);
+
+        // Filter for issue reviews if requested (low ratings)
+        if ($this->request->getQuery('issues')) {
+            $query->where(['Reviews.rating <=' => 2]);
+        }
+
         $reviews = $this->paginate($query);
 
-        $this->set(compact('reviews'));
+        // Pass filter state to template
+        $showingIssues = (bool) $this->request->getQuery('issues');
+
+        $this->set(compact('reviews', 'showingIssues'));
     }
 
     /**

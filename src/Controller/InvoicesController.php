@@ -11,6 +11,18 @@ namespace App\Controller;
  */
 class InvoicesController extends AppController
 {
+    public function beforeFilter(\Cake\Event\EventInterface $event)
+    {
+        parent::beforeFilter($event);
+
+        $user = $this->Authentication->getIdentity();
+
+        // Use admin layout for admin users
+        if ($user && $user->role === 'admin') {
+            $this->viewBuilder()->setLayout('admin');
+        }
+    }
+
     /**
      * Index method
      *
