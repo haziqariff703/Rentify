@@ -204,11 +204,12 @@
     <!-- Header -->
     <?= $this->element('header') ?>
 
-    <!-- Flash Messages -->
-    <?= $this->Flash->render() ?>
-
     <!-- Main Auth Content -->
     <div class="auth-content-wrapper">
+        <!-- Toast Container for Flash Messages (inside layout) -->
+        <div class="toast-container position-absolute top-0 end-0 p-3" style="z-index: 10000;">
+            <?= $this->Flash->render() ?>
+        </div>
         <?= $this->fetch('content') ?>
     </div>
 

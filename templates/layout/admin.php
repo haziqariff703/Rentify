@@ -91,10 +91,13 @@ $cakeDescription = 'Rentify - Admin Panel';
     <?= $this->element('sidebar') ?>
 
     <!-- Content Wrapper (main only) -->
-    <div class="admin-content-wrapper">
+    <div class="admin-content-wrapper" style="position: relative;">
+        <!-- Toast Container for Flash Messages (inside layout) -->
+        <div class="toast-container position-absolute top-0 end-0 p-3" style="z-index: 10000;">
+            <?= $this->Flash->render() ?>
+        </div>
         <!-- Main Content -->
         <main class="admin-main">
-            <?= $this->Flash->render() ?>
             <?= $this->fetch('content') ?>
         </main>
     </div>
@@ -117,6 +120,9 @@ $cakeDescription = 'Rentify - Admin Panel';
 
     <!-- FullCalendar -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- DataTables Custom Initialization -->
     <script src="<?= $this->Url->assetUrl('js/datatables-init.js') ?>?v=<?= time() ?>"></script>

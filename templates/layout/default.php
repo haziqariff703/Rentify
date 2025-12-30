@@ -54,8 +54,11 @@ $cakeDescription = 'Rentify - Premium Car Rental';
     <?= $this->element('header') ?>
 
     <!-- Main Content -->
-    <main class="flex-grow-1 pt-5 container-fluid px-4 px-lg-5 mx-auto w-100" style="max-width: 1320px;">
-        <?= $this->Flash->render() ?>
+    <main class="flex-grow-1 pt-5 container-fluid px-4 px-lg-5 mx-auto w-100" style="max-width: 1320px; position: relative;">
+        <!-- Toast Container for Flash Messages (inside layout) -->
+        <div class="toast-container position-absolute top-0 end-0 p-3" style="z-index: 10000;">
+            <?= $this->Flash->render() ?>
+        </div>
         <?= $this->fetch('content') ?>
     </main>
 

@@ -48,7 +48,7 @@ foreach ($bookings as $booking) {
        ======================================== */
     .midnight-header {
         background-image:
-            linear-gradient(to bottom, 
+            linear-gradient(to bottom,
                 rgba(15, 23, 42, 0.95) 0%,
                 rgba(15, 23, 42, 0.90) 40%,
                 rgba(15, 23, 42, 0.60) 100%),
@@ -909,7 +909,7 @@ foreach ($bookings as $booking) {
                                                 <?php if ($unpaidInvoice): ?>
                                                     <?= $this->Html->link(
                                                         'Pay Now',
-                                                        ['controller' => 'Invoices', 'action' => 'view', $unpaidInvoice->id],
+                                                        ['controller' => 'Invoices', 'action' => 'viewInvoices', $unpaidInvoice->id],
                                                         ['class' => 'ticket-btn-pay']
                                                     ) ?>
                                                 <?php endif; ?>
@@ -1009,7 +1009,7 @@ foreach ($bookings as $booking) {
                             <h4>No Reservations Yet</h4>
                             <p>You haven't made any bookings. Start your journey today!</p>
                             <?= $this->Html->link(
-                                '<i class="fas fa-car me-2"></i>Browse Cars',
+                                'Browse Cars',
                                 ['controller' => 'Cars', 'action' => 'index'],
                                 ['class' => 'btn-book', 'escape' => false]
                             ) ?>
