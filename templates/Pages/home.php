@@ -7,33 +7,47 @@ $this->setLayout('home');
 $this->assign('title', 'Welcome to Rentify');
 ?>
 
-<!-- Hero Section with Video Background -->
-<section class="hero-section position-relative d-flex align-items-center justify-content-center overflow-hidden" style="height: 100vh; min-height: 600px;">
+<!-- Hero Section with Video Background - Editorial Cinema Style -->
+<section class="hero-section position-relative d-flex align-items-center overflow-hidden" style="height: 100vh; min-height: 700px;">
     <!-- Background Video -->
     <div class="position-absolute top-0 start-0 w-100 h-100 z-0">
         <video autoplay muted loop playsinline class="w-100 h-100" style="object-fit: cover;">
             <source src="<?= $this->Url->webroot('video/7727416-hd_1920_1080_25fps.mp4') ?>" type="video/mp4">
             Your browser does not support the video tag.
         </video>
-        <!-- Navy Midnight Overlay -->
-        <div class="video-overlay position-absolute top-0 start-0 w-100 h-100" style="background: rgba(15, 23, 42, 0.6);"></div>
+        <!-- Gradient Overlay - Dark on Left for Text Readability -->
+        <div class="video-overlay position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(to right, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.7) 40%, rgba(15, 23, 42, 0.3) 100%);"></div>
     </div>
 
-    <!-- Hero Content -->
-    <div class="position-relative z-10 text-center container d-flex flex-column justify-content-center align-items-center" style="max-width: 900px;">
-        <h1 class="hero-headline">
-            Luxury Performance.<br><span class="hero-headline-accent">Everyday Value.</span>
-        </h1>
-        <p class="hero-subheadline">
-            Premium Fleets for Your Every Destination.
-        </p>
-        <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center align-items-center">
-            <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="hero-btn-primary">
-                <i class="bi bi-compass me-2"></i>Explore Now
-            </a>
-            <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'add']) ?>" class="hero-btn-outline">
-                <i class="bi bi-person-plus me-2"></i>Join Now
-            </a>
+    <!-- Hero Content - Left Aligned -->
+    <div class="container position-relative z-10">
+        <div class="row">
+            <div class="col-lg-7 text-start">
+                
+                <!-- Eyebrow -->
+                <h6 class="hero-eyebrow">Rentify Premium</h6>
+
+                <!-- Main Title -->
+                <h1 class="hero-title-editorial">
+                    Command<br>The Road.
+                </h1>
+
+                <!-- Subtitle -->
+                <p class="hero-subtitle-editorial">
+                    Experience the pinnacle of automotive engineering. Your journey deserves the best.
+                </p>
+
+                <!-- Buttons -->
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'index']) ?>" class="hero-btn-white">
+                        View Fleet
+                    </a>
+                    <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'add']) ?>" class="hero-btn-ghost">
+                        Join Now
+                    </a>
+                </div>
+
+            </div>
         </div>
     </div>
 
@@ -434,8 +448,8 @@ $this->assign('title', 'Welcome to Rentify');
    Zig-Zag Layout with Photography
    ======================================== */
 
-    /* Google Fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@400;500;600;700&display=swap');
+    /* Google Fonts - Unified Design System */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@400;500;600;700;800;900&display=swap');
 
     /* Section Container - Pure White */
     .how-it-works-section {
@@ -446,22 +460,22 @@ $this->assign('title', 'Welcome to Rentify');
 
     /* Subtitle */
     .how-subtitle {
-        font-family: 'Playfair Display', serif;
-        font-size: 1rem;
-        font-weight: 400;
-        font-style: italic;
-        letter-spacing: 3px;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 600;
+        font-style: normal;
+        letter-spacing: 0.2em;
         color: #94a3b8;
         text-transform: uppercase;
         margin-bottom: 12px;
     }
 
-    /* Main Title - Serif for Elegance */
+    /* Main Title - Montserrat (Unified Design System) */
     .how-title {
-        font-family: 'Playfair Display', serif;
-        font-size: 3.5rem;
-        font-weight: 700;
-        letter-spacing: -1px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 2.5rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
         color: #0f172a;
         margin: 0;
     }
@@ -522,20 +536,20 @@ $this->assign('title', 'Welcome to Rentify');
         margin-bottom: 16px;
     }
 
-    /* Step Title */
+    /* Step Title - Montserrat (Unified Design System) */
     .step-title {
-        font-family: 'Playfair Display', serif;
-        font-size: 2.25rem;
-        font-weight: 600;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.75rem;
+        font-weight: 700;
         color: #0f172a;
         margin-bottom: 16px;
-        letter-spacing: -0.5px;
+        letter-spacing: -0.25px;
     }
 
-    /* Step Text */
+    /* Step Text - Inter */
     .step-text {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 1.1rem;
+        font-family: 'Inter', sans-serif;
+        font-size: 1rem;
         color: #64748b;
         line-height: 1.8;
         max-width: 400px;

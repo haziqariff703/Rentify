@@ -1,102 +1,119 @@
 /* ========================================
-   HERO SECTION - EXECUTIVE TYPOGRAPHY
+   HERO SECTION - EDITORIAL CINEMA STYLE
    ======================================== */
 
-/* Main Headline - Playfair Display */
-.hero-headline {
-    font-family: "Playfair Display", serif;
-    font-size: 4rem;
-    font-weight: 700;
-    color: #ffffff;
-    line-height: 1.15;
-    margin-bottom: 32px;
-    letter-spacing: -1px;
+/* Eyebrow - Red Accent */
+.hero-eyebrow {
+    font-family: "Inter", sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #ef4444;
+    margin-bottom: 20px;
 }
 
-/* Accent Text - Italic + Bright Cyan-Blue Gradient + Glow */
-.hero-headline-accent {
-    font-style: italic;
-    background: linear-gradient(135deg, #38bdf8 0%, #3b82f6 50%, #1e40af 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.5));
-}
-
-/* Sub-Headline - Montserrat */
-.hero-subheadline {
+/* Main Title - Massive White */
+.hero-title-editorial {
     font-family: "Montserrat", sans-serif;
-    font-size: 1.25rem;
-    font-weight: 400;
-    color: rgba(255, 255, 255, 0.9);
-    letter-spacing: 3px;
-    max-width: 700px;
-    margin: 0 auto 48px;
+    font-size: 4rem;
+    font-weight: 900;
+    color: #ffffff;
+    line-height: 0.95;
+    letter-spacing: -2px;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    text-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
 }
 
-/* Primary Button - Executive Style */
-.hero-btn-primary {
+@media (min-width: 768px) {
+    .hero-title-editorial {
+        font-size: 5.5rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    .hero-title-editorial {
+        font-size: 6.5rem;
+    }
+}
+
+/* Subtitle - Gray */
+.hero-subtitle-editorial {
+    font-family: "Inter", sans-serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.7;
+    max-width: 480px;
+    margin-bottom: 40px;
+}
+
+/* Primary Button - Solid White */
+.hero-btn-white {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     font-family: "Montserrat", sans-serif;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    color: #ffffff;
-    background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+    letter-spacing: 0.1em;
+    color: #0f172a;
+    background: #ffffff;
     padding: 16px 36px;
     border-radius: 50px;
     text-decoration: none;
-    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
     transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
-.hero-btn-primary:hover {
+.hero-btn-white:hover {
     transform: translateY(-3px);
-    box-shadow: 0 15px 40px rgba(59, 130, 246, 0.5);
-    color: #ffffff;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    color: #0f172a;
     text-decoration: none;
 }
 
-/* Outline Button - Executive Style */
-.hero-btn-outline {
+/* Ghost Button - Transparent with White Border */
+.hero-btn-ghost {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     font-family: "Montserrat", sans-serif;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 0.1em;
     color: #ffffff;
     background: transparent;
-    border: 2px solid rgba(255, 255, 255, 0.6);
-    padding: 14px 36px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    padding: 14px 34px;
     border-radius: 50px;
     text-decoration: none;
     transition: all 0.3s ease;
 }
 
-.hero-btn-outline:hover {
-    background: #ffffff;
-    color: #0f172a;
+.hero-btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.1);
     border-color: #ffffff;
+    color: #ffffff;
     text-decoration: none;
 }
 
 /* Hero Responsive */
 @media (max-width: 768px) {
-    .hero-headline {
-        font-size: 2.5rem;
+    .hero-title-editorial {
+        font-size: 3rem;
     }
 
-    .hero-subheadline {
+    .hero-subtitle-editorial {
         font-size: 1rem;
     }
 
-    .hero-btn-primary,
-    .hero-btn-outline {
-        padding: 12px 28px;
+    .hero-btn-white,
+    .hero-btn-ghost {
+        padding: 14px 28px;
         font-size: 0.75rem;
     }
 }
@@ -398,20 +415,20 @@ a:hover {
     margin-bottom: 20px;
 }
 
-/* Main Title - Playfair Display */
+/* Main Title - Montserrat (Unified Design System) */
 .about-executive-title {
-    font-family: "Playfair Display", serif;
-    font-size: 2.75rem;
+    font-family: "Montserrat", sans-serif;
+    font-size: 2.25rem;
     font-weight: 700;
-    letter-spacing: -1px;
+    letter-spacing: -0.5px;
     color: #0f172a;
-    line-height: 1.2;
+    line-height: 1.3;
     margin-bottom: 28px;
 }
 
-/* Body Text */
+/* Body Text - Inter */
 .about-executive-text {
-    font-family: "Montserrat", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 1rem;
     color: #475569;
     line-height: 1.9;
@@ -447,14 +464,14 @@ a:hover {
     transform: translateY(-4px);
 }
 
-/* Icon Labels - Playfair Display */
+/* Icon Labels - Montserrat (Unified Design System) */
 .executive-icon-label {
     display: block;
-    font-family: "Playfair Display", serif;
-    font-size: 0.95rem;
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.9rem;
     font-weight: 600;
     color: #0f172a;
-    letter-spacing: -0.25px;
+    letter-spacing: 0;
 }
 
 /* Responsive */
@@ -599,12 +616,12 @@ a:hover {
 }
 
 .marquee-card-title {
-    font-family: "Playfair Display", serif;
-    font-size: 1.4rem;
-    font-weight: 600;
+    font-family: "Montserrat", sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
     color: #0f172a;
     margin-bottom: 10px;
-    letter-spacing: -0.5px;
+    letter-spacing: -0.25px;
 }
 
 .marquee-card-specs {
@@ -654,33 +671,33 @@ a:hover {
 }
 
 /* ========================================
-   FEATURED FLEET SECTION - EXECUTIVE TYPOGRAPHY
+   FEATURED FLEET SECTION - UNIFIED TYPOGRAPHY
    ======================================== */
 .fleet-subtitle {
-    font-family: "Playfair Display", serif;
-    font-size: 1rem;
-    font-weight: 400;
-    font-style: italic;
-    letter-spacing: 3px;
+    font-family: "Inter", sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-style: normal;
+    letter-spacing: 0.2em;
     color: #94a3b8;
     text-transform: uppercase;
     margin-bottom: 12px;
 }
 
 .fleet-title {
-    font-family: "Playfair Display", serif;
-    font-size: 3.5rem;
-    font-weight: 700;
-    letter-spacing: -1px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
     color: #0f172a;
     margin: 0 0 20px;
 }
 
 .fleet-description {
-    font-family: "Montserrat", sans-serif;
+    font-family: "Inter", sans-serif;
     max-width: 700px;
     margin: 0 auto 50px;
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: #64748b;
     line-height: 1.8;
 }
