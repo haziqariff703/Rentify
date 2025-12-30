@@ -2,6 +2,35 @@
 
 All notable changes to the Rentify project will be documented in this file.
 
+## [2025-12-30]
+
+### Added
+
+-   **Policy Engine & Service Integration**
+    -   Added 7 policy fields to `car_categories`: security_deposit, insurance_tier, insurance_daily_rate, chauffeur_available, chauffeur_daily_rate, gps_available, gps_daily_rate
+    -   Added 4 service selection fields to `bookings`: has_chauffeur, has_gps, has_full_insurance, security_deposit_amount
+    -   Created virtual properties in Booking entity: `total_calculated_price`, `rental_days`, `price_breakdown`
+    -   Added custom validation rules for chauffeur/GPS service availability
+    -   Updated CarCategories add/edit forms with policy settings UI
+-   Added "Categories" menu item to admin sidebar under Fleet (`fa-layer-group` icon)
+-   **Enhanced CarCategories view/edit pages**
+    -   View page shows policy settings card (deposit, insurance, chauffeur, GPS availability)
+    -   Both pages display cars belonging to the category with status badges
+-   **CarCategories Template Refresh**
+    -   `index.php`: DataTables with purple theme, column filters for Name/Insurance/Chauffeur/GPS
+    -   `view.php`: Card-based layout with Financial Policy and Services cards
+    -   `add.php` / `edit.php`: Modern card-based forms grouped by section
+-   **Service Add-ons Integration**
+    -   Dynamic add-ons in booking form based on category availability/rates
+    -   `BookingsController::add()` calculates add-on costs (chauffeur, GPS, insurance)
+    -   Invoice displays itemized add-on breakdown with individual costs
+
+### Changed
+
+-   Updated `CarCategory` entity with new policy fields and `hasMany('Cars')` relationship
+-   Updated `CarCategoriesTable` with validation rules for all policy fields
+-   Updated `BookingsTable` with service selection validation and application rules
+
 ## [2025-12-29]
 
 ### Changed

@@ -73,9 +73,9 @@ class InvoicesController extends AppController
      */
     public function view($id)
     {
-        // FIX: Added 'Payments' to the contain array
+        // FIX: Added 'Payments' and 'Categories' to the contain array
         $invoice = $this->Invoices->get($id, [
-            'contain' => ['Bookings' => ['Users', 'Cars', 'Payments']]
+            'contain' => ['Bookings' => ['Users', 'Cars' => ['Categories'], 'Payments']]
         ]);
 
         if ($this->request->getQuery('pdf')) {
@@ -102,7 +102,7 @@ class InvoicesController extends AppController
         $user = $this->Authentication->getIdentity();
 
         $invoice = $this->Invoices->get($id, [
-            'contain' => ['Bookings' => ['Users', 'Cars', 'Payments']]
+            'contain' => ['Bookings' => ['Users', 'Cars' => ['Categories'], 'Payments']]
         ]);
 
         // Authorization: Ensure user owns this invoice

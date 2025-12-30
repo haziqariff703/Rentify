@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -7,6 +8,7 @@ use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Datasource\EntityInterface;
 
 /**
  * Bookings Model
@@ -100,6 +102,24 @@ class BookingsTable extends Table
             ->scalar('booking_status')
             ->allowEmptyString('booking_status');
 
+        // Service selection fields
+        $validator
+            ->boolean('has_chauffeur')
+            ->allowEmptyString('has_chauffeur');
+
+        $validator
+            ->boolean('has_gps')
+            ->allowEmptyString('has_gps');
+
+        $validator
+            ->boolean('has_full_insurance')
+            ->allowEmptyString('has_full_insurance');
+
+        $validator
+            ->decimal('security_deposit_amount')
+            ->greaterThanOrEqual('security_deposit_amount', 0)
+            ->allowEmptyString('security_deposit_amount');
+
         return $validator;
     }
 
@@ -114,6 +134,33 @@ class BookingsTable extends Table
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'), ['errorField' => 'user_id']);
         $rules->add($rules->existsIn(['car_id'], 'Cars'), ['errorField' => 'car_id']);
+
+        // Custom rule: Chauffeur only if category allows
+        $rules->add(function (EntityInterface $entity, array $options) {
+            if (!$entity->has_chauffeur) {
+                return true; // No chauffeur requested, always valid
+            }
+
+            // Load car with category to check availability
+            $car = $this->Cars->get($entity->car_id, contain: ['Categories']);
+            return (bool)($car->category->chauffeur_available ?? false);
+        }, 'chauffeurAvailable', [
+            'errorField' => 'has_chauffeur',
+            'message' => 'Chauffeur service is not available for this car category.'
+        ]);
+
+        // Custom rule: GPS only if category allows
+        $rules->add(function (EntityInterface $entity, array $options) {
+            if (!$entity->has_gps) {
+                return true; // No GPS requested, always valid
+            }
+
+            $car = $this->Cars->get($entity->car_id, contain: ['Categories']);
+            return (bool)($car->category->gps_available ?? false);
+        }, 'gpsAvailable', [
+            'errorField' => 'has_gps',
+            'message' => 'GPS service is not available for this car category.'
+        ]);
 
         return $rules;
     }

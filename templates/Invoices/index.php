@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @var \App\View\AppView $this
  * @var iterable<\App\Model\Entity\Invoice> $invoices
@@ -44,7 +45,7 @@
             <tbody>
                 <?php foreach ($invoices as $invoice): ?>
                     <tr>
-                        <td><code>#<?= h($invoice->id) ?></code></td>
+                        <td data-order="<?= h($invoice->id) ?>"><code>#<?= h($invoice->id) ?></code></td>
                         <td>
                             <?php if ($invoice->hasValue('booking')): ?>
                                 <?= $this->Html->link('#' . $invoice->booking->id, ['controller' => 'Bookings', 'action' => 'view', $invoice->booking->id]) ?>
@@ -96,42 +97,56 @@
 </div>
 
 <script>
-    window.addEventListener('load', function () {
+    window.addEventListener('load', function() {
         if (typeof $ !== 'undefined' && typeof $.fn.dataTable !== 'undefined') {
             var table = $('#invoicesTable').DataTable({
                 responsive: true,
                 pageLength: 10,
-                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                lengthMenu: [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, "All"]
+                ],
                 language: {
                     search: "_INPUT_",
                     searchPlaceholder: "Search invoices...",
                     lengthMenu: "Show _MENU_ entries",
                     info: "Showing _START_ to _END_ of _TOTAL_ invoices",
-                    paginate: { first: "First", last: "Last", next: "Next", previous: "Previous" }
+                    paginate: {
+                        first: "First",
+                        last: "Last",
+                        next: "Next",
+                        previous: "Previous"
+                    }
                 },
-                columnDefs: [{ orderable: false, targets: [6] }],
-                order: [[0, 'desc']],
-                initComplete: function () {
+                columnDefs: [{
+                    orderable: false,
+                    targets: [6]
+                }],
+                order: [
+                    [0, 'desc']
+                ],
+                initComplete: function() {
                     var api = this.api();
-                    $('#invoicesTable thead th.filterable').each(function () {
+                    $('#invoicesTable thead th.filterable').each(function() {
                         var $th = $(this);
                         var columnIndex = $th.data('column');
                         var column = api.column(columnIndex);
                         var $dropdown = $th.find('.column-dropdown');
                         var $filterIcon = $th.find('.filter-icon');
                         $dropdown.append('<div class="filter-option" data-value="">All</div>');
-                        column.data().unique().sort().each(function (d) {
+                        column.data().unique().sort().each(function(d) {
                             var text = $('<div>').html(d).text().trim();
                             if (text) $dropdown.append('<div class="filter-option" data-value="' + text + '">' + text + '</div>');
                         });
-                        $filterIcon.on('click', function (e) {
-                            e.stopPropagation(); e.preventDefault();
+                        $filterIcon.on('click', function(e) {
+                            e.stopPropagation();
+                            e.preventDefault();
                             var wasVisible = $dropdown.is(':visible');
                             $('.column-dropdown').hide();
                             if (!wasVisible) $dropdown.show();
                             return false;
                         });
-                        $dropdown.on('click', '.filter-option', function (e) {
+                        $dropdown.on('click', '.filter-option', function(e) {
                             e.stopPropagation();
                             var val = $(this).data('value');
                             if (val) column.search(val, false, false).draw();
@@ -141,7 +156,7 @@
                             else $filterIcon.removeClass('filter-active');
                         });
                     });
-                    $(document).on('click', function (e) {
+                    $(document).on('click', function(e) {
                         if (!$(e.target).closest('.column-dropdown, .filter-icon').length) $('.column-dropdown').hide();
                     });
                 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Book a Car - Executive Premium Checkout
  * Two-Column Layout with Dynamic Price Calculator
@@ -404,7 +405,7 @@ echo $this->Html->script('https://cdn.jsdelivr.net/npm/flatpickr');
 <div class="booking-wrapper">
     <div class="container">
         <div class="booking-grid">
-            
+
             <!-- LEFT COLUMN: FORM -->
             <div class="form-column">
                 <div class="form-header">
@@ -472,29 +473,34 @@ echo $this->Html->script('https://cdn.jsdelivr.net/npm/flatpickr');
                 <!-- Add-ons -->
                 <div class="form-section">
                     <span class="section-label">Optional Add-ons</span>
-                    <div class="addon-list">
-                        <div class="addon-item" data-addon="chauffeur" data-price="50">
+                    <div class="addon-list" id="addon-list">
+                        <div class="addon-item" data-addon="chauffeur" data-price="0" style="display: none;">
                             <div class="addon-info">
                                 <div class="addon-checkbox"></div>
                                 <span class="addon-name">Chauffeur Service</span>
                             </div>
-                            <span class="addon-price">+RM 50/day</span>
+                            <span class="addon-price">+RM 0/day</span>
                         </div>
-                        <div class="addon-item" data-addon="insurance" data-price="20">
+                        <div class="addon-item" data-addon="insurance" data-price="0">
                             <div class="addon-info">
                                 <div class="addon-checkbox"></div>
                                 <span class="addon-name">Full Coverage Insurance</span>
                             </div>
-                            <span class="addon-price">+RM 20/day</span>
+                            <span class="addon-price">+RM 0/day</span>
                         </div>
-                        <div class="addon-item" data-addon="gps" data-price="10">
+                        <div class="addon-item" data-addon="gps" data-price="0" style="display: none;">
                             <div class="addon-info">
                                 <div class="addon-checkbox"></div>
                                 <span class="addon-name">GPS Navigation</span>
                             </div>
-                            <span class="addon-price">+RM 10/day</span>
+                            <span class="addon-price">+RM 0/day</span>
                         </div>
                     </div>
+
+                    <!-- Hidden inputs for form submission -->
+                    <?= $this->Form->hidden('has_chauffeur', ['id' => 'has-chauffeur', 'value' => 0]) ?>
+                    <?= $this->Form->hidden('has_gps', ['id' => 'has-gps', 'value' => 0]) ?>
+                    <?= $this->Form->hidden('has_full_insurance', ['id' => 'has-insurance', 'value' => 0]) ?>
                 </div>
 
                 <?= $this->Form->end() ?>
@@ -551,165 +557,220 @@ echo $this->Html->script('https://cdn.jsdelivr.net/npm/flatpickr');
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const carSelect = document.getElementById('car-select');
-    const startDateInput = document.getElementById('start-date');
-    const endDateInput = document.getElementById('end-date');
-    const carPreview = document.getElementById('car-preview');
-    const addonItems = document.querySelectorAll('.addon-item');
-    
-    let pickerStart, pickerEnd;
-    let selectedCar = null;
-    let selectedAddons = [];
+    document.addEventListener('DOMContentLoaded', function() {
+        const carSelect = document.getElementById('car-select');
+        const startDateInput = document.getElementById('start-date');
+        const endDateInput = document.getElementById('end-date');
+        const carPreview = document.getElementById('car-preview');
+        const addonItems = document.querySelectorAll('.addon-item');
 
-    // Car data (will be populated via AJAX)
-    const carsData = <?= json_encode($this->request->getAttribute('carsData') ?? []) ?>;
+        let pickerStart, pickerEnd;
+        let selectedCar = null;
+        let categoryServices = null;
 
-    // Initialize Flatpickr with Linked Date Logic
-    function initPickers(disabledDates = []) {
-        // Start Date Picker
-        pickerStart = flatpickr("#start-date", {
-            dateFormat: "Y-m-d",
-            minDate: "today",
-            disable: disabledDates,
-            onChange: function(selectedDates, dateStr, instance) {
-                // --- FIX 1: Prevent Return Date from being before Pick-up Date ---
-                pickerEnd.set('minDate', dateStr);
-                
-                // If the current return date is now invalid (before new start date), clear it
-                if (endDateInput.value && endDateInput.value < dateStr) {
-                    pickerEnd.clear();
-                    // Reset summary duration since date is invalid
-                    document.getElementById('duration').textContent = '0 days'; 
+        // Initialize Flatpickr with Linked Date Logic
+        function initPickers(disabledDates = []) {
+            pickerStart = flatpickr("#start-date", {
+                dateFormat: "Y-m-d",
+                minDate: "today",
+                disable: disabledDates,
+                onChange: function(selectedDates, dateStr, instance) {
+                    pickerEnd.set('minDate', dateStr);
+                    if (endDateInput.value && endDateInput.value < dateStr) {
+                        pickerEnd.clear();
+                        document.getElementById('duration').textContent = '0 days';
+                    }
+                    updatePriceCalculation();
                 }
-                
-                updatePriceCalculation();
-            }
-        });
-
-        // Return Date Picker
-        pickerEnd = flatpickr("#end-date", {
-            dateFormat: "Y-m-d",
-            minDate: "today", 
-            disable: disabledDates,
-            onChange: updatePriceCalculation
-        });
-    }
-
-    initPickers();
-
-    // Fetch car details when selection changes
-    carSelect.addEventListener('change', function() {
-        const carId = this.value;
-        if (!carId) {
-            carPreview.classList.remove('active');
-            selectedCar = null;
-            updateSummary();
-            return;
-        }
-
-        fetch('<?= $this->Url->build(['controller' => 'Bookings', 'action' => 'getCarDetails']) ?>/' + carId)
-            .then(response => response.json())
-            .then(data => {
-                selectedCar = data;
-                
-                document.getElementById('car-preview-image').src = '<?= $this->Url->image('') ?>' + data.image;
-                document.getElementById('car-preview-name').textContent = data.name;
-                document.getElementById('car-preview-price').textContent = 'RM ' + parseFloat(data.price_per_day).toFixed(2) + '/day';
-                carPreview.classList.add('active');
-
-                document.getElementById('summary-car-thumb').style.backgroundImage = 'url(<?= $this->Url->image('') ?>' + data.image + ')';
-                document.getElementById('summary-car-thumb').style.backgroundSize = 'cover';
-                document.getElementById('summary-car-thumb').style.backgroundPosition = 'center';
-                document.getElementById('summary-car-name').textContent = data.name;
-                document.getElementById('daily-rate').textContent = 'RM ' + parseFloat(data.price_per_day).toFixed(2);
-
-                updatePriceCalculation();
-            })
-            .catch(err => console.error('Error fetching car:', err));
-
-        fetch('<?= $this->Url->build(['controller' => 'Bookings', 'action' => 'getBookedDates']) ?>/' + carId)
-            .then(response => response.json())
-            .then(data => {
-                // Re-init pickers with new blocked dates, preserving current logic
-                const currentStart = startDateInput.value;
-                const currentEnd = endDateInput.value;
-                
-                pickerStart.destroy();
-                pickerEnd.destroy();
-                initPickers(data.dates);
-                
-                // Restore values if they don't conflict (optional simple restore)
-                if(currentStart) pickerStart.setDate(currentStart);
-                if(currentEnd) pickerEnd.setDate(currentEnd);
             });
-    });
 
-    addonItems.forEach(item => {
-        item.addEventListener('click', function() {
-            this.classList.toggle('selected');
-            updatePriceCalculation();
+            pickerEnd = flatpickr("#end-date", {
+                dateFormat: "Y-m-d",
+                minDate: "today",
+                disable: disabledDates,
+                onChange: updatePriceCalculation
+            });
+        }
+
+        initPickers();
+
+        // Fetch car details when selection changes
+        carSelect.addEventListener('change', function() {
+            const carId = this.value;
+            if (!carId) {
+                carPreview.classList.remove('active');
+                selectedCar = null;
+                categoryServices = null;
+                updateSummary();
+                resetAddons();
+                return;
+            }
+
+            fetch('<?= $this->Url->build(['controller' => 'Bookings', 'action' => 'getCarDetails']) ?>/' + carId)
+                .then(response => response.json())
+                .then(data => {
+                    selectedCar = data;
+                    categoryServices = {
+                        chauffeur_available: data.chauffeur_available,
+                        chauffeur_daily_rate: parseFloat(data.chauffeur_daily_rate) || 0,
+                        gps_available: data.gps_available,
+                        gps_daily_rate: parseFloat(data.gps_daily_rate) || 0,
+                        insurance_daily_rate: parseFloat(data.insurance_daily_rate) || 0,
+                        security_deposit: parseFloat(data.security_deposit) || 0
+                    };
+
+                    // Update car preview
+                    document.getElementById('car-preview-image').src = '<?= $this->Url->image('') ?>' + data.image;
+                    document.getElementById('car-preview-name').textContent = (data.brand || '') + ' ' + data.name;
+                    document.getElementById('car-preview-price').textContent = 'RM ' + parseFloat(data.price_per_day).toFixed(2) + '/day';
+                    carPreview.classList.add('active');
+
+                    // Update summary
+                    document.getElementById('summary-car-thumb').style.backgroundImage = 'url(<?= $this->Url->image('') ?>' + data.image + ')';
+                    document.getElementById('summary-car-thumb').style.backgroundSize = 'cover';
+                    document.getElementById('summary-car-thumb').style.backgroundPosition = 'center';
+                    document.getElementById('summary-car-name').textContent = (data.brand || '') + ' ' + data.name;
+                    document.getElementById('daily-rate').textContent = 'RM ' + parseFloat(data.price_per_day).toFixed(2);
+
+                    // Update add-ons visibility and prices
+                    updateAddonsDisplay();
+                    updatePriceCalculation();
+                })
+                .catch(err => console.error('Error fetching car:', err));
+
+            fetch('<?= $this->Url->build(['controller' => 'Bookings', 'action' => 'getBookedDates']) ?>/' + carId)
+                .then(response => response.json())
+                .then(data => {
+                    const currentStart = startDateInput.value;
+                    const currentEnd = endDateInput.value;
+
+                    pickerStart.destroy();
+                    pickerEnd.destroy();
+                    initPickers(data.dates);
+
+                    if (currentStart) pickerStart.setDate(currentStart);
+                    if (currentEnd) pickerEnd.setDate(currentEnd);
+                });
         });
-    });
 
-    // Price calculation
-    function updatePriceCalculation() {
-        if (!selectedCar) {
+        // Update add-ons display based on category services
+        function updateAddonsDisplay() {
+            if (!categoryServices) return;
+
+            const chauffeurItem = document.querySelector('[data-addon="chauffeur"]');
+            const gpsItem = document.querySelector('[data-addon="gps"]');
+            const insuranceItem = document.querySelector('[data-addon="insurance"]');
+
+            // Chauffeur
+            if (categoryServices.chauffeur_available) {
+                chauffeurItem.style.display = 'flex';
+                chauffeurItem.dataset.price = categoryServices.chauffeur_daily_rate;
+                chauffeurItem.querySelector('.addon-price').textContent = '+RM ' + categoryServices.chauffeur_daily_rate.toFixed(2) + '/day';
+            } else {
+                chauffeurItem.style.display = 'none';
+                chauffeurItem.classList.remove('selected');
+                document.getElementById('has-chauffeur').value = '0';
+            }
+
+            // GPS
+            if (categoryServices.gps_available) {
+                gpsItem.style.display = 'flex';
+                gpsItem.dataset.price = categoryServices.gps_daily_rate;
+                gpsItem.querySelector('.addon-price').textContent = '+RM ' + categoryServices.gps_daily_rate.toFixed(2) + '/day';
+            } else {
+                gpsItem.style.display = 'none';
+                gpsItem.classList.remove('selected');
+                document.getElementById('has-gps').value = '0';
+            }
+
+            // Insurance (always available)
+            insuranceItem.style.display = 'flex';
+            insuranceItem.dataset.price = categoryServices.insurance_daily_rate;
+            insuranceItem.querySelector('.addon-price').textContent = '+RM ' + categoryServices.insurance_daily_rate.toFixed(2) + '/day';
+        }
+
+        function resetAddons() {
+            addonItems.forEach(item => {
+                item.classList.remove('selected');
+                item.style.display = 'none';
+            });
+            document.getElementById('has-chauffeur').value = '0';
+            document.getElementById('has-gps').value = '0';
+            document.getElementById('has-insurance').value = '0';
+        }
+
+        // Add-on selection handlers
+        addonItems.forEach(item => {
+            item.addEventListener('click', function() {
+                this.classList.toggle('selected');
+
+                const addon = this.dataset.addon;
+                const isSelected = this.classList.contains('selected');
+
+                if (addon === 'chauffeur') {
+                    document.getElementById('has-chauffeur').value = isSelected ? '1' : '0';
+                } else if (addon === 'gps') {
+                    document.getElementById('has-gps').value = isSelected ? '1' : '0';
+                } else if (addon === 'insurance') {
+                    document.getElementById('has-insurance').value = isSelected ? '1' : '0';
+                }
+
+                updatePriceCalculation();
+            });
+        });
+
+        // Price calculation
+        function updatePriceCalculation() {
+            if (!selectedCar) {
+                resetSummary();
+                return;
+            }
+
+            const startDate = startDateInput.value;
+            const endDate = endDateInput.value;
+
+            let days = 0;
+            if (startDate && endDate) {
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+                const diffTime = end - start;
+                days = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                if (days < 1) days = 1;
+            }
+
+            let addonsPerDay = 0;
+            document.querySelectorAll('.addon-item.selected').forEach(item => {
+                addonsPerDay += parseFloat(item.dataset.price) || 0;
+            });
+
+            const dailyRate = parseFloat(selectedCar.price_per_day);
+            const subtotal = dailyRate * days;
+            const addonsTotal = addonsPerDay * days;
+            const taxes = (subtotal + addonsTotal) * 0.06;
+            const total = subtotal + addonsTotal + taxes;
+
+            document.getElementById('duration').textContent = days + (days === 1 ? ' day' : ' days');
+            document.getElementById('addons-total').textContent = 'RM ' + addonsTotal.toFixed(2);
+            document.getElementById('taxes').textContent = 'RM ' + taxes.toFixed(2);
+            document.getElementById('total-price').textContent = 'RM ' + total.toFixed(2);
+        }
+
+        function resetSummary() {
+            document.getElementById('daily-rate').textContent = 'RM 0.00';
+            document.getElementById('duration').textContent = '0 days';
+            document.getElementById('addons-total').textContent = 'RM 0.00';
+            document.getElementById('taxes').textContent = 'RM 0.00';
+            document.getElementById('total-price').textContent = 'RM 0.00';
+        }
+
+        function updateSummary() {
+            document.getElementById('summary-car-name').textContent = 'Select a vehicle';
+            document.getElementById('summary-car-thumb').style.backgroundImage = '';
             resetSummary();
-            return;
         }
 
-        const startDate = startDateInput.value;
-        const endDate = endDateInput.value;
-        
-        let days = 0;
-        if (startDate && endDate) {
-            const start = new Date(startDate);
-            const end = new Date(endDate);
-            
-            const diffTime = end - start;
-            
-            // --- FIX 2: Inclusive Day Calculation ---
-            // (Jan 1 to Jan 1) = 0 diff + 1 = 1 Day
-            // (Jan 1 to Jan 2) = 1 diff + 1 = 2 Days
-            days = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-            
-            if (days < 1) days = 1;
+        if (carSelect.value) {
+            carSelect.dispatchEvent(new Event('change'));
         }
-
-        let addonsPerDay = 0;
-        document.querySelectorAll('.addon-item.selected').forEach(item => {
-            addonsPerDay += parseInt(item.dataset.price);
-        });
-
-        const dailyRate = parseFloat(selectedCar.price_per_day);
-        const subtotal = dailyRate * days;
-        const addonsTotal = addonsPerDay * days;
-        const taxes = (subtotal + addonsTotal) * 0.06;
-        const total = subtotal + addonsTotal + taxes;
-
-        document.getElementById('duration').textContent = days + (days === 1 ? ' day' : ' days');
-        document.getElementById('addons-total').textContent = 'RM ' + addonsTotal.toFixed(2);
-        document.getElementById('taxes').textContent = 'RM ' + taxes.toFixed(2);
-        document.getElementById('total-price').textContent = 'RM ' + total.toFixed(2);
-    }
-
-    function resetSummary() {
-        document.getElementById('daily-rate').textContent = 'RM 0.00';
-        document.getElementById('duration').textContent = '0 days';
-        document.getElementById('addons-total').textContent = 'RM 0.00';
-        document.getElementById('taxes').textContent = 'RM 0.00';
-        document.getElementById('total-price').textContent = 'RM 0.00';
-    }
-
-    function updateSummary() {
-        document.getElementById('summary-car-name').textContent = 'Select a vehicle';
-        document.getElementById('summary-car-thumb').style.backgroundImage = '';
-        resetSummary();
-    }
-
-    if (carSelect.value) {
-        carSelect.dispatchEvent(new Event('change'));
-    }
-});
+    });
 </script>

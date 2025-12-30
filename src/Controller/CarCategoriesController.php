@@ -36,7 +36,7 @@ class CarCategoriesController extends AppController
      */
     public function index()
     {
-        $query = $this->CarCategories->find();
+        $query = $this->CarCategories->find()->contain(['Cars']);
         $carCategories = $this->paginate($query);
 
         $this->set(compact('carCategories'));
@@ -51,7 +51,7 @@ class CarCategoriesController extends AppController
      */
     public function view($id = null)
     {
-        $carCategory = $this->CarCategories->get($id, contain: []);
+        $carCategory = $this->CarCategories->get($id, contain: ['Cars']);
         $this->set(compact('carCategory'));
     }
 
@@ -84,7 +84,7 @@ class CarCategoriesController extends AppController
      */
     public function edit($id = null)
     {
-        $carCategory = $this->CarCategories->get($id, contain: []);
+        $carCategory = $this->CarCategories->get($id, contain: ['Cars']);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $carCategory = $this->CarCategories->patchEntity($carCategory, $this->request->getData());
             if ($this->CarCategories->save($carCategory)) {

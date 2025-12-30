@@ -59,7 +59,7 @@ $isAdmin = $identity && $identity->role === 'admin';
             <tbody>
                 <?php foreach ($bookings as $booking): ?>
                     <tr>
-                        <td><code>#<?= h($booking->id) ?></code></td>
+                        <td data-order="<?= h($booking->id) ?>"><code>#<?= h($booking->id) ?></code></td>
                         <td><?= $booking->hasValue('user') ? $this->Html->link($booking->user->name, ['controller' => 'Users', 'action' => 'view', $booking->user->id]) : '' ?></td>
                         <td><?= $booking->hasValue('car') ? $this->Html->link($booking->car->brand . ' ' . $booking->car->car_model, ['controller' => 'Cars', 'action' => 'view', $booking->car->id]) : '' ?></td>
                         <td><?= h($booking->start_date?->format('M d, Y')) ?></td>

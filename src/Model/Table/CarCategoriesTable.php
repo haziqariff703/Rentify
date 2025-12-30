@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -44,6 +45,11 @@ class CarCategoriesTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+
+        // Cars relationship
+        $this->hasMany('Cars', [
+            'foreignKey' => 'category_id',
+        ]);
     }
 
     /**
@@ -63,6 +69,40 @@ class CarCategoriesTable extends Table
         $validator
             ->scalar('description')
             ->allowEmptyString('description');
+
+        // Policy Engine fields
+        $validator
+            ->decimal('security_deposit')
+            ->greaterThanOrEqual('security_deposit', 0)
+            ->allowEmptyString('security_deposit');
+
+        $validator
+            ->scalar('insurance_tier')
+            ->inList('insurance_tier', ['basic', 'standard', 'premium'])
+            ->allowEmptyString('insurance_tier');
+
+        $validator
+            ->decimal('insurance_daily_rate')
+            ->greaterThanOrEqual('insurance_daily_rate', 0)
+            ->allowEmptyString('insurance_daily_rate');
+
+        $validator
+            ->boolean('chauffeur_available')
+            ->allowEmptyString('chauffeur_available');
+
+        $validator
+            ->decimal('chauffeur_daily_rate')
+            ->greaterThanOrEqual('chauffeur_daily_rate', 0)
+            ->allowEmptyString('chauffeur_daily_rate');
+
+        $validator
+            ->boolean('gps_available')
+            ->allowEmptyString('gps_available');
+
+        $validator
+            ->decimal('gps_daily_rate')
+            ->greaterThanOrEqual('gps_daily_rate', 0)
+            ->allowEmptyString('gps_daily_rate');
 
         return $validator;
     }

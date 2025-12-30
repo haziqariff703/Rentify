@@ -262,21 +262,71 @@ if ($booking && $booking->car) {
                         <td class="text-end pe-3 py-3 fw-bold">RM <?= number_format($baseCost, 2) ?></td>
                     </tr>
 
-                    <tr>
-                        <td class="ps-3 py-3">
-                            <div class="fw-bold text-dark">Add-on Services</div>
-                            <div class="small text-muted">Optional Extras (Insurance, GPS, etc.)</div>
-                        </td>
-                        <td class="text-center py-3">-</td>
-                        <td class="text-center py-3">-</td>
-                        <td class="text-end pe-3 py-3 fw-bold">
-                            <?php if ($addons > 0): ?>
-                                RM <?= number_format($addons, 2) ?>
-                            <?php else: ?>
-                                -
-                            <?php endif; ?>
-                        </td>
-                    </tr>
+                    <?php
+                    // Calculate individual add-on costs from booking flags and category rates
+                    $category = $car->category ?? null;
+                    $chauffeurCost = 0;
+                    $gpsCost = 0;
+                    $insuranceCost = 0;
+
+                    if ($booking->has_chauffeur && $category) {
+                        $chauffeurCost = (float)($category->chauffeur_daily_rate ?? 0) * $days;
+                    }
+                    if ($booking->has_gps && $category) {
+                        $gpsCost = (float)($category->gps_daily_rate ?? 0) * $days;
+                    }
+                    if ($booking->has_full_insurance && $category) {
+                        $insuranceCost = (float)($category->insurance_daily_rate ?? 0) * $days;
+                    }
+
+                    $hasAnyAddon = $booking->has_chauffeur || $booking->has_gps || $booking->has_full_insurance;
+                    ?>
+
+                    <?php if ($hasAnyAddon): ?>
+                        <?php if ($booking->has_chauffeur): ?>
+                            <tr>
+                                <td class="ps-3 py-2">
+                                    <div class="text-dark"><i class="fas fa-user-tie text-muted me-2"></i>Chauffeur Service</div>
+                                </td>
+                                <td class="text-center py-2">RM <?= number_format($category->chauffeur_daily_rate ?? 0, 2) ?></td>
+                                <td class="text-center py-2"><?= $days ?> Days</td>
+                                <td class="text-end pe-3 py-2">RM <?= number_format($chauffeurCost, 2) ?></td>
+                            </tr>
+                        <?php endif; ?>
+
+                        <?php if ($booking->has_gps): ?>
+                            <tr>
+                                <td class="ps-3 py-2">
+                                    <div class="text-dark"><i class="fas fa-map-marker-alt text-muted me-2"></i>GPS Navigation</div>
+                                </td>
+                                <td class="text-center py-2">RM <?= number_format($category->gps_daily_rate ?? 0, 2) ?></td>
+                                <td class="text-center py-2"><?= $days ?> Days</td>
+                                <td class="text-end pe-3 py-2">RM <?= number_format($gpsCost, 2) ?></td>
+                            </tr>
+                        <?php endif; ?>
+
+                        <?php if ($booking->has_full_insurance): ?>
+                            <tr>
+                                <td class="ps-3 py-2">
+                                    <div class="text-dark"><i class="fas fa-shield-alt text-muted me-2"></i>Full Coverage Insurance</div>
+                                </td>
+                                <td class="text-center py-2">RM <?= number_format($category->insurance_daily_rate ?? 0, 2) ?></td>
+                                <td class="text-center py-2"><?= $days ?> Days</td>
+                                <td class="text-end pe-3 py-2">RM <?= number_format($insuranceCost, 2) ?></td>
+                            </tr>
+                        <?php endif; ?>
+                    <?php elseif ($addons > 0): ?>
+                        <!-- Fallback for legacy bookings without specific addon flags -->
+                        <tr>
+                            <td class="ps-3 py-3">
+                                <div class="fw-bold text-dark">Add-on Services</div>
+                                <div class="small text-muted">Optional Extras</div>
+                            </td>
+                            <td class="text-center py-3">-</td>
+                            <td class="text-center py-3">-</td>
+                            <td class="text-end pe-3 py-3 fw-bold">RM <?= number_format($addons, 2) ?></td>
+                        </tr>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>

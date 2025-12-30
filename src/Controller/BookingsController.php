@@ -48,19 +48,29 @@ class BookingsController extends AppController
         $this->viewBuilder()->setOption('serialize', ['dates']);
     }
 
-    // --- API to get car details for dynamic preview ---
+    // --- API to get car details for dynamic preview with category services ---
     public function getCarDetails($carId = null)
     {
         $this->request->allowMethod(['get', 'ajax']);
 
         $carsTable = $this->fetchTable('Cars');
-        $car = $carsTable->get($carId);
+        $car = $carsTable->get($carId, contain: ['Categories']);
+
+        $category = $car->category;
 
         $data = [
             'id' => $car->id,
             'name' => $car->car_model,
+            'brand' => $car->brand,
             'image' => $car->image,
-            'price_per_day' => $car->price_per_day
+            'price_per_day' => $car->price_per_day,
+            // Category service data
+            'chauffeur_available' => $category->chauffeur_available ?? false,
+            'chauffeur_daily_rate' => $category->chauffeur_daily_rate ?? 0,
+            'gps_available' => $category->gps_available ?? false,
+            'gps_daily_rate' => $category->gps_daily_rate ?? 0,
+            'insurance_daily_rate' => $category->insurance_daily_rate ?? 0,
+            'security_deposit' => $category->security_deposit ?? 0,
         ];
 
         return $this->response
@@ -92,19 +102,48 @@ class BookingsController extends AppController
                 $startDate = $booking->start_date;
                 $endDate   = $booking->end_date;
 
-                // OLD Logic (Delete this or comment it out):
-                // $days = $endDate->diffInDays($startDate);
-                // if ($days == 0) $days = 1;
-
-                // NEW Logic (Matches your request):
-                // Inclusive days: (End - Start) + 1. 
-                // Example: Jan 1 to Jan 2 is 1 day difference + 1 = 2 Days billing.
+                // Inclusive days: (End - Start) + 1
                 $days = $endDate->diffInDays($startDate) + 1;
 
-                $car = $this->Bookings->Cars->get($booking->car_id);
+                $car = $this->Bookings->Cars->get($booking->car_id, contain: ['Categories']);
+                $category = $car->category;
+
+                // --- CALCULATE ADD-ON COSTS ---
+                $chauffeurCost = 0;
+                $gpsCost = 0;
+                $insuranceCost = 0;
+
+                // Chauffeur Service
+                if ($this->request->getData('has_chauffeur') && $category && $category->chauffeur_available) {
+                    $chauffeurCost = (float)$category->chauffeur_daily_rate * $days;
+                    $booking->has_chauffeur = true;
+                } else {
+                    $booking->has_chauffeur = false;
+                }
+
+                // GPS Navigation
+                if ($this->request->getData('has_gps') && $category && $category->gps_available) {
+                    $gpsCost = (float)$category->gps_daily_rate * $days;
+                    $booking->has_gps = true;
+                } else {
+                    $booking->has_gps = false;
+                }
+
+                // Full Insurance
+                if ($this->request->getData('has_full_insurance') && $category) {
+                    $insuranceCost = (float)$category->insurance_daily_rate * $days;
+                    $booking->has_full_insurance = true;
+                } else {
+                    $booking->has_full_insurance = false;
+                }
+
+                // Security deposit (stored but not added to price)
+                $booking->security_deposit_amount = $category ? (float)$category->security_deposit : 0;
 
                 // --- FINANCIAL LOGIC ---
-                $subtotal = $days * $car->price_per_day;
+                $baseCost = $days * $car->price_per_day;
+                $addonsCost = $chauffeurCost + $gpsCost + $insuranceCost;
+                $subtotal = $baseCost + $addonsCost;
                 $taxRate = 0.06; // 6% SST
                 $taxAmount = $subtotal * $taxRate;
                 $totalPrice = $subtotal + $taxAmount;
