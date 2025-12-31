@@ -2,6 +2,26 @@
 
 All notable changes to the Rentify project will be documented in this file.
 
+## [2026-01-01]
+
+### Changed
+
+-   **Footer Updates**
+    -   Updated social media links to point to valid URLs (Twitter, Facebook, Instagram).
+    -   Updated Twitter icon/label to new "X" branding.
+    -   Added GitHub repository link to footer.
+
+## [2025-12-31]
+
+### Changed
+
+-   **Redesign Car Reviews Page**
+    -   Implemented modern two-column layout with sticky summary sidebar (`templates/Reviews/car_reviews.php`).
+    -   Cleaned up `add_review.php` by removing car image preview.
+-   **Flash Message Refinement**
+    -   Standardized Bootstrap Toast positioning to top-right across all layouts.
+    -   Ensured auto-dismiss functionality (3 seconds) and working close buttons.
+
 ## [2025-12-30]
 
 ### Added
