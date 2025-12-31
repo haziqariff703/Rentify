@@ -539,7 +539,7 @@ foreach ($bookings as $booking) {
     /* Compact Ledger Row */
     .history-row {
         display: grid;
-        grid-template-columns: 100px 100px 1fr 100px 100px;
+        grid-template-columns: 100px 100px 1fr 100px 140px;
         padding: 14px 0;
         border-bottom: 1px solid #f8fafc;
         font-family: 'Montserrat', sans-serif;
@@ -983,8 +983,13 @@ foreach ($bookings as $booking) {
                                         <div class="history-price">
                                             RM <?= number_format((float)$booking->total_price, 2) ?>
                                         </div>
-                                        <div>
+                                        <div class="d-flex align-items-center gap-2 justify-content-end">
                                             <span class="status-pill <?= $statusClass ?>"><?= $statusLabel ?></span>
+                                            <?= $this->Html->link(
+                                                '<i class="fas fa-eye"></i>',
+                                                ['action' => 'viewBookings', $booking->id],
+                                                ['class' => 'btn btn-sm btn-dark rounded-circle', 'style' => 'width: 30px; height: 30px; padding: 0; display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem;', 'escape' => false, 'title' => 'View Booking']
+                                            ) ?>
                                         </div>
                                     </div>
                                 <?php endforeach; ?>

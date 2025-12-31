@@ -21,17 +21,17 @@
 
                 <!-- Social Icons -->
                 <div class="footer-social">
-                    <a href="#" class="social-icon" aria-label="Twitter">
-                        <i class="fab fa-twitter"></i>
+                    <a href="https://twitter.com" class="social-icon" aria-label="X-Twitter">
+                        <i class="fa-brands fa-x-twitter"></i>
                     </a>
-                    <a href="#" class="social-icon" aria-label="Facebook">
+                    <a href="https://facebook.com" class="social-icon" aria-label="Facebook">
                         <i class="fab fa-facebook-f"></i>
                     </a>
-                    <a href="#" class="social-icon" aria-label="Instagram">
+                    <a href="https://instagram.com" class="social-icon" aria-label="Instagram">
                         <i class="fab fa-instagram"></i>
                     </a>
-                    <a href="#" class="social-icon" aria-label="LinkedIn">
-                        <i class="fab fa-linkedin-in"></i>
+                    <a href="https://github.com/haziqariff703/Rentify" class="social-icon" aria-label="Github">
+                        <i class="fa-brands fa-github"></i>
                     </a>
                 </div>
             </div>

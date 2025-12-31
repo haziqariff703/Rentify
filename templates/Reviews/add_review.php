@@ -75,13 +75,6 @@ $this->assign('title', 'Leave a Review');
         <div class="review-form-container">
             <!-- Car Preview -->
             <div class="car-preview text-center">
-                <?php if ($booking->car->image): ?>
-                    <?= $this->Html->image($booking->car->image, ['class' => 'car-preview-img mb-3', 'alt' => $booking->car->name]) ?>
-                <?php else: ?>
-                    <div class="car-preview-img bg-secondary d-flex align-items-center justify-content-center mx-auto mb-3" style="height: 120px; width: 200px;">
-                        <i class="fas fa-car fa-3x opacity-50"></i>
-                    </div>
-                <?php endif; ?>
                 <h4 class="fw-bold mb-1"><?= h($booking->car->name) ?></h4>
                 <p class="text-white-50 mb-0">
                     Booked: <?= $booking->start_date->format('M j') ?> - <?= $booking->end_date->format('M j, Y') ?>

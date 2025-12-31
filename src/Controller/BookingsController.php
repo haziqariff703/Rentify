@@ -152,6 +152,21 @@ class BookingsController extends AppController
     {
         $userId = $this->Authentication->getIdentity()->getIdentifier();
 
+        // Auto-complete bookings that have passed their end date
+        $today = FrozenDate::now();
+        $pastBookings = $this->Bookings->find()
+            ->where([
+                'Bookings.user_id' => $userId,
+                'Bookings.booking_status' => 'confirmed',
+                'Bookings.end_date <' => $today
+            ])
+            ->all();
+
+        foreach ($pastBookings as $booking) {
+            $booking->booking_status = 'completed';
+            $this->Bookings->save($booking);
+        }
+
         $query = $this->Bookings->find()
             ->where(['Bookings.user_id' => $userId])
             ->contain(['Cars', 'Invoices'])

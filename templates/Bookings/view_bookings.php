@@ -630,6 +630,14 @@ if ($booking->start_date && $booking->end_date) {
                         ) ?>
                     <?php endif; ?>
 
+                    <?php if (strtolower($booking->display_status ?? '') === 'completed'): ?>
+                        <?= $this->Html->link(
+                            '<i class="fas fa-star"></i> Leave a Review',
+                            ['controller' => 'Reviews', 'action' => 'addReview', $booking->id],
+                            ['class' => 'btn-action btn-primary', 'escape' => false]
+                        ) ?>
+                    <?php endif; ?>
+
                     <?= $this->Html->link(
                         '<i class="fas fa-arrow-left"></i> Back to Bookings',
                         ['action' => 'myBookings'],

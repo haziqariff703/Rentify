@@ -141,6 +141,54 @@ class UsersController extends AppController
     }
 
     /**
+     * Handle avatar file upload
+     *
+     * @param \App\Model\Entity\User $user User entity
+     * @param \Psr\Http\Message\UploadedFileInterface|null $avatarFile Uploaded file
+     * @return string|null New avatar filename or null if failed/no file
+     */
+    private function _uploadAvatar($user, $avatarFile)
+    {
+        if ($avatarFile && $avatarFile->getError() === UPLOAD_ERR_OK) {
+            $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            $maxFileSize = 2 * 1024 * 1024; // 2MB
+
+            if (!in_array($avatarFile->getClientMediaType(), $allowedMimeTypes)) {
+                $this->Flash->error(__('Invalid file type. Please upload JPG, PNG, GIF, or WebP.'));
+                return null;
+            }
+
+            if ($avatarFile->getSize() > $maxFileSize) {
+                $this->Flash->error(__('File is too large. Maximum size is 2MB.'));
+                return null;
+            }
+
+            // Create avatars directory if it doesn't exist
+            $uploadDir = WWW_ROOT . 'img' . DS . 'avatars';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+
+            // Generate unique filename
+            $extension = pathinfo($avatarFile->getClientFilename(), PATHINFO_EXTENSION);
+            $newFilename = 'avatar_' . $user->id . '_' . time() . '.' . $extension;
+            $targetPath = $uploadDir . DS . $newFilename;
+
+            // Move uploaded file
+            $avatarFile->moveTo($targetPath);
+
+            // Delete old avatar if exists
+            if (!empty($user->avatar) && file_exists(WWW_ROOT . 'img' . DS . $user->avatar)) {
+                @unlink(WWW_ROOT . 'img' . DS . $user->avatar);
+            }
+
+            return 'avatars' . DS . $newFilename;
+        }
+
+        return null;
+    }
+
+    /**
      * Edit Profile method - Customer can edit their own profile
      *
      * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
@@ -155,43 +203,13 @@ class UsersController extends AppController
 
             // Handle avatar file upload
             $avatarFile = $this->request->getUploadedFile('avatar_file');
-            if ($avatarFile && $avatarFile->getError() === UPLOAD_ERR_OK) {
-                $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-                $maxFileSize = 2 * 1024 * 1024; // 2MB
-
-                if (!in_array($avatarFile->getClientMediaType(), $allowedMimeTypes)) {
-                    $this->Flash->error(__('Invalid file type. Please upload JPG, PNG, GIF, or WebP.'));
-                    $this->set(compact('user'));
-                    return;
-                }
-
-                if ($avatarFile->getSize() > $maxFileSize) {
-                    $this->Flash->error(__('File is too large. Maximum size is 2MB.'));
-                    $this->set(compact('user'));
-                    return;
-                }
-
-                // Create avatars directory if it doesn't exist
-                $uploadDir = WWW_ROOT . 'img' . DS . 'avatars';
-                if (!is_dir($uploadDir)) {
-                    mkdir($uploadDir, 0755, true);
-                }
-
-                // Generate unique filename
-                $extension = pathinfo($avatarFile->getClientFilename(), PATHINFO_EXTENSION);
-                $newFilename = 'avatar_' . $userId . '_' . time() . '.' . $extension;
-                $targetPath = $uploadDir . DS . $newFilename;
-
-                // Move uploaded file
-                $avatarFile->moveTo($targetPath);
-
-                // Set the avatar path in data
-                $data['avatar'] = 'avatars' . DS . $newFilename;
-
-                // Delete old avatar if exists
-                if (!empty($user->avatar) && file_exists(WWW_ROOT . 'img' . DS . $user->avatar)) {
-                    @unlink(WWW_ROOT . 'img' . DS . $user->avatar);
-                }
+            $avatarPath = $this->_uploadAvatar($user, $avatarFile);
+            if ($avatarPath) {
+                $data['avatar'] = $avatarPath;
+            } elseif ($avatarFile && $avatarFile->getError() !== UPLOAD_ERR_NO_FILE) {
+                // If there was an error other than "no file", stop and let the user fix it
+                $this->set(compact('user'));
+                return;
             }
 
             // Only allow customers to update specific fields (not role)
@@ -252,7 +270,25 @@ class UsersController extends AppController
     {
         $user = $this->Users->get($id, contain: []);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $user = $this->Users->patchEntity($user, $this->request->getData());
+            $data = $this->request->getData();
+
+            // Handle avatar file upload
+            $avatarFile = $this->request->getUploadedFile('avatar_file');
+            $avatarPath = $this->_uploadAvatar($user, $avatarFile);
+            if ($avatarPath) {
+                $data['avatar'] = $avatarPath;
+            } elseif ($avatarFile && $avatarFile->getError() !== UPLOAD_ERR_NO_FILE) {
+                // If there was an error other than "no file", stop
+                $this->set(compact('user'));
+                return;
+            }
+
+            // Only include password if it's not empty
+            if (empty($data['password'])) {
+                unset($data['password']);
+            }
+
+            $user = $this->Users->patchEntity($user, $data);
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
 

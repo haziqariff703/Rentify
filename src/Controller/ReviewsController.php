@@ -117,7 +117,15 @@ class ReviewsController extends AppController
             ->where(['car_id' => $carId])
             ->count();
 
-        $this->set(compact('reviews', 'car', 'totalReviews'));
+        // Calculate rating distribution (count of each star level)
+        $ratingDistribution = [];
+        for ($i = 1; $i <= 5; $i++) {
+            $ratingDistribution[$i] = $this->Reviews->find()
+                ->where(['car_id' => $carId, 'rating' => $i])
+                ->count();
+        }
+
+        $this->set(compact('reviews', 'car', 'totalReviews', 'ratingDistribution'));
         $this->set('avgRating', ($avgRating && $avgRating->avg_rating !== null) ? round($avgRating->avg_rating, 1) : 0);
     }
 
