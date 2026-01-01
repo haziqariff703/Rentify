@@ -1,4 +1,5 @@
 <?php
+
 /**
  * About Us - Rentify Premium Car Rental
  * Uber-inspired Zig-Zag Layout with Luxury Automotive Styling
@@ -9,7 +10,7 @@ $this->assign('title', 'About Us');
 
 <style>
     /* Google Fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@500;600;700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600&family=Montserrat:wght@500;600;700;800;900&display=swap');
 
     /* ========================================
        ABOUT US PAGE WRAPPER
@@ -55,12 +56,10 @@ $this->assign('title', 'About Us');
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(
-            to bottom,
-            rgba(0, 0, 0, 0.1) 0%,
-            rgba(0, 0, 0, 0.3) 70%,
-            rgba(0, 0, 0, 0.5) 100%
-        );
+        background: linear-gradient(to bottom,
+                rgba(0, 0, 0, 0.1) 0%,
+                rgba(0, 0, 0, 0.3) 70%,
+                rgba(0, 0, 0, 0.5) 100%);
         z-index: 1;
     }
 
@@ -82,7 +81,7 @@ $this->assign('title', 'About Us');
             height: 50vh;
             min-height: 350px;
         }
-        
+
         .video-hero .hero-title-uber {
             bottom: 40px;
             left: 24px;
@@ -120,7 +119,7 @@ $this->assign('title', 'About Us');
     }
 
     .mission-text {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Syne', sans-serif;
         font-size: 1.1rem;
         line-height: 1.9;
         color: #64748b;
@@ -175,7 +174,7 @@ $this->assign('title', 'About Us');
     }
 
     .content-text {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Syne', sans-serif;
         font-size: 1rem;
         line-height: 1.8;
         color: #64748b;
@@ -288,7 +287,7 @@ $this->assign('title', 'About Us');
     }
 
     .stat-bar-label {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Syne', sans-serif;
         font-size: 0.7rem;
         font-weight: 600;
         text-transform: uppercase;
@@ -314,8 +313,8 @@ $this->assign('title', 'About Us');
         <div class="mission-content">
             <h2 class="mission-quote">We don't just rent cars. We curate experiences.</h2>
             <p class="mission-text">
-                Rentify was born from a simple obsession: the belief that the journey matters more than the destination. 
-                We exist to bridge the gap between premium automotive engineering and everyday accessibility. 
+                Rentify was born from a simple obsession: the belief that the journey matters more than the destination.
+                We exist to bridge the gap between premium automotive engineering and everyday accessibility.
                 Whether it's a Proton for a quick errand or a sports car for a weekend escape, we ensure every mile counts.
             </p>
         </div>
@@ -335,8 +334,8 @@ $this->assign('title', 'About Us');
                     <p class="content-label">Performance</p>
                     <h3 class="content-title">Uncompromising Standards</h3>
                     <p class="content-text">
-                        Every vehicle in our garage undergoes a rigorous 150-point inspection before it reaches you. 
-                        We believe that safety and performance are not optional extras—they are the standard. 
+                        Every vehicle in our garage undergoes a rigorous 150-point inspection before it reaches you.
+                        We believe that safety and performance are not optional extras—they are the standard.
                         From tire pressure to engine diagnostics, nothing escapes our attention.
                     </p>
                     <a href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'myCars']) ?>" class="btn-dark-pill">
@@ -361,8 +360,8 @@ $this->assign('title', 'About Us');
                     <p class="content-label">Transparency</p>
                     <h3 class="content-title">Honest Pricing. Always.</h3>
                     <p class="content-text">
-                        No hidden fees. No surprise charges at the counter. Just clear, honest pricing that lets you 
-                        focus on the road ahead. Our "Total Spend" dashboard puts you in complete control of your finances, 
+                        No hidden fees. No surprise charges at the counter. Just clear, honest pricing that lets you
+                        focus on the road ahead. Our "Total Spend" dashboard puts you in complete control of your finances,
                         with every transaction tracked in real-time.
                     </p>
                     <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'add']) ?>" class="btn-outline-pill">

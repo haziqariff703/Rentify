@@ -453,11 +453,12 @@ $greeting = match (true) {
 
         // --- ApexCharts Initialization ---
 
-        // 1. Highlight Chart
+        // 1. Highlight Chart (Revenue & Bookings Trend)
+        // UX Improvements: Y-axis starts at 0, Bar for Revenue, Line for Bookings
         const highlightOptions = {
             series: [{
                 name: 'Revenue (RM)',
-                type: 'area',
+                type: 'column', // Bar chart for revenue (shows volume better)
                 data: <?= json_encode($revenueData ?? []) ?>
             }, {
                 name: 'Bookings',
@@ -478,20 +479,30 @@ $greeting = match (true) {
             },
             colors: ['#6366f1', '#10b981'],
             stroke: {
-                curve: 'smooth',
-                width: [3, 3]
+                curve: 'straight', // Straight lines for honest data representation
+                width: [0, 3] // 0 for bars, 3 for line
             },
             fill: {
-                type: ['gradient', 'solid'],
-                gradient: {
-                    shadeIntensity: 1,
-                    opacityFrom: 0.5,
-                    opacityTo: 0.1,
-                    stops: [0, 90, 100]
+                type: ['solid', 'solid'],
+                opacity: [0.85, 1]
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 6,
+                    columnWidth: '50%'
                 }
             },
             dataLabels: {
                 enabled: false
+            },
+            markers: {
+                size: [0, 5], // Show dots on the booking line
+                colors: ['#6366f1', '#10b981'],
+                strokeWidth: 2,
+                strokeColors: '#fff',
+                hover: {
+                    size: 7
+                }
             },
             xaxis: {
                 categories: <?= json_encode($revenueLabels ?? []) ?>,
@@ -500,6 +511,12 @@ $greeting = match (true) {
                 },
                 axisTicks: {
                     show: false
+                },
+                labels: {
+                    style: {
+                        fontSize: '12px',
+                        fontWeight: 500
+                    }
                 }
             },
             yaxis: [{
@@ -507,9 +524,11 @@ $greeting = match (true) {
                         text: 'Revenue (RM)',
                         style: {
                             fontSize: '12px',
+                            fontWeight: 600,
                             color: '#6366f1'
                         }
                     },
+                    min: 0, // Force Y-axis to start at 0 for honest scale
                     labels: {
                         formatter: function(val) {
                             return 'RM ' + (val ? val.toLocaleString() : '0');
@@ -522,9 +541,11 @@ $greeting = match (true) {
                         text: 'Bookings',
                         style: {
                             fontSize: '12px',
+                            fontWeight: 600,
                             color: '#10b981'
                         }
                     },
+                    min: 0, // Force Y-axis to start at 0 for honest scale
                     labels: {
                         formatter: function(val) {
                             return Math.round(val);
@@ -533,17 +554,35 @@ $greeting = match (true) {
                 }
             ],
             grid: {
-                borderColor: 'rgba(0,0,0,0.05)',
-                strokeDashArray: 4
+                borderColor: 'rgba(0,0,0,0.08)',
+                strokeDashArray: 4,
+                padding: {
+                    top: 0,
+                    bottom: 0
+                }
             },
             legend: {
                 position: 'top',
-                horizontalAlign: 'right'
+                horizontalAlign: 'right',
+                fontWeight: 600,
+                markers: {
+                    radius: 12
+                }
             },
             tooltip: {
                 theme: 'light',
                 shared: true,
-                intersect: false
+                intersect: false,
+                y: {
+                    formatter: function(val, {
+                        seriesIndex
+                    }) {
+                        if (seriesIndex === 0) {
+                            return 'RM ' + (val ? val.toLocaleString() : '0');
+                        }
+                        return val + ' bookings';
+                    }
+                }
             }
         };
         new ApexCharts(document.querySelector("#highlightChart"), highlightOptions).render();

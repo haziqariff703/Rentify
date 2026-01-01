@@ -4,8 +4,22 @@ All notable changes to the Rentify project will be documented in this file.
 
 ## [2026-01-01]
 
+### Fixed
+
+-   **Dashboard Chart Booking Count** (`src/Controller/AdminsController.php`)
+    -   Changed booking count query to use `start_date` instead of `created` date.
+    -   Changed revenue calculation to use booking `start_date` and `total_price` instead of payment `payment_date`.
+    -   Both metrics are now counted in the month the rental begins, not when booking/payment was made.
+    -   This aligns the "Revenue & Bookings Trend" chart with the Booking Interactive Calendar.
+
 ### Changed
 
+-   **Dashboard Chart UX Improvements** (`templates/Admins/dashboard.php`)
+    -   Changed Revenue to use **bar chart** (shows volume better) instead of area chart.
+    -   Bookings displayed as a **line with markers** for clear trend visibility.
+    -   **Y-axis now starts at 0** for both metrics (honest scale, prevents misleading visuals).
+    -   Changed from smooth curves to **straight lines** for accurate data representation.
+    -   Enhanced tooltip to show formatted values ("RM X" and "X bookings").
 -   **Footer Updates**
     -   Updated social media links to point to valid URLs (Twitter, Facebook, Instagram).
     -   Updated Twitter icon/label to new "X" branding.

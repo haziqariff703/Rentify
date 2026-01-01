@@ -69,13 +69,13 @@ class AdminsController extends AppController
         // --- Chart Data: Revenue Trends (Last 6 Months) ---
         $sixMonthsAgo = new \Cake\I18n\FrozenDate('-6 months');
 
-        // Get revenue by month
-        $revenueQuery = $paymentsTable->find();
+        // Get revenue by month (based on booking start_date for consistency with booking counts)
+        $revenueQuery = $bookingsTable->find();
         $revenueResults = $revenueQuery->select([
-            'month_str' => $revenueQuery->newExpr("DATE_FORMAT(payment_date, '%Y-%m')"),
-            'total' => $revenueQuery->func()->sum('amount')
+            'month_str' => $revenueQuery->newExpr("DATE_FORMAT(start_date, '%Y-%m')"),
+            'total' => $revenueQuery->func()->sum('total_price')
         ])
-            ->where(['payment_date >=' => $sixMonthsAgo])
+            ->where(['start_date >=' => $sixMonthsAgo])
             ->group('month_str')
             ->order(['month_str' => 'ASC'])
             ->all();
@@ -87,12 +87,13 @@ class AdminsController extends AppController
         }
 
         // --- Chart Data: Booking Counts (Last 6 Months) ---
+        // Count by start_date so bookings appear in the month the rental begins
         $bookingCountQuery = $bookingsTable->find();
         $bookingCountResults = $bookingCountQuery->select([
-            'month_str' => $bookingCountQuery->newExpr("DATE_FORMAT(created, '%Y-%m')"),
+            'month_str' => $bookingCountQuery->newExpr("DATE_FORMAT(start_date, '%Y-%m')"),
             'count' => $bookingCountQuery->func()->count('*')
         ])
-            ->where(['created >=' => $sixMonthsAgo])
+            ->where(['start_date >=' => $sixMonthsAgo])
             ->group('month_str')
             ->order(['month_str' => 'ASC'])
             ->all();

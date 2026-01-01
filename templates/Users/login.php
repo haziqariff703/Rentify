@@ -304,7 +304,7 @@
         background: #fff;
         border-color: #3b82f6;
         outline: none;
-        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        box-shadow: 0 0 0 4px rgba(244, 245, 247, 0.1);
     }
 
     .form-input::placeholder {
@@ -615,7 +615,7 @@
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const registerButton = document.getElementById('register');
         const loginButton = document.getElementById('login');
         const container = document.getElementById('container');
