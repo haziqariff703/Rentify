@@ -13,15 +13,21 @@ class StatusHelper extends Helper
      */
     public function bookingBadge(string $status): string
     {
-        $class = match (strtolower($status)) {
-            'pending' => 'pending',
-            'confirmed' => 'confirmed',
-            'cancelled' => 'cancelled',
-            'completed' => 'completed',
-            default => 'default'
+        $status = strtolower($status);
+        $config = match ($status) {
+            'pending' => ['class' => 'pending', 'icon' => 'fa-clock'],
+            'confirmed' => ['class' => 'confirmed', 'icon' => 'fa-check-circle'],
+            'cancelled' => ['class' => 'cancelled', 'icon' => 'fa-times-circle'],
+            'completed' => ['class' => 'completed', 'icon' => 'fa-flag-checkered'],
+            default => ['class' => 'default', 'icon' => 'fa-info-circle']
         };
 
-        return sprintf('<span class="status-badge %s">%s</span>', $class, ucfirst(h($status)));
+        return sprintf(
+            '<span class="status-badge %s"><i class="fas %s me-1"></i>%s</span>',
+            $config['class'],
+            $config['icon'],
+            ucfirst($status)
+        );
     }
 
     /**
@@ -29,14 +35,20 @@ class StatusHelper extends Helper
      */
     public function paymentBadge(string $status): string
     {
-        $class = match (strtolower($status)) {
-            'paid' => 'paid',
-            'unpaid' => 'unpaid',
-            'cancelled', 'void', 'refunded' => 'cancelled',
-            'pending' => 'pending',
-            default => 'default'
+        $status = strtolower($status);
+        $config = match ($status) {
+            'paid' => ['class' => 'paid', 'icon' => 'fa-check-circle'],
+            'unpaid' => ['class' => 'unpaid', 'icon' => 'fa-exclamation-circle'],
+            'cancelled', 'void', 'refunded' => ['class' => 'cancelled', 'icon' => 'fa-redo'],
+            'pending' => ['class' => 'pending', 'icon' => 'fa-hourglass-half'],
+            default => ['class' => 'default', 'icon' => 'fa-info-circle']
         };
 
-        return sprintf('<span class="status-badge %s">%s</span>', $class, ucfirst(h($status)));
+        return sprintf(
+            '<span class="status-badge %s"><i class="fas %s me-1"></i>%s</span>',
+            $config['class'],
+            $config['icon'],
+            ucfirst($status)
+        );
     }
 }

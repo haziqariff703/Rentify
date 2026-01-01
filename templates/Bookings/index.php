@@ -46,6 +46,11 @@ $isAdmin = $identity && $identity->role === 'admin';
                     <th>End Date</th>
                     <th>Total Price</th>
                     <th class="filterable" data-column="6">
+                        <span class="th-text">Payment</span>
+                        <i class="fas fa-filter filter-icon"></i>
+                        <div class="column-dropdown"></div>
+                    </th>
+                    <th class="filterable" data-column="7">
                         <span class="th-text">Status</span>
                         <i class="fas fa-filter filter-icon"></i>
                         <div class="column-dropdown"></div>
@@ -58,6 +63,18 @@ $isAdmin = $identity && $identity->role === 'admin';
             </thead>
             <tbody>
                 <?php foreach ($bookings as $booking): ?>
+                    <?php
+                    // Determine payment status from invoices
+                    $isPaid = false;
+                    if (!empty($booking->invoices)) {
+                        foreach ($booking->invoices as $invoice) {
+                            if ($invoice->status === 'paid') {
+                                $isPaid = true;
+                                break;
+                            }
+                        }
+                    }
+                    ?>
                     <tr>
                         <td data-order="<?= h($booking->id) ?>"><code>#<?= h($booking->id) ?></code></td>
                         <td><?= $booking->hasValue('user') ? $this->Html->link($booking->user->name, ['controller' => 'Users', 'action' => 'view', $booking->user->id]) : '' ?></td>
@@ -65,6 +82,9 @@ $isAdmin = $identity && $identity->role === 'admin';
                         <td><?= h($booking->start_date?->format('M d, Y')) ?></td>
                         <td><?= h($booking->end_date?->format('M d, Y')) ?></td>
                         <td class="price-cell">RM <?= $booking->total_price === null ? '0' : $this->Number->format($booking->total_price) ?></td>
+                        <td>
+                            <?= $this->Status->paymentBadge($isPaid ? 'paid' : 'pending') ?>
+                        </td>
                         <td>
                             <?= $this->Status->bookingBadge($booking->display_status) ?>
                         </td>
@@ -95,13 +115,20 @@ $isAdmin = $identity && $identity->role === 'admin';
                         <?php if ($isAdmin): ?>
                             <td class="actions-cell">
                                 <?php if ($booking->booking_status === 'pending'): ?>
+                                    <?php
+                                    $confirmMsg = $isPaid
+                                        ? __('Approve booking #{0}? This will mark the car as Rented.', $booking->id)
+                                        : __('WARNING: Payment for booking #{0} is still PENDING. Approve anyway?', $booking->id);
+
+                                    $btnClass = $isPaid ? 'btn-success' : 'btn-warning';
+                                    ?>
                                     <?= $this->Form->postLink(
-                                        '<i class="fas fa-check"></i> Approve',
+                                        '<i class="fas fa-check"></i> ' . ($isPaid ? 'Approve' : 'Override'),
                                         ['controller' => 'Admins', 'action' => 'approveBooking', $booking->id],
                                         [
-                                            'class' => 'btn btn-sm btn-success',
+                                            'class' => 'btn btn-sm ' . $btnClass,
                                             'escape' => false,
-                                            'confirm' => __('Approve booking #{0}? This will mark the car as Rented.', $booking->id),
+                                            'confirm' => $confirmMsg,
                                         ]
                                     ) ?>
                                     <?= $this->Form->postLink(

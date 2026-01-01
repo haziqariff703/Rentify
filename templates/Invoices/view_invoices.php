@@ -13,9 +13,13 @@ $car = $booking->car;
 $paymentInfo = null;
 $methodDisplay = '-';
 
+// Check invoice status first - this is the source of truth after admin confirmation
+$invoiceIsPaid = strtolower($invoice->status ?? 'unpaid') === 'paid';
+
 if (!empty($booking->payments)) {
     foreach ($booking->payments as $p) {
-        if ($p->payment_status === 'paid' || $p->payment_status === 'refunded') {
+        // Show receipt if: payment is paid/refunded, OR invoice is marked paid (for admin-confirmed cash)
+        if ($p->payment_status === 'paid' || $p->payment_status === 'refunded' || $invoiceIsPaid) {
             $paymentInfo = $p;
 
             // Format the raw database string into human text

@@ -81,6 +81,22 @@
                         </td>
                         <td><?= $payment->created ? $payment->created->format('M d, Y') : '-' ?></td>
                         <td class="actions-cell">
+                            <?php
+                            $status = $payment->payment_status ?? '';
+                            $needsConfirmation = empty($status) || $status === 'pending';
+                            ?>
+                            <?php if ($needsConfirmation): ?>
+                                <?= $this->Form->postLink(
+                                    '<i class="fas fa-check"></i>',
+                                    ['action' => 'confirmCashPayment', $payment->id],
+                                    [
+                                        'class' => 'btn btn-sm btn-success',
+                                        'escape' => false,
+                                        'title' => 'Confirm Cash Payment',
+                                        'confirm' => __('Are you sure you have received RM {0} in cash for this booking?', $this->Number->format($payment->amount))
+                                    ]
+                                ) ?>
+                            <?php endif; ?>
                             <?= $this->Html->link(
                                 '<i class="fas fa-eye"></i>',
                                 ['action' => 'view', $payment->id],

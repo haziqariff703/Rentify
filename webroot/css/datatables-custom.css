@@ -269,81 +269,111 @@
 }
 
 /* =====================================================
-   STATUS BADGES
+   STATUS BADGES & COLOR UTILITIES
    ===================================================== */
 
+/* Soft Background Utilities */
+.bg-success-soft {
+    background-color: rgba(22, 163, 74, 0.1) !important;
+    color: #16a34a !important;
+    border: 1px solid rgba(22, 163, 74, 0.2) !important;
+}
+
+.bg-warning-soft {
+    background-color: rgba(217, 119, 6, 0.1) !important;
+    color: #d97706 !important;
+    border: 1px solid rgba(217, 119, 6, 0.2) !important;
+}
+
+.bg-danger-soft {
+    background-color: rgba(220, 38, 38, 0.1) !important;
+    color: #dc2626 !important;
+    border: 1px solid rgba(220, 38, 38, 0.2) !important;
+}
+
+.bg-info-soft {
+    background-color: rgba(37, 99, 235, 0.1) !important;
+    color: #2563eb !important;
+    border: 1px solid rgba(37, 99, 235, 0.2) !important;
+}
+
+.bg-secondary-soft {
+    background-color: rgba(71, 85, 105, 0.1) !important;
+    color: #475569 !important;
+    border: 1px solid rgba(71, 85, 105, 0.2) !important;
+}
+
 .status-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 4px 12px;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    display: inline-flex !important;
+    align-items: center !important;
+    padding: 6px 14px !important;
+    border-radius: 50px !important;
+    font-size: 0.75rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    border: 1px solid transparent !important;
+    white-space: nowrap !important;
 }
 
 /* Car Status Badges */
 .status-badge.available {
-    background-color: #dcfce7;
-    color: #166534;
+    background-color: rgba(22, 163, 74, 0.1) !important;
+    color: #16a34a !important;
+    border-color: rgba(22, 163, 74, 0.2) !important;
 }
 
-.status-badge.rented {
-    background-color: #fef3c7;
-    color: #92400e;
-}
-
-.status-badge.maintenance {
-    background-color: #fee2e2;
-    color: #991b1b;
-}
-
+.status-badge.rented,
 .status-badge.booked {
-    background-color: #fef3c7;
-    color: #92400e;
+    background-color: rgba(217, 119, 6, 0.1) !important;
+    color: #d97706 !important;
+    border-color: rgba(217, 119, 6, 0.2) !important;
 }
 
-/* Booking Status Badges */
+.status-badge.maintenance,
+.status-badge.cancelled {
+    background-color: rgba(220, 38, 38, 0.1) !important;
+    color: #dc2626 !important;
+    border-color: rgba(220, 38, 38, 0.2) !important;
+}
+
+/* Booking & Payment Specifics */
 .status-badge.pending {
-    background-color: #fef3c7;
-    color: #92400e;
+    background-color: rgba(217, 119, 6, 0.1) !important;
+    color: #d97706 !important;
+    border-color: rgba(217, 119, 6, 0.2) !important;
 }
 
-.status-badge.confirmed {
-    background-color: #dcfce7;
-    color: #166534;
+.status-badge.confirmed,
+.status-badge.paid {
+    background-color: rgba(22, 163, 74, 0.1) !important;
+    color: #16a34a !important;
+    border-color: rgba(22, 163, 74, 0.2) !important;
 }
 
 .status-badge.completed {
-    background-color: #e0e7ff;
-    color: #4338ca;
-}
-
-.status-badge.cancelled {
-    background-color: #fee2e2;
-    color: #991b1b;
-}
-
-.status-badge.paid {
-    background-color: #dcfce7;
-    color: #166534;
+    background-color: rgba(37, 99, 235, 0.1) !important;
+    color: #2563eb !important;
+    border-color: rgba(37, 99, 235, 0.2) !important;
 }
 
 .status-badge.unpaid {
-    background-color: #fef3c7;
-    color: #92400e;
+    background-color: rgba(217, 119, 6, 0.1) !important;
+    color: #d97706 !important;
+    border-color: rgba(217, 119, 6, 0.2) !important;
 }
 
 .status-badge.default {
-    background-color: #e2e8f0;
-    color: #475569;
+    background-color: rgba(71, 85, 105, 0.1) !important;
+    color: #475569 !important;
+    border-color: rgba(71, 85, 105, 0.2) !important;
 }
 
-/* Maintenance Status Badges */
+/* Legacy support/alternate names */
 .status-badge.scheduled {
-    background-color: #fee2e2;
-    color: #991b1b;
+    background-color: rgba(220, 38, 38, 0.1) !important;
+    color: #dc2626 !important;
+    border-color: rgba(220, 38, 38, 0.2) !important;
 }
 
 /* =====================================================

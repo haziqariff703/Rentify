@@ -9,6 +9,16 @@ All notable changes to the Rentify project will be documented in this file.
 -   **Dashboard Chart Booking Count Fix** (`src/Controller/AdminsController.php`)
     -   Changed booking count query to use `start_date` instead of `created` date.
     -   Both metrics now align with the rental activity month.
+-   **Premium Design System & Badge Overhaul**
+    -   Added **soft-color utilities** (`bg-success-soft`, etc.) to the shared design system for a modern, glassmorphism-inspired look.
+    -   Enhanced `StatusHelper` to automatically include **FontAwesome icons** in all status badges.
+    -   Standardized status rendering across `Bookings/view.php` and `index.php` to ensure 100% visual consistency.
+    -   Removed redundant internal CSS from view templates to lean on the centralized design system.
+-   **Enhanced Booking Approval Workflow**
+    -   Separated financial confirmation (Payments page) from operational approval (Bookings page).
+    -   Added a **Payment** column to `Bookings/index.php` showing real-time invoice status.
+    -   Redesigned the "Approve" button to dynamically switch to "Override" (warning style) if payment is pending.
+    -   Modified `PaymentsController` to strictly handle financial status, preventing premature booking confirmation.
 -   **Styling Standardization & Design System Alignment**
     -   Standardized **action buttons** and **status badges** across Car Categories, Invoices, and Payments.
     -   Refactored `CarCategories/index.php`, `Invoices/index.php`, and `Payments/index.php` to use the shared `datatables-custom.css`.
@@ -23,6 +33,11 @@ All notable changes to the Rentify project will be documented in this file.
     -   Implemented custom **Glassmorphism** styling for modals to match site theme.
     -   Added colored icons and badges for booking status (Confirmed, Pending, etc.).
     -   Enabled direct navigation to booking details from the calendar modal.
+-   **Cash Payment Approval Workflow** (`src/Controller/PaymentsController.php`, `templates/Payments/index.php`)
+    -   Implemented a business logic change where **Cash payments** stay `pending` until verified.
+    -   Prevented automatic booking confirmation for cash users to ensure financial security.
+    -   Added a dedicated **"Confirm Payment"** admin button to manually verify cash receipts.
+    -   Manual payment confirmation automatically triggers booking approval and invoice updates.
 -   **Footer Updates**
     -   Updated social media links to point to valid URLs (Twitter, Facebook, Instagram).
     -   Updated Twitter icon/label to new "X" branding.

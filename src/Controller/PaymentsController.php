@@ -28,7 +28,7 @@ class PaymentsController extends AppController
         }
 
         // Admin-only actions
-        $adminActions = ['index', 'edit', 'delete'];
+        $adminActions = ['index', 'edit', 'delete', 'confirmCashPayment'];
         if (in_array($action, $adminActions)) {
             if (!$user || $user->role !== 'admin') {
                 $this->Flash->error(__('You are not authorized to access this page.'));
@@ -174,26 +174,33 @@ class PaymentsController extends AppController
             }
 
             if ($isValid) {
-                $payment->payment_date = date('Y-m-d H:i:s');
-                $payment->payment_status = 'paid';
+                $isCash = ($data['payment_method'] === 'cash');
+                $payment->payment_date = \Cake\I18n\FrozenTime::now();
+                $payment->payment_status = $isCash ? 'pending' : 'paid';
 
                 if ($this->Payments->save($payment)) {
                     // Update Invoice
                     $invoicesTable = $this->fetchTable('Invoices');
                     $invoice = $invoicesTable->find()->where(['booking_id' => $payment->booking_id])->first();
-                    if ($invoice) {
+
+                    if ($invoice && !$isCash) {
                         $invoice->status = 'paid';
                         $invoicesTable->save($invoice);
                     }
 
                     // Update Booking
-                    $bookingsTable = $this->fetchTable('Bookings');
-                    $bookingRec = $bookingsTable->get($payment->booking_id);
-                    $bookingRec->booking_status = 'confirmed';
-                    $bookingsTable->save($bookingRec);
+                    if (!$isCash) {
+                        $bookingsTable = $this->fetchTable('Bookings');
+                        $bookingRec = $bookingsTable->get($payment->booking_id);
+                        $bookingRec->booking_status = 'confirmed';
+                        $bookingsTable->save($bookingRec);
 
-                    $this->Flash->success(__('Payment Successful! Booking Confirmed.'));
-                    return $this->redirect(['controller' => 'Invoices', 'action' => 'viewInvoices', $invoice->id]);
+                        $this->Flash->success(__('Payment Successful! Booking Confirmed.'));
+                    } else {
+                        $this->Flash->success(__('Booking request submitted! Please visit our counter to complete the cash payment.'));
+                    }
+
+                    return $this->redirect(['controller' => 'Invoices', 'action' => 'viewInvoices', $invoice ? $invoice->id : $payment->booking_id]);
                 }
             }
         }
@@ -205,5 +212,57 @@ class PaymentsController extends AppController
 
         // Pass $booking to view for summary
         $this->set(compact('payment', 'bookingId', 'amount', 'booking'));
+    }
+
+    /**
+     * Confirm Cash Payment - Admin only
+     * Manually mark a cash payment as paid and confirm the booking
+     */
+    public function confirmCashPayment($id = null)
+    {
+        $this->request->allowMethod(['post']);
+        $payment = $this->Payments->get($id);
+
+        // Accept 'pending', empty, or null as valid states for confirmation
+        $currentStatus = $payment->payment_status ?? '';
+        if (!empty($currentStatus) && $currentStatus !== 'pending') {
+            $this->Flash->error(__('This payment is already processed (status: {0}).', $currentStatus));
+            return $this->redirect(['action' => 'index']);
+        }
+
+        // Update payment status
+        $payment->payment_status = 'paid';
+        $payment->payment_date = \Cake\I18n\FrozenTime::now();
+        $payment->setDirty('payment_status', true);
+        $payment->setDirty('payment_date', true);
+
+        if ($this->Payments->save($payment)) {
+            // Update Invoice
+            $invoicesTable = $this->fetchTable('Invoices');
+            $invoice = $invoicesTable->find()->where(['booking_id' => $payment->booking_id])->first();
+            if ($invoice) {
+                $invoice->status = 'paid';
+                $invoice->setDirty('status', true);
+                if (!$invoicesTable->save($invoice)) {
+                    $this->Flash->warning(__('Payment saved but invoice update failed.'));
+                }
+            } else {
+                $this->Flash->warning(__('Payment saved but no invoice found for booking #{0}.', $payment->booking_id));
+            }
+
+            $this->Flash->success(__('Payment confirmed! You can now officially approve the booking from the Bookings Management page.'));
+        } else {
+            // Show validation errors
+            $errors = $payment->getErrors();
+            $errorMsg = '';
+            foreach ($errors as $field => $fieldErrors) {
+                foreach ($fieldErrors as $error) {
+                    $errorMsg .= "{$field}: {$error}; ";
+                }
+            }
+            $this->Flash->error(__('Could not confirm payment. Errors: {0}', $errorMsg ?: 'Unknown'));
+        }
+
+        return $this->redirect(['action' => 'index']);
     }
 }

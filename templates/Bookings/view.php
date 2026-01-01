@@ -242,14 +242,6 @@ $locationLabels = [
                             </thead>
                             <tbody>
                                 <?php foreach ($booking->invoices as $invoice): ?>
-                                    <?php
-                                    $invStatusClass = match ($invoice->status) {
-                                        'paid' => 'bg-success',
-                                        'unpaid' => 'bg-warning text-dark',
-                                        'cancelled' => 'bg-danger',
-                                        default => 'bg-secondary'
-                                    };
-                                    ?>
                                     <tr>
                                         <td><code><?= h($invoice->invoice_number) ?></code></td>
                                         <td>RM <?= $this->Number->format($invoice->amount) ?></td>
@@ -294,15 +286,6 @@ $locationLabels = [
                             </thead>
                             <tbody>
                                 <?php foreach ($booking->payments as $payment): ?>
-                                    <?php
-                                    $payStatusClass = match ($payment->payment_status) {
-                                        'paid' => 'bg-success',
-                                        'pending' => 'bg-warning text-dark',
-                                        'refunded' => 'bg-info',
-                                        'failed' => 'bg-danger',
-                                        default => 'bg-secondary'
-                                    };
-                                    ?>
                                     <tr>
                                         <td><strong>RM <?= $this->Number->format($payment->amount) ?></strong></td>
                                         <td><?= h($payment->payment_method) ?></td>
@@ -365,13 +348,6 @@ $locationLabels = [
         font-size: 0.9rem;
     }
 
-    .status-badge {
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        text-transform: uppercase;
-    }
 
     .header-actions {
         display: flex;
@@ -616,5 +592,55 @@ $locationLabels = [
             flex-direction: column;
             align-items: flex-start;
         }
+    }
+
+    /* Status Badges - Premium Styling */
+    .status-badge {
+        display: inline-flex !important;
+        align-items: center !important;
+        padding: 6px 14px !important;
+        border-radius: 50px !important;
+        font-size: 0.75rem !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        white-space: nowrap !important;
+    }
+
+    .status-badge.pending {
+        background-color: rgba(217, 119, 6, 0.15) !important;
+        color: #d97706 !important;
+        border: 1px solid rgba(217, 119, 6, 0.3) !important;
+    }
+
+    .status-badge.confirmed,
+    .status-badge.paid {
+        background-color: rgba(22, 163, 74, 0.15) !important;
+        color: #16a34a !important;
+        border: 1px solid rgba(22, 163, 74, 0.3) !important;
+    }
+
+    .status-badge.completed {
+        background-color: rgba(37, 99, 235, 0.15) !important;
+        color: #2563eb !important;
+        border: 1px solid rgba(37, 99, 235, 0.3) !important;
+    }
+
+    .status-badge.cancelled {
+        background-color: rgba(220, 38, 38, 0.15) !important;
+        color: #dc2626 !important;
+        border: 1px solid rgba(220, 38, 38, 0.3) !important;
+    }
+
+    .status-badge.unpaid {
+        background-color: rgba(217, 119, 6, 0.15) !important;
+        color: #d97706 !important;
+        border: 1px solid rgba(217, 119, 6, 0.3) !important;
+    }
+
+    .status-badge.default {
+        background-color: rgba(71, 85, 105, 0.15) !important;
+        color: #475569 !important;
+        border: 1px solid rgba(71, 85, 105, 0.3) !important;
     }
 </style>
