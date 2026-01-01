@@ -11,8 +11,10 @@ All notable changes to the Rentify project will be documented in this file.
     -   Both metrics now align with the rental activity month.
 -   **Premium Design System & Badge Overhaul**
     -   Added **soft-color utilities** (`bg-success-soft`, etc.) to the shared design system for a modern, glassmorphism-inspired look.
-    -   Enhanced `StatusHelper` to automatically include **FontAwesome icons** in all status badges.
+    -   Enhanced `StatusHelper` to automatically include **FontAwesome icons** in all status badges (Check-circle, Clock, hourglass, etc.).
+    -   Strengthened badge rules in `datatables-custom.css` with **1px borders** and `!important` flags to ensure colors are visible even when overridden by table-cell styles.
     -   Standardized status rendering across `Bookings/view.php` and `index.php` to ensure 100% visual consistency.
+    -   Fixed missing badge colors on single-view pages (e.g., `Bookings/view.php`) by implementing internal CSS fallbacks for non-DataTable views.
     -   Removed redundant internal CSS from view templates to lean on the centralized design system.
 -   **Enhanced Booking Approval Workflow**
     -   Separated financial confirmation (Payments page) from operational approval (Bookings page).
