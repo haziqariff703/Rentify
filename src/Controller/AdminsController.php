@@ -195,6 +195,32 @@ class AdminsController extends AppController
             ->where(['Reviews.rating <=' => 2])
             ->count();
 
+        // --- Chart Data: Hourly Booking Pulse (Last 24 Hours) ---
+        $twentyFourHoursAgo = new \DateTime('-24 hours');
+        $hourlyBookingsQuery = $bookingsTable->find();
+        $hourlyResults = $hourlyBookingsQuery->select([
+            'hour' => $hourlyBookingsQuery->newExpr("DATE_FORMAT(created, '%H')"),
+            'count' => $hourlyBookingsQuery->func()->count('*')
+        ])
+            ->where(['created >=' => $twentyFourHoursAgo])
+            ->group('hour')
+            ->order(['hour' => 'ASC'])
+            ->all();
+
+        // Initialize 24 hours with 0
+        $hourlyBookingStats = [];
+        $currentHour = (int)date('H');
+        for ($i = 23; $i >= 0; $i--) {
+            $h = (clone $twentyFourHoursAgo)->modify("+$i hours")->format('H');
+            $hourlyBookingStats[$h] = 0;
+        }
+
+        foreach ($hourlyResults as $row) {
+            $hourlyBookingStats[$row->hour] = (int)$row->count;
+        }
+        $hourlyBookingCounts = array_values($hourlyBookingStats);
+        $hourlyBookingLabels = array_keys($hourlyBookingStats);
+
         $this->set(compact(
             'totalCars',
             'totalBookings',
@@ -217,7 +243,9 @@ class AdminsController extends AppController
             'topCars',
             'scheduledMaintenances',
             'issueReviews',
-            'issueReviewsCount'
+            'issueReviewsCount',
+            'hourlyBookingCounts',
+            'hourlyBookingLabels'
         ));
     }
 

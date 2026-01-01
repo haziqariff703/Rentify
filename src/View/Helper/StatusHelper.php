@@ -30,13 +30,13 @@ class StatusHelper extends Helper
     public function paymentBadge(string $status): string
     {
         $class = match (strtolower($status)) {
-            'paid' => 'success',
-            'unpaid' => 'warning',
-            'cancelled', 'void', 'refunded' => 'danger',
-            'pending' => 'info',
-            default => 'secondary'
+            'paid' => 'paid',
+            'unpaid' => 'unpaid',
+            'cancelled', 'void', 'refunded' => 'cancelled',
+            'pending' => 'pending',
+            default => 'default'
         };
 
-        return sprintf('<span class="badge bg-%s">%s</span>', $class, ucfirst(h($status)));
+        return sprintf('<span class="status-badge %s">%s</span>', $class, ucfirst(h($status)));
     }
 }

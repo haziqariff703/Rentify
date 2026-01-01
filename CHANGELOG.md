@@ -6,24 +6,39 @@ All notable changes to the Rentify project will be documented in this file.
 
 ### Fixed
 
--   **Dashboard Chart Booking Count** (`src/Controller/AdminsController.php`)
+-   **Dashboard Chart Booking Count Fix** (`src/Controller/AdminsController.php`)
     -   Changed booking count query to use `start_date` instead of `created` date.
-    -   Changed revenue calculation to use booking `start_date` and `total_price` instead of payment `payment_date`.
-    -   Both metrics are now counted in the month the rental begins, not when booking/payment was made.
-    -   This aligns the "Revenue & Bookings Trend" chart with the Booking Interactive Calendar.
-
-### Changed
-
--   **Dashboard Chart UX Improvements** (`templates/Admins/dashboard.php`)
-    -   Changed Revenue to use **bar chart** (shows volume better) instead of area chart.
-    -   Bookings displayed as a **line with markers** for clear trend visibility.
-    -   **Y-axis now starts at 0** for both metrics (honest scale, prevents misleading visuals).
-    -   Changed from smooth curves to **straight lines** for accurate data representation.
-    -   Enhanced tooltip to show formatted values ("RM X" and "X bookings").
+    -   Both metrics now align with the rental activity month.
+-   **Styling Standardization & Design System Alignment**
+    -   Standardized **action buttons** and **status badges** across Car Categories, Invoices, and Payments.
+    -   Refactored `CarCategories/index.php`, `Invoices/index.php`, and `Payments/index.php` to use the shared `datatables-custom.css`.
+    -   Updated `StatusHelper` to use high-end `.status-badge` design for all billing statuses.
+    -   Centrally managed professional colors for Paid, Unpaid, and Cancelled statuses.
+-   **Performance Overview Chart Redesign** (`templates/Admins/dashboard.php`)
+    -   Redesigned the main trend chart with a professional "Report" style header.
+    -   Added summary stats (Total Revenue, Total Bookings) directly into the chart card.
+    -   Enhanced visuals with **12px rounded bars**, gradients, and glowing trend lines.
+-   **Professional SweetAlert2 Modals** (`templates/Admins/dashboard.php`)
+    -   Replaced native `alert()` browser dialogs with high-end SweetAlert2 modals.
+    -   Implemented custom **Glassmorphism** styling for modals to match site theme.
+    -   Added colored icons and badges for booking status (Confirmed, Pending, etc.).
+    -   Enabled direct navigation to booking details from the calendar modal.
 -   **Footer Updates**
     -   Updated social media links to point to valid URLs (Twitter, Facebook, Instagram).
     -   Updated Twitter icon/label to new "X" branding.
     -   Added GitHub repository link to footer.
+
+### Added
+
+-   **Live Activity Widget** (`templates/Admins/dashboard.php`)
+    -   Replaced static "Earnings" sparkline with real-time "Live Activity" chart.
+    -   Chart updates every 2 seconds with smooth scrolling animation.
+    -   Added pulsing green "LIVE" indicator with CSS animation.
+    -   Gives dashboard a premium, dynamic feel.
+-   **Hourly Booking Pulse Widget** (`src/Controller/AdminsController.php`, `templates/Admins/dashboard.php`)
+    -   Replaced static "Orders" bar chart with a real-time "Hourly Pulse" of the last 24 hours.
+    -   Fetches actual database records group by hour to show booking activity peaks.
+    -   Enhanced tooltips to show specific hour (e.g., "14:00") and booking count.
 
 ## [2025-12-31]
 

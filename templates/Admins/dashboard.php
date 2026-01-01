@@ -164,6 +164,71 @@
         margin-right: 15px;
         background: #f1f5f9;
     }
+
+    /* Live Activity Pulse Animation */
+    .pulse-dot {
+        width: 8px;
+        height: 8px;
+        background-color: #10b981;
+        border-radius: 50%;
+        display: inline-block;
+        animation: pulse-animation 1.5s infinite ease-in-out;
+    }
+
+    @keyframes pulse-animation {
+        0% {
+            transform: scale(1);
+            opacity: 1;
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+        }
+
+        50% {
+            transform: scale(1.1);
+            opacity: 0.8;
+            box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+        }
+
+        100% {
+            transform: scale(1);
+            opacity: 1;
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+        }
+    }
+
+    /* SweetAlert2 Glassmorphism */
+    .glass-swal-popup {
+        background: rgba(255, 255, 255, 0.8) !important;
+        backdrop-filter: blur(15px) !important;
+        -webkit-backdrop-filter: blur(15px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.5) !important;
+        border-radius: 24px !important;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1) !important;
+        font-family: 'Inter', sans-serif !important;
+    }
+
+    .shadow-inner {
+        box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+    }
+
+    .bg-soft-success {
+        background: rgba(16, 185, 129, 0.1) !important;
+        color: #10b981 !important;
+    }
+
+    .bg-soft-warning {
+        background: rgba(245, 158, 11, 0.1) !important;
+        color: #f59e0b !important;
+    }
+
+    .bg-soft-danger {
+        background: rgba(239, 68, 68, 0.1) !important;
+        color: #ef4444 !important;
+    }
+
+    .bg-soft-info {
+        background: rgba(59, 130, 246, 0.1) !important;
+        color: #3b82f6 !important;
+    }
 </style>
 
 <!-- Analytics Header -->
@@ -271,14 +336,24 @@ $greeting = match (true) {
         </div>
 
         <!-- Highlight Chart (Revenue) -->
-        <div class="glass-card">
-            <div class="widget-title mb-3">
+        <div class="glass-card shadow-sm border-0">
+            <div class="d-flex justify-content-between align-items-start mb-4">
                 <div>
-                    <i class="fas fa-chart-area me-2 text-info"></i>
-                    Revenue & Bookings Trend
+                    <h5 class="fw-bold text-dark mb-1">Performance Overview</h5>
+                    <p class="text-muted small">Revenue and booking trends for the last 6 months</p>
+                </div>
+                <div class="d-flex gap-4">
+                    <div class="text-end">
+                        <div class="text-muted small fw-bold text-uppercase">Total Period Revenue</div>
+                        <div class="fw-bold fs-5 text-indigo" style="color: #6366f1;">RM <?= number_format(array_sum($revenueData)) ?></div>
+                    </div>
+                    <div class="text-end border-start ps-4">
+                        <div class="text-muted small fw-bold text-uppercase">Total Bookings</div>
+                        <div class="fw-bold fs-5 text-emerald" style="color: #10b981;"><?= array_sum($bookingCountData) ?></div>
+                    </div>
                 </div>
             </div>
-            <div style="height: 300px;">
+            <div style="height: 320px; margin-top: 10px;">
                 <div id="highlightChart"></div>
             </div>
         </div>
@@ -405,13 +480,22 @@ $greeting = match (true) {
         <div class="row g-3">
             <div class="col-6">
                 <div class="glass-card p-3 d-flex flex-column h-100 justify-content-between">
-                    <div class="small text-muted fw-bold mb-2">EARNINGS</div>
-                    <div id="earningsChart"></div>
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <div class="small text-muted fw-bold">LIVE ACTIVITY</div>
+                        <span class="d-flex align-items-center">
+                            <span class="pulse-dot me-1"></span>
+                            <span class="text-success small fw-bold">LIVE</span>
+                        </span>
+                    </div>
+                    <div id="liveActivityChart"></div>
                 </div>
             </div>
             <div class="col-6">
                 <div class="glass-card p-3 d-flex flex-column h-100 justify-content-between">
-                    <div class="small text-muted fw-bold mb-2">ORDERS</div>
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <div class="small text-muted fw-bold">HOURLY PULSE</div>
+                        <div class="text-muted small fw-bold">24H</div>
+                    </div>
                     <div id="ordersChart"></div>
                 </div>
             </div>
@@ -445,20 +529,67 @@ $greeting = match (true) {
             height: 600,
             events: '<?= $this->Url->build(['controller' => 'Bookings', 'action' => 'calendarData']) ?>', // Dynamic URL
             eventClick: function(info) {
-                // Simple alert for now, can be a modal later
-                alert('Booking: ' + info.event.title + '\nPrice: ' + info.event.extendedProps.price + '\nStatus: ' + info.event.extendedProps.status);
+                const event = info.event;
+                const status = event.extendedProps.status || 'N/A';
+                const price = event.extendedProps.price || '0.00';
+
+                let icon = 'info';
+                if (status.toLowerCase() === 'confirmed') icon = 'success';
+                if (status.toLowerCase() === 'pending') icon = 'warning';
+                if (status.toLowerCase() === 'cancelled') icon = 'error';
+
+                Swal.fire({
+                    title: `<div class="fw-bold text-dark mt-2">${event.title}</div>`,
+                    html: `
+                        <div class="text-start mt-3 p-3 rounded-4 bg-light shadow-inner">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted small fw-bold uppercase">Rental Price:</span>
+                                <span class="fw-bold text-indigo">RM ${price}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted small fw-bold uppercase">Booking Status:</span>
+                                <span class="badge rounded-pill bg-soft-${getBadgeColor(status)} text-${getBadgeColor(status)}">${status.toUpperCase()}</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted small fw-bold uppercase">Start Date:</span>
+                                <span class="small fw-bold">${event.start.toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                    `,
+                    icon: icon,
+                    showCloseButton: true,
+                    confirmButtonText: 'View Full Details',
+                    confirmButtonColor: '#6366f1',
+                    customClass: {
+                        popup: 'glass-swal-popup',
+                    },
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Redirect to the booking view page
+                        window.location.href = '<?= $this->Url->build(['controller' => 'Bookings', 'action' => 'view']) ?>/' + event.id;
+                    }
+                });
             }
         });
+
+        // Helper function for badge colors
+        function getBadgeColor(status) {
+            status = status.toLowerCase();
+            if (status === 'confirmed') return 'success';
+            if (status === 'pending') return 'warning';
+            if (status === 'cancelled') return 'danger';
+            return 'info';
+        }
         calendar.render();
 
         // --- ApexCharts Initialization ---
 
         // 1. Highlight Chart (Revenue & Bookings Trend)
-        // UX Improvements: Y-axis starts at 0, Bar for Revenue, Line for Bookings
+        // Premium Pro Upgrade: Glowing lines, rounded bars, and gradients
         const highlightOptions = {
             series: [{
                 name: 'Revenue (RM)',
-                type: 'column', // Bar chart for revenue (shows volume better)
+                type: 'column',
                 data: <?= json_encode($revenueData ?? []) ?>
             }, {
                 name: 'Bookings',
@@ -467,7 +598,7 @@ $greeting = match (true) {
             }],
             chart: {
                 type: 'line',
-                height: 300,
+                height: 320,
                 fontFamily: "'Inter', sans-serif",
                 toolbar: {
                     show: false
@@ -475,33 +606,49 @@ $greeting = match (true) {
                 zoom: {
                     enabled: false
                 },
-                background: 'transparent'
+                dropShadow: {
+                    enabled: true,
+                    top: 8,
+                    left: 0,
+                    blur: 8,
+                    opacity: 0.1,
+                    enabledOnSeries: [1] // Only glow for the booking line
+                }
             },
             colors: ['#6366f1', '#10b981'],
             stroke: {
-                curve: 'straight', // Straight lines for honest data representation
-                width: [0, 3] // 0 for bars, 3 for line
+                curve: 'smooth',
+                width: [0, 4], // Thicker line for better visibility
+                dashArray: [0, 0]
             },
             fill: {
-                type: ['solid', 'solid'],
-                opacity: [0.85, 1]
+                type: ['gradient', 'solid'],
+                gradient: {
+                    shade: 'light',
+                    type: "vertical",
+                    shadeIntensity: 0.5,
+                    opacityFrom: 0.9,
+                    opacityTo: 0.7,
+                    stops: [0, 100]
+                }
             },
             plotOptions: {
                 bar: {
-                    borderRadius: 6,
-                    columnWidth: '50%'
+                    borderRadius: 12, // More rounded for modern feel
+                    borderRadiusApplication: 'around',
+                    columnWidth: '45%',
                 }
             },
             dataLabels: {
                 enabled: false
             },
             markers: {
-                size: [0, 5], // Show dots on the booking line
-                colors: ['#6366f1', '#10b981'],
-                strokeWidth: 2,
-                strokeColors: '#fff',
+                size: [0, 6],
+                colors: ['#fff'],
+                strokeColors: '#10b981',
+                strokeWidth: 3,
                 hover: {
-                    size: 7
+                    size: 9
                 }
             },
             xaxis: {
@@ -514,25 +661,27 @@ $greeting = match (true) {
                 },
                 labels: {
                     style: {
-                        fontSize: '12px',
-                        fontWeight: 500
+                        fontSize: '13px',
+                        fontWeight: 500,
+                        colors: '#64748b'
                     }
                 }
             },
             yaxis: [{
                     title: {
-                        text: 'Revenue (RM)',
+                        text: 'Revenue',
                         style: {
                             fontSize: '12px',
                             fontWeight: 600,
                             color: '#6366f1'
                         }
                     },
-                    min: 0, // Force Y-axis to start at 0 for honest scale
+                    min: 0,
                     labels: {
-                        formatter: function(val) {
-                            return 'RM ' + (val ? val.toLocaleString() : '0');
-                        }
+                        style: {
+                            colors: '#64748b'
+                        },
+                        formatter: (val) => 'RM ' + (val ? val.toLocaleString() : '0')
                     }
                 },
                 {
@@ -545,29 +694,27 @@ $greeting = match (true) {
                             color: '#10b981'
                         }
                     },
-                    min: 0, // Force Y-axis to start at 0 for honest scale
+                    min: 0,
                     labels: {
-                        formatter: function(val) {
-                            return Math.round(val);
-                        }
+                        style: {
+                            colors: '#64748b'
+                        },
+                        formatter: (val) => Math.round(val)
                     }
                 }
             ],
             grid: {
-                borderColor: 'rgba(0,0,0,0.08)',
-                strokeDashArray: 4,
+                borderColor: '#f1f5f9',
+                strokeDashArray: 5,
                 padding: {
                     top: 0,
-                    bottom: 0
+                    bottom: 0,
+                    left: 10,
+                    right: 10
                 }
             },
             legend: {
-                position: 'top',
-                horizontalAlign: 'right',
-                fontWeight: 600,
-                markers: {
-                    radius: 12
-                }
+                show: false // Hidden because we have custom stats in the header
             },
             tooltip: {
                 theme: 'light',
@@ -587,10 +734,11 @@ $greeting = match (true) {
         };
         new ApexCharts(document.querySelector("#highlightChart"), highlightOptions).render();
 
-        // 2. Orders Bar Chart
+        // 2. Hourly Pulse (Orders) Bar Chart
         const ordersOptions = {
             series: [{
-                data: [65, 59, 80, 81, 56, 55, 40]
+                name: 'Bookings',
+                data: <?= json_encode($hourlyBookingCounts ?? []) ?>
             }],
             chart: {
                 type: 'bar',
@@ -606,33 +754,56 @@ $greeting = match (true) {
                     columnWidth: '60%'
                 }
             },
+            xaxis: {
+                categories: <?= json_encode($hourlyBookingLabels ?? []) ?>
+            },
             tooltip: {
                 theme: 'light',
                 fixed: {
                     enabled: false
                 },
                 x: {
-                    show: false
+                    show: true,
+                    formatter: function(val, {
+                        dataPointIndex,
+                        w
+                    }) {
+                        return w.config.xaxis.categories[dataPointIndex] + ':00';
+                    }
                 },
                 y: {
                     title: {
-                        formatter: () => ''
+                        formatter: () => 'Bookings: '
                     }
                 }
             }
         };
         new ApexCharts(document.querySelector("#ordersChart"), ordersOptions).render();
 
-        // 3. Earnings Sparkline
-        const earningsOptions = {
+        // 3. Live Activity Chart (Real-time scrolling)
+        // Generate initial data points (last 20 data points)
+        let liveData = [];
+        for (let i = 0; i < 20; i++) {
+            liveData.push(Math.floor(Math.random() * 40) + 20);
+        }
+
+        const liveActivityOptions = {
             series: [{
-                data: [30, 45, 35, 50, 40, 60, 55]
+                name: 'Activity',
+                data: liveData.slice()
             }],
             chart: {
                 type: 'area',
-                height: 50,
+                height: 60,
                 sparkline: {
                     enabled: true
+                },
+                animations: {
+                    enabled: true,
+                    easing: 'linear',
+                    dynamicAnimation: {
+                        speed: 1000
+                    }
                 }
             },
             colors: ['#10b981'],
@@ -643,26 +814,34 @@ $greeting = match (true) {
             fill: {
                 type: 'gradient',
                 gradient: {
-                    opacityFrom: 0.4,
-                    opacityTo: 0
+                    shadeIntensity: 1,
+                    opacityFrom: 0.5,
+                    opacityTo: 0.1,
+                    stops: [0, 90, 100]
                 }
             },
             tooltip: {
-                theme: 'light',
-                fixed: {
-                    enabled: false
-                },
-                x: {
-                    show: false
-                },
-                y: {
-                    title: {
-                        formatter: () => '$'
-                    }
-                }
+                enabled: false
             }
         };
-        new ApexCharts(document.querySelector("#earningsChart"), earningsOptions).render();
+
+        const liveActivityChart = new ApexCharts(document.querySelector("#liveActivityChart"), liveActivityOptions);
+        liveActivityChart.render();
+
+        // Real-time update: Add new data point every 2 seconds
+        setInterval(function() {
+            // Generate new random value (simulating activity)
+            const newValue = Math.floor(Math.random() * 40) + 20;
+
+            // Add new value and remove oldest to keep array size constant
+            liveData.push(newValue);
+            liveData.shift();
+
+            // Update chart with smooth animation
+            liveActivityChart.updateSeries([{
+                data: liveData.slice()
+            }]);
+        }, 2000);
 
         // 4. Fleet Status Donut
         const fleetOptions = {

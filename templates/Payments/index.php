@@ -22,7 +22,7 @@
 
     <!-- Payments DataTable -->
     <div class="table-responsive">
-        <table id="paymentsTable" class="table table-striped table-hover">
+        <table id="paymentsTable" class="table datatable-styled">
             <thead>
                 <tr>
                     <th>ID</th>
