@@ -35,10 +35,10 @@ if ($booking->start_date && $booking->end_date) {
 ?>
 
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
     .booking-view-wrapper {
-        font-family: 'Syne', sans-serif;
+        font-family: 'Inter', sans-serif;
         min-height: 100vh;
         padding: 30px 0 60px;
         background: #f8fafc;

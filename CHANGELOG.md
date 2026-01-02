@@ -6,6 +6,34 @@ All notable changes to the Rentify project will be documented in this file.
 
 ### Changed
 
+-   **Dashboard Optimization**: Refactored `AdminsController::dashboard` logic into `src/Service/AdminDashboardService.php` to reduce controller complexity and improve maintainability.
+-   **Dashboard Interactivity Enhancements** (`templates/Admins/dashboard.php`)
+    -   **Date Range Filter**: Filter dropdown (Today, This Week, This Month, Last 3 Months) with live filtering of Bookings, Revenue, and Users stats.
+    -   **Quick Actions Dropdown**: One-click access to New Booking, Add Car, Add User, Schedule Maintenance, and View Issues.
+    -   **Inline Booking Approvals**: Pending bookings mini-list in Action Center with inline ✓ Approve and 👁 View buttons.
+-   **Security Hardening**: Enabled `FormProtection` component in `AppController` to prevent form tampering and request forgery.
+-   **Dashboard Stat Cards Redesign** (`templates/Admins/dashboard.php`)
+    -   Replaced large faded icons with rounded square icon boxes (16px radius, 60x60px).
+    -   Percentages now calculate from real data: bookings and revenue compare this month vs last month.
+    -   New users count shows actual registrations in the last 7 days.
+    -   Changed currency from `$` to `RM` for consistency.
+-   **Dashboard Widgets**:
+    -   replaced "Hourly Pulse" chart with "Fleet Status" donut chart for better utility in the mini-widget area.
+    -   Consolidated layout by moving Fleet Status from bottom row to the main grid.
+-   **Action Center "Returns Due Today"**: Button now links to `Bookings/index` instead of being non-functional.
+-   **Reviews Management Maintenance Integration** (`templates/Reviews/index.php`)
+    -   Added dedicated "Maintenance" column.
+    -   Displays "Mark Done" button for cars currently in maintenance (triggers `Maintenances::completeActive`).
+    -   Displays "Schedule" button for low-rated cars needing maintenance.
+    -   Added `completeActive()` method to `MaintenancesController` to simplified maintenance completion from external views.
+    -   Fixed matching logic for "maintenance" status to be case-insensitive.
+    -   Implemented smart "Resolved" status: Checks if a maintenance was completed _after_ the review date to prevent re-scheduling resolved issues.
+-   **Top Performing Cars**: Fixed image path - now correctly displays car thumbnails instead of placeholder icons.
+-   **Month-over-Month Calculations** (`src/Controller/AdminsController.php`)
+    -   Added `$bookingsChange`, `$revenueChange`, `$newUsersThisWeek` variables with real database queries.
+
+### Changed
+
 -   **View Page CSS Standardization & Font Upgrade** (`webroot/css/custom.css`)
     -   Created unified `.view-container` component system with ~500 lines of CSS.
     -   **Typography Upgrade**: Switched primary heading and data font to **Poppins** (bold) for a cleaner, more professional look.

@@ -66,7 +66,7 @@ if ($booking && $booking->car) {
 ?>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <div class="container py-4" data-html2canvas-ignore="true">
     <!-- Page Header -->
@@ -369,7 +369,7 @@ if ($booking && $booking->car) {
     <style>
         body {
             background-color: #f3f4f6;
-            font-family: 'Syne', sans-serif;
+            font-family: 'Inter', sans-serif;
         }
 
         .invoice-wrapper {

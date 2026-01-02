@@ -56,8 +56,37 @@
         font-weight: 800;
         letter-spacing: -1px;
         background: var(--primary-gradient);
+        background-clip: text;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+    }
+
+    /* Stat Card Icon Boxes */
+    .stat-icon-box {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 1.5rem;
+    }
+
+    .bg-primary-soft {
+        background: rgba(99, 102, 241, 0.1);
+    }
+
+    .bg-success-soft {
+        background: rgba(16, 185, 129, 0.1);
+    }
+
+    .bg-info-soft {
+        background: rgba(59, 130, 246, 0.1);
+    }
+
+    .bg-warning-soft {
+        background: rgba(245, 158, 11, 0.1);
     }
 
     /* FullCalendar Customization */
@@ -242,16 +271,77 @@ $greeting = match (true) {
 ?>
 <div class="d-flex justify-content-between align-items-center mb-5">
     <div>
-        <h2 class="fw-bold mb-1" style="color: #0f172a;">Dashboard Overview</h2>
-        <p class="text-muted mb-0"><?= $greeting ?>, Admin! Here's what's happening today.</p>
+        <h2 class="fw-bold mb-1" style="color: #0f172a;">
+            Dashboard Overview
+            <?php if (($filterLabel ?? 'All Time') !== 'All Time'): ?>
+                <span class="badge bg-primary ms-2 fs-6 fw-normal"><?= h($filterLabel) ?></span>
+            <?php endif; ?>
+        </h2>
+        <p class="text-muted mb-0"><?= $greeting ?>, Admin! <?= ($filterLabel ?? 'All Time') === 'All Time' ? "Here's what's happening today." : "Showing data for: " . h($filterLabel) ?>.</p>
     </div>
     <div class="d-flex gap-2">
-        <button class="btn btn-white shadow-sm border">
-            <i class="fas fa-filter me-2 text-muted"></i> Filter
-        </button>
-        <button class="btn btn-primary shadow-lg" style="background: var(--primary-gradient); border: none;">
-            <i class="fas fa-plus me-2"></i> Quick Action
-        </button>
+        <!-- Filter Dropdown -->
+        <div class="dropdown">
+            <button class="btn btn-white shadow-sm border dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-filter me-2 text-muted"></i>Filter
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0" aria-labelledby="filterDropdown" style="min-width: 200px;">
+                <li>
+                    <h6 class="dropdown-header">Time Period</h6>
+                </li>
+                <li><a class="dropdown-item" href="?period=today"><i class="fas fa-calendar-day me-2 text-muted"></i>Today</a></li>
+                <li><a class="dropdown-item" href="?period=week"><i class="fas fa-calendar-week me-2 text-muted"></i>This Week</a></li>
+                <li><a class="dropdown-item" href="?period=month"><i class="fas fa-calendar-alt me-2 text-muted"></i>This Month</a></li>
+                <li><a class="dropdown-item" href="?period=quarter"><i class="fas fa-calendar me-2 text-muted"></i>Last 3 Months</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="<?= $this->Url->build(['action' => 'dashboard']) ?>"><i class="fas fa-sync me-2 text-muted"></i>Reset Filters</a></li>
+            </ul>
+        </div>
+
+        <!-- Quick Actions Dropdown -->
+        <div class="dropdown">
+            <button class="btn btn-primary shadow-lg dropdown-toggle" type="button" id="quickActionsDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background: var(--primary-gradient); border: none;">
+                <i class="fas fa-bolt me-2"></i>Quick Action
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0" aria-labelledby="quickActionsDropdown" style="min-width: 220px;">
+                <li>
+                    <h6 class="dropdown-header">Create New</h6>
+                </li>
+                <li>
+                    <a class="dropdown-item py-2" href="<?= $this->Url->build(['controller' => 'Bookings', 'action' => 'add']) ?>">
+                        <i class="fas fa-calendar-plus me-2 text-primary"></i>New Booking
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item py-2" href="<?= $this->Url->build(['controller' => 'Cars', 'action' => 'add']) ?>">
+                        <i class="fas fa-car me-2 text-info"></i>Add Car
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item py-2" href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'add']) ?>">
+                        <i class="fas fa-user-plus me-2 text-success"></i>Add User
+                    </a>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li>
+                    <h6 class="dropdown-header">Maintenance</h6>
+                </li>
+                <li>
+                    <a class="dropdown-item py-2" href="<?= $this->Url->build(['controller' => 'Maintenances', 'action' => 'add']) ?>">
+                        <i class="fas fa-tools me-2 text-warning"></i>Schedule Maintenance
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item py-2" href="<?= $this->Url->build(['controller' => 'Reviews', 'action' => 'index', '?' => ['issues' => 1]]) ?>">
+                        <i class="fas fa-exclamation-triangle me-2 text-danger"></i>View Issues
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 
@@ -259,62 +349,82 @@ $greeting = match (true) {
 <div class="row g-4 mb-5">
     <!-- Total Bookings -->
     <div class="col-xl-3 col-md-6">
-        <div class="glass-card h-100 position-relative overflow-hidden">
-            <div class="position-absolute top-0 end-0 p-3 opacity-10">
-                <i class="fas fa-calendar-check fa-4x text-primary"></i>
+        <div class="glass-card h-100 d-flex align-items-center">
+            <div class="stat-icon-box bg-primary-soft me-3">
+                <i class="fas fa-calendar-check text-primary"></i>
             </div>
-            <div class="mb-2 text-uppercase fw-bold text-muted small tracking-wider">Total Bookings</div>
-            <div class="stat-value-lg"><?= number_format($totalBookings) ?></div>
-            <div class="mt-2 text-success small fw-semibold">
-                <i class="fas fa-arrow-up me-1"></i> +12% <span class="text-muted fw-normal">from last month</span>
+            <div class="flex-grow-1">
+                <div class="mb-1 text-uppercase fw-bold text-muted small tracking-wider">Total Bookings</div>
+                <div class="stat-value-lg"><?= number_format($totalBookings) ?></div>
+                <?php if (($bookingsChange ?? 0) >= 0): ?>
+                    <div class="mt-1 text-success small fw-semibold">
+                        <i class="fas fa-arrow-up me-1"></i> +<?= abs($bookingsChange) ?>% <span class="text-muted fw-normal">from last month</span>
+                    </div>
+                <?php else: ?>
+                    <div class="mt-1 text-danger small fw-semibold">
+                        <i class="fas fa-arrow-down me-1"></i> <?= abs($bookingsChange) ?>% <span class="text-muted fw-normal">from last month</span>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
 
     <!-- Total Revenue -->
     <div class="col-xl-3 col-md-6">
-        <div class="glass-card h-100 position-relative overflow-hidden">
-            <div class="position-absolute top-0 end-0 p-3 opacity-10">
-                <i class="fas fa-wallet fa-4x text-success"></i>
+        <div class="glass-card h-100 d-flex align-items-center">
+            <div class="stat-icon-box bg-success-soft me-3">
+                <i class="fas fa-wallet text-success"></i>
             </div>
-            <div class="mb-2 text-uppercase fw-bold text-muted small tracking-wider">Total Revenue</div>
-            <div class="stat-value-lg" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                $<?= number_format($totalRevenue) ?>
-            </div>
-            <div class="mt-2 text-success small fw-semibold">
-                <i class="fas fa-arrow-up me-1"></i> +8.5% <span class="text-muted fw-normal">from last month</span>
+            <div class="flex-grow-1">
+                <div class="mb-1 text-uppercase fw-bold text-muted small tracking-wider">Total Revenue</div>
+                <div class="stat-value-lg" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    RM<?= number_format($totalRevenue) ?>
+                </div>
+                <?php if (($revenueChange ?? 0) >= 0): ?>
+                    <div class="mt-1 text-success small fw-semibold">
+                        <i class="fas fa-arrow-up me-1"></i> +<?= abs($revenueChange) ?>% <span class="text-muted fw-normal">from last month</span>
+                    </div>
+                <?php else: ?>
+                    <div class="mt-1 text-danger small fw-semibold">
+                        <i class="fas fa-arrow-down me-1"></i> <?= abs($revenueChange) ?>% <span class="text-muted fw-normal">from last month</span>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
 
     <!-- Active Fleet -->
     <div class="col-xl-3 col-md-6">
-        <div class="glass-card h-100 position-relative overflow-hidden">
-            <div class="position-absolute top-0 end-0 p-3 opacity-10">
-                <i class="fas fa-car fa-4x text-info"></i>
+        <div class="glass-card h-100 d-flex align-items-center">
+            <div class="stat-icon-box bg-info-soft me-3">
+                <i class="fas fa-car text-info"></i>
             </div>
-            <div class="mb-2 text-uppercase fw-bold text-muted small tracking-wider">Active Fleet</div>
-            <div class="stat-value-lg" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                <?= $availableCars + $currentlyRentedCars ?> <span class="fs-5 text-muted">/ <?= $totalCars ?></span>
-            </div>
-            <div class="mt-2 text-muted small">
-                <?= $maintenanceCars ?> cars in maintenance
+            <div class="flex-grow-1">
+                <div class="mb-1 text-uppercase fw-bold text-muted small tracking-wider">Active Fleet</div>
+                <div class="stat-value-lg" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    <?= $availableCars + $currentlyRentedCars ?> <span class="fs-5 text-muted">/ <?= $totalCars ?></span>
+                </div>
+                <div class="mt-1 text-muted small">
+                    <?= $maintenanceCars ?> cars in maintenance
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Users -->
     <div class="col-xl-3 col-md-6">
-        <div class="glass-card h-100 position-relative overflow-hidden">
-            <div class="position-absolute top-0 end-0 p-3 opacity-10">
-                <i class="fas fa-users fa-4x text-warning"></i>
+        <div class="glass-card h-100 d-flex align-items-center">
+            <div class="stat-icon-box bg-warning-soft me-3">
+                <i class="fas fa-users text-warning"></i>
             </div>
-            <div class="mb-2 text-uppercase fw-bold text-muted small tracking-wider">Registered Users</div>
-            <div class="stat-value-lg" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                <?= number_format($totalUsers) ?>
-            </div>
-            <div class="mt-2 text-success small fw-semibold">
-                <i class="fas fa-arrow-up me-1"></i> +24 <span class="text-muted fw-normal">new this week</span>
+            <div class="flex-grow-1">
+                <div class="mb-1 text-uppercase fw-bold text-muted small tracking-wider">Registered Users</div>
+                <div class="stat-value-lg" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    <?= number_format($totalUsers) ?>
+                </div>
+                <div class="mt-1 text-success small fw-semibold">
+                    <i class="fas fa-arrow-up me-1"></i> +<?= $newUsersThisWeek ?? 0 ?> <span class="text-muted fw-normal">new this week</span>
+                </div>
             </div>
         </div>
     </div>
@@ -382,8 +492,35 @@ $greeting = match (true) {
                             <div class="small text-muted"><?= $pendingBookings ?> bookings waiting approval</div>
                         </div>
                     </div>
-                    <a href="<?= $this->Url->build(['controller' => 'Bookings', 'action' => 'index']) ?>" class="btn btn-sm btn-light border">Review</a>
+                    <a href="<?= $this->Url->build(['controller' => 'Bookings', 'action' => 'index', '?' => ['status' => 'pending']]) ?>" class="btn btn-sm btn-light border">Review All</a>
                 </div>
+
+                <!-- Inline Pending Bookings Mini-List -->
+                <?php if (!empty($pendingBookingsList) && count($pendingBookingsList) > 0): ?>
+                    <?php foreach ($pendingBookingsList as $booking): ?>
+                        <div class="action-item ps-5 border-start border-warning border-3" style="margin-left: 20px;">
+                            <div class="d-flex align-items-center flex-grow-1">
+                                <div>
+                                    <div class="fw-semibold text-dark small"><?= h($booking->user->name ?? 'Customer') ?></div>
+                                    <div class="text-muted small"><?= h($booking->car->car_model ?? 'Car') ?> • <?= $booking->start_date?->format('M j') ?> - <?= $booking->end_date?->format('M j') ?></div>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-1">
+                                <?= $this->Form->postLink(
+                                    '<i class="fas fa-check"></i>',
+                                    ['controller' => 'Admins', 'action' => 'approveBooking', $booking->id],
+                                    [
+                                        'class' => 'btn btn-sm btn-success',
+                                        'title' => 'Approve',
+                                        'escape' => false,
+                                        'confirm' => 'Approve this booking?'
+                                    ]
+                                ) ?>
+                                <a href="<?= $this->Url->build(['controller' => 'Bookings', 'action' => 'view', $booking->id]) ?>" class="btn btn-sm btn-outline-secondary" title="View Details"><i class="fas fa-eye"></i></a>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
 
                 <!-- Returns Due -->
                 <div class="action-item">
@@ -396,7 +533,7 @@ $greeting = match (true) {
                             <div class="small text-muted"><?= $carsDueToday ?? 0 ?> cars scheduled for return</div>
                         </div>
                     </div>
-                    <button class="btn btn-sm btn-light border">View</button>
+                    <a href="<?= $this->Url->build(['controller' => 'Bookings', 'action' => 'index']) ?>" class="btn btn-sm btn-light border">View</a>
                 </div>
 
                 <!-- Maintenance Alerts (Dynamic) -->
@@ -453,8 +590,8 @@ $greeting = match (true) {
                             <div class="d-flex align-items-center">
                                 <div class="fw-bold text-muted me-3">#<?= $index + 1 ?></div>
                                 <!-- Thumbnail Placeholder or Actual Image -->
-                                <?php if (!empty($car->car->image)): ?>
-                                    <?= $this->Html->image('cars/' . h($car->car->image), ['class' => 'car-thumb']) ?>
+                                <?php if (!empty($car->car_image)): ?>
+                                    <img src="<?= $this->Url->webroot('img/' . h($car->car_image)) ?>" class="car-thumb" alt="<?= h($car->car_model) ?>">
                                 <?php else: ?>
                                     <div class="car-thumb d-flex align-items-center justify-content-center text-muted small bg-light">
                                         <i class="fas fa-car"></i>
@@ -491,23 +628,13 @@ $greeting = match (true) {
                 </div>
             </div>
             <div class="col-6">
+                <!-- Fleet Status Donut moved here -->
                 <div class="glass-card p-3 d-flex flex-column h-100 justify-content-between">
                     <div class="d-flex align-items-center justify-content-between mb-2">
-                        <div class="small text-muted fw-bold">HOURLY PULSE</div>
-                        <div class="text-muted small fw-bold">24H</div>
-                    </div>
-                    <div id="ordersChart"></div>
-                </div>
-            </div>
-            <div class="col-12">
-                <div class="glass-card p-3">
-                    <div class="d-flex justify-content-between mb-2">
                         <div class="small text-muted fw-bold">FLEET STATUS</div>
                         <div class="badge bg-light text-dark">Total: <?= $totalCars ?></div>
                     </div>
-                    <div class="d-flex justify-content-center">
-                        <div id="fleetChart"></div>
-                    </div>
+                    <div id="fleetChart" class="d-flex justify-content-center align-items-center"></div>
                 </div>
             </div>
         </div>

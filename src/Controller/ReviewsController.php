@@ -185,7 +185,7 @@ class ReviewsController extends AppController
     public function index()
     {
         $query = $this->Reviews->find()
-            ->contain(['Users', 'Cars', 'Bookings']);
+            ->contain(['Users', 'Cars' => ['Maintenances'], 'Bookings']);
 
         // Filter for issue reviews if requested (low ratings)
         if ($this->request->getQuery('issues')) {

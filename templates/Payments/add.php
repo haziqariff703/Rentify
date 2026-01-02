@@ -24,7 +24,7 @@ if ($booking && $booking->car) {
 }
 ?>
 
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <div class="payment-wrapper">
     <div class="container py-5">
@@ -201,7 +201,7 @@ if ($booking && $booking->car) {
 <style>
     body {
         background-color: #f3f4f6;
-        font-family: 'Syne', sans-serif;
+        font-family: 'Inter', sans-serif;
     }
 
     .payment-tabs {

@@ -803,11 +803,11 @@ a:hover {
 /* ========================================
    VIEW CONTAINER - STANDARDIZED VIEW PAGES
    Applies to all view.php pages
-   Typography: Montserrat (headings), Syne (content)
+   Typography: Poppins (headings), Inter (content)
    ======================================== */
 
 .view-container {
-    font-family: "Syne", sans-serif;
+    font-family: "Inter", sans-serif;
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
@@ -980,7 +980,7 @@ a:hover {
     width: 120px;
     color: #64748b;
     font-weight: 500;
-    font-family: "Syne", sans-serif;
+    font-family: "Inter", sans-serif;
 }
 
 .view-container .view-table td {

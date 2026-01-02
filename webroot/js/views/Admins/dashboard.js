@@ -88,59 +88,41 @@ document.addEventListener('DOMContentLoaded', function() {
         const highlightOptions = {
             series: [{
                 name: 'Revenue (RM)',
-                type: 'column',
+                type: 'area',
                 data: data.revenueData || []
             }, {
                 name: 'Bookings',
-                type: 'line',
+                type: 'area',
                 data: data.bookingCountData || []
             }],
             chart: {
-                type: 'line',
+                type: 'area',
                 height: 320,
                 fontFamily: "'Inter', sans-serif",
                 toolbar: { show: false },
                 zoom: { enabled: false },
-                dropShadow: {
-                    enabled: true,
-                    top: 8,
-                    left: 0,
-                    blur: 8,
-                    opacity: 0.1,
-                    enabledOnSeries: [1]
-                }
             },
             colors: ['#6366f1', '#10b981'],
             stroke: {
                 curve: 'smooth',
-                width: [0, 4],
-                dashArray: [0, 0]
+                width: [3, 3],
             },
             fill: {
-                type: ['gradient', 'solid'],
+                type: 'gradient',
                 gradient: {
-                    shade: 'light',
-                    type: "vertical",
-                    shadeIntensity: 0.5,
-                    opacityFrom: 0.9,
-                    opacityTo: 0.7,
-                    stops: [0, 100]
-                }
-            },
-            plotOptions: {
-                bar: {
-                    borderRadius: 12,
-                    borderRadiusApplication: 'around',
-                    columnWidth: '45%',
+                    shadeIntensity: 1,
+                    opacityFrom: 0.45,
+                    opacityTo: 0.05,
+                    stops: [20, 100, 100, 100]
                 }
             },
             dataLabels: { enabled: false },
             markers: {
-                size: [0, 6],
-                colors: ['#fff'],
-                strokeColors: '#10b981',
-                strokeWidth: 3,
-                hover: { size: 9 }
+                size: [4, 4],
+                colors: ['#6366f1', '#10b981'],
+                strokeColors: '#fff',
+                strokeWidth: 2,
+                hover: { size: 7 }
             },
             xaxis: {
                 categories: data.revenueLabels || [],
@@ -199,45 +181,7 @@ document.addEventListener('DOMContentLoaded', function() {
         new ApexCharts(highlightChartEl, highlightOptions).render();
     }
 
-    // 2. Hourly Pulse (Orders) Bar Chart
-    const ordersChartEl = document.querySelector("#ordersChart");
-    if (ordersChartEl) {
-        const ordersOptions = {
-            series: [{
-                name: 'Bookings',
-                data: data.hourlyBookingCounts || []
-            }],
-            chart: {
-                type: 'bar',
-                height: 60,
-                sparkline: { enabled: true }
-            },
-            colors: ['#6366f1'],
-            plotOptions: {
-                bar: {
-                    borderRadius: 4,
-                    columnWidth: '60%'
-                }
-            },
-            xaxis: {
-                categories: data.hourlyBookingLabels || []
-            },
-            tooltip: {
-                theme: 'light',
-                fixed: { enabled: false },
-                x: {
-                    show: true,
-                    formatter: function(val, { dataPointIndex, w }) {
-                        return w.config.xaxis.categories[dataPointIndex] + ':00';
-                    }
-                },
-                y: {
-                    title: { formatter: () => 'Bookings: ' }
-                }
-            }
-        };
-        new ApexCharts(ordersChartEl, ordersOptions).render();
-    }
+
 
     // 3. Live Activity Chart (Real-time scrolling)
     const liveActivityChartEl = document.querySelector("#liveActivityChart");

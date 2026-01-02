@@ -146,4 +146,46 @@ class MaintenancesController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+    /**
+     * Complete active maintenance for a car
+     *
+     * @param string|null $carId Car id.
+     * @return \Cake\Http\Response|null Redirects to referer.
+     */
+    public function completeActive($carId = null)
+    {
+        $this->request->allowMethod(['post']);
+
+        // Find the active maintenance for this car
+        $maintenance = $this->Maintenances->find()
+            ->where([
+                'car_id' => $carId,
+                'status' => 'scheduled'
+            ])
+            ->first();
+
+        if ($maintenance) {
+            $maintenance->status = 'completed';
+            $maintenance->end_date = new \Cake\I18n\Date(); // Set completion date to today
+
+            if ($this->Maintenances->save($maintenance)) {
+                // Determine redirect based on referer
+                // If referer contains 'reviews', go back there, otherwise index
+                $referer = $this->request->referer();
+
+                // Update car status
+                $car = $this->Maintenances->Cars->get($carId);
+                $car->status = 'available';
+                $this->Maintenances->Cars->save($car);
+
+                $this->Flash->success(__('Maintenance marked as done. Car is available.'));
+            } else {
+                $this->Flash->error(__('Could not update maintenance status.'));
+            }
+        } else {
+            $this->Flash->error(__('No active maintenance found for this car.'));
+        }
+
+        return $this->redirect($this->request->referer() ?: ['action' => 'index']);
+    }
 }

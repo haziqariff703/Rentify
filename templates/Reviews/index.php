@@ -65,6 +65,7 @@ $showingIssues = $showingIssues ?? false;
                     <th>Rating</th>
                     <th>Comment</th>
                     <th>Created</th>
+                    <th>Maintenance</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -90,6 +91,53 @@ $showingIssues = $showingIssues ?? false;
                             <?= h(substr($review->comment ?? '', 0, 50)) ?> <?= strlen($review->comment ?? '') > 50 ? '...' : '' ?>
                         </td>
                         <td><?= $review->created ? $review->created->format('M d, Y') : '-' ?></td>
+                        <td class="text-center">
+                            <?php if ($review->hasValue('car')): ?>
+                                <?php
+                                $status = strtolower($review->car->status ?? '');
+                                $isMaintenance = $status === 'maintenance';
+                                $hasResolvedIssue = false;
+
+                                // Check if there's a completed maintenance AFTER the review date
+                                if (!$isMaintenance && !empty($review->car->maintenances)) {
+                                    foreach ($review->car->maintenances as $maintenance) {
+                                        if ($maintenance->status === 'completed' && $maintenance->end_date) {
+                                            // Compare Y-m-d strings to safely compare Date vs DateTime
+                                            if ($maintenance->end_date->format('Y-m-d') >= $review->created->format('Y-m-d')) {
+                                                $hasResolvedIssue = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                ?>
+
+                                <?php if ($isMaintenance): ?>
+                                    <?= $this->Form->postLink(
+                                        '<i class="fas fa-check-circle me-1"></i> Mark Done',
+                                        ['controller' => 'Maintenances', 'action' => 'completeActive', $review->car->id],
+                                        [
+                                            'class' => 'btn btn-sm btn-success fw-bold',
+                                            'escape' => false,
+                                            'title' => 'Mark Maintenance as Completed',
+                                            'confirm' => __('Mark maintenance for {0} as completed?', $review->car->car_model)
+                                        ]
+                                    ) ?>
+                                <?php elseif ($hasResolvedIssue && ($review->rating ?? 5) <= 2): ?>
+                                    <span class="badge bg-soft-success text-success border border-success px-2 py-1">
+                                        <i class="fas fa-check-double me-1"></i> Resolved
+                                    </span>
+                                <?php elseif (($review->rating ?? 5) <= 2): ?>
+                                    <?= $this->Html->link(
+                                        '<i class="fas fa-tools"></i> Schedule',
+                                        ['controller' => 'Maintenances', 'action' => 'add', '?' => ['car_id' => $review->car->id]],
+                                        ['class' => 'btn btn-sm btn-danger', 'escape' => false, 'title' => 'Schedule Maintenance']
+                                    ) ?>
+                                <?php else: ?>
+                                    <span class="text-muted small"><i class="fas fa-check text-success"></i> OK</span>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </td>
                         <td class="actions-cell">
                             <?= $this->Html->link(
                                 '<i class="fas fa-eye"></i>',
@@ -111,13 +159,6 @@ $showingIssues = $showingIssues ?? false;
                                     'data-confirm-message' => __('Are you sure you want to delete review #{0}?', $review->id)
                                 ]
                             ) ?>
-                            <?php if (($review->rating ?? 5) <= 2 && $review->hasValue('car')): ?>
-                                <?= $this->Html->link(
-                                    '<i class="fas fa-tools"></i>',
-                                    ['controller' => 'Maintenances', 'action' => 'add', '?' => ['car_id' => $review->car->id]],
-                                    ['class' => 'btn btn-sm btn-danger', 'escape' => false, 'title' => 'Schedule Maintenance']
-                                ) ?>
-                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
