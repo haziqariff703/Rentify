@@ -93,7 +93,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             // available as array through $request->getData()
             // https://book.cakephp.org/5/en/controllers/middleware.html#body-parser-middleware
             ->add(new BodyParserMiddleware())
-            
+
             // Cross Site Request Forgery (CSRF) Protection Middleware
             // https://book.cakephp.org/5/en/security/csrf.html#cross-site-request-forgery-csrf-middleware
             ->add(new CsrfProtectionMiddleware([
@@ -116,9 +116,24 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     {
         $service = new AuthenticationService();
 
+        // Skip authentication for DebugKit to avoid routing errors
+        $params = $request->getAttribute('params', []);
+        $path = $request->getUri()->getPath();
+        if (
+            ($params['plugin'] ?? null) === 'DebugKit' ||
+            strpos($path, '/debug-kit') !== false
+        ) {
+            $service->loadAuthenticator('Authentication.Session');
+            return $service;
+        }
+
         // Define where to redirect to when not authenticated
         $service->setConfig([
-            'unauthenticatedRedirect' => Router::url(['controller' => 'Users', 'action' => 'login']),
+            'unauthenticatedRedirect' => Router::url([
+                'controller' => 'Users',
+                'action' => 'login',
+                'plugin' => null
+            ]),
             'queryParam' => 'redirect',
         ]);
 
@@ -139,7 +154,11 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
                 'username' => 'email',
                 'password' => 'password',
             ],
-            'loginUrl' => Router::url(['controller' => 'Users', 'action' => 'login']),
+            'loginUrl' => Router::url([
+                'controller' => 'Users',
+                'action' => 'login',
+                'plugin' => null
+            ]),
         ]);
 
         return $service;
