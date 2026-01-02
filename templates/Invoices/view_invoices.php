@@ -23,7 +23,8 @@ if (!empty($booking->payments)) {
             $paymentInfo = $p;
 
             // Format the raw database string into human text
-            $raw = $p->payment_method;
+            $raw = $p->payment_method ?? '';
+
             if ($raw === 'card') {
                 $methodDisplay = 'Credit/Debit Card';
             } elseif (str_contains($raw, 'online_transfer')) {
@@ -32,7 +33,7 @@ if (!empty($booking->payments)) {
                 $methodDisplay = 'FPX Online (' . $bank . ')';
             } elseif ($raw === 'cash') {
                 $methodDisplay = 'Cash at Counter';
-            } else {
+            } elseif (!empty($raw)) {
                 $methodDisplay = ucfirst(str_replace('_', ' ', $raw));
             }
             break;
@@ -177,7 +178,7 @@ if (file_exists($logoPath)) {
 <div class="invoice-wrapper">
     <div id="invoice-to-print" class="invoice-paper">
 
-        <div class="row mb-5">
+        <div class="row mb-4">
             <div class="col-6">
                 <img src="<?= $this->Url->webroot('img/rentify_logo_black.png') ?>" alt="Rentify" class="brand-logo-img"
                     style="height: 150px; width: auto;">
@@ -206,7 +207,7 @@ if (file_exists($logoPath)) {
 
         <hr class="border-light my-4">
 
-        <div class="row mb-5">
+        <div class="row mb-4">
             <div class="col-6">
                 <label class="small text-uppercase fw-bold text-muted mb-2">Billed To:</label>
                 <h5 class="fw-bold mb-1"><?= h($user->name) ?></h5>
@@ -221,15 +222,16 @@ if (file_exists($logoPath)) {
                             ✓ Payment Receipt
                         </div>
 
-                        <div class="receipt-row">
-                            <span class="receipt-label">Paid Via:</span>
-                            <span class="receipt-value"><?= h($methodDisplay) ?></span>
-                        </div>
-
-                        <div class="receipt-row">
-                            <span class="receipt-label">Date:</span>
-                            <span class="receipt-value"><?= h($paymentInfo->created->format('d M Y, h:i A')) ?></span>
-                        </div>
+                        <table class="w-100" style="border-collapse: collapse;">
+                            <tr>
+                                <td class="receipt-label-td">Paid Via:</td>
+                                <td class="receipt-value-td"><?= h($methodDisplay) ?></td>
+                            </tr>
+                            <tr>
+                                <td class="receipt-label-td">Date:</td>
+                                <td class="receipt-value-td"><?= h($paymentInfo->created->format('d M Y, h:i A')) ?></td>
+                            </tr>
+                        </table>
                     </div>
                 <?php else: ?>
                     <div class="mt-2">
@@ -240,7 +242,7 @@ if (file_exists($logoPath)) {
             </div>
         </div>
 
-        <div class="table-container mb-5">
+        <div class="table-container mb-4">
             <table class="w-100 custom-table">
                 <thead>
                     <tr>
@@ -334,7 +336,7 @@ if (file_exists($logoPath)) {
             </table>
         </div>
 
-        <div class="row justify-content-end mb-5">
+        <div class="row justify-content-end mb-4">
             <div class="col-5">
                 <div class="d-flex justify-content-between mb-2 small text-muted">
                     <span>Subtotal</span>
@@ -385,7 +387,7 @@ if (file_exists($logoPath)) {
             background: white;
             width: 210mm;
             min-height: 297mm;
-            padding: 15mm;
+            padding: 10mm;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             position: relative;
             display: flex;
@@ -399,63 +401,47 @@ if (file_exists($logoPath)) {
         }
 
 
-        /* Receipt Box Styling */
         .receipt-box {
-            background-color: #f0fdf4;
-            border: 1px solid #bbf7d0;
+            background-color: #f0fdf4 !important;
+            border: 1px solid #bbf7d0 !important;
             border-radius: 8px;
-            padding: 15px;
-            display: inline-block;
+            padding: 10px;
+            /* display: inline-block; REMOVED to fix PDF issue */
+            width: 250px;
+            /* Fixed compact width */
+            margin-left: auto;
+            /* Align to right */
             text-align: left;
-            min-width: 240px;
-            border-left: 4px solid #059669;
+            border-left: 4px solid #059669 !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
         }
 
         .receipt-header {
             display: block;
             font-size: 0.75rem;
             font-weight: 700;
-            color: #166534;
+            color: #166534 !important;
             text-transform: uppercase;
             margin-bottom: 8px;
             border-bottom: 1px solid #bbf7d0;
             padding-bottom: 4px;
         }
 
-        .receipt-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .receipt-table td {
+        .receipt-label-td {
+            color: #6b7280 !important;
+            font-size: 0.85rem;
             padding: 4px 0;
-            font-size: 0.85rem;
+            vertical-align: top;
         }
 
-        .receipt-label {
-            float: left;
-            color: #6b7280;
-            font-size: 0.85rem;
-        }
-
-        .receipt-value {
-            float: right;
-            color: #1f2937;
+        .receipt-value-td {
+            color: #1f2937 !important;
             font-weight: 700;
             font-size: 0.85rem;
-        }
-
-        .receipt-row {
-            display: block;
-            overflow: hidden;
-            margin-bottom: 6px;
-            clear: both;
-        }
-
-        .receipt-row::after {
-            content: "";
-            display: table;
-            clear: both;
+            text-align: right;
+            padding: 4px 0;
+            vertical-align: top;
         }
 
         /* Table */

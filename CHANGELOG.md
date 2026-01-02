@@ -39,6 +39,11 @@ All notable changes to the Rentify project will be documented in this file.
     -   Pill-style Save/Cancel buttons matching my_account.
     -   Removed icons from buttons for cleaner look.
 
+### Fixed
+
+-   Fixed invisible payment receipt details in `view_invoices.php` by changing layout to block/margin-auto and adding `!important` color overrides.
+-   Optimized invoice PDF layout by compacting "Receipt" box width and reducing vertical margins to prevent page splitting.
+
 ### Removed
 
 -   Deleted `view_payments.php` (incorrect plural naming) - replaced with `view_payment.php`.
