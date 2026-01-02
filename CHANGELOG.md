@@ -25,7 +25,38 @@ All notable changes to the Rentify project will be documented in this file.
     -   `CarCategories/view.php`: Reduced inline CSS significantly, kept page-specific styles only.
 -   Standardized container class naming across all view pages.
 
-### Not Changed (Intentionally Preserved)
+### Backend Refactoring
+
+-   **Created `ImageUploadService`** (`src/Service/ImageUploadService.php`)
+    -   Centralized image upload logic with validation (MIME type, file size).
+    -   Convenience methods: `uploadAvatar()` for users, `uploadCarImage()` for cars.
+    -   Automatic old file cleanup when uploading replacements.
+-   **Refactored `UsersController`**: Removed `_uploadAvatar()` helper, now uses `ImageUploadService`.
+-   **Refactored `CarsController`**: Removed duplicated upload logic in `add()` and `edit()`, now uses `ImageUploadService`.
+-   **Created Authorization Helper Methods** (`src/Controller/AppController.php`)
+    -   `isAdmin()`: Check if current user is admin.
+    -   `isAuthenticated()`: Check if user is logged in.
+    -   `requireAdmin()`: Redirect non-admins with error message.
+    -   `setAdminLayoutIfAdmin()`: Apply admin layout for admin users.
+-   **Standardized Authorization** across all controllers:
+    -   `AdminsController`, `CarCategoriesController`, `MaintenancesController`: Use `requireAdmin()`.
+    -   `UsersController`, `CarsController`, `PaymentsController`, `ReviewsController`, `InvoicesController`, `BookingsController`: Use `isAdmin()` and `setAdminLayoutIfAdmin()`.
+
+### JavaScript Separation
+
+-   **Extracted Inline JS to External Files** (`webroot/js/`)
+    -   `webroot/js/components/sidebar.js`: Sidebar toggle logic (~75 lines).
+    -   `webroot/js/components/flash.js`: Toast auto-dismiss logic (~24 lines).
+    -   `webroot/js/views/Invoices/view.js`: PDF download logic (~32 lines).
+    -   `webroot/js/views/Admins/dashboard.js`: FullCalendar, ApexCharts initialization (~280 lines).
+    -   `webroot/js/views/Bookings/add.js`: Booking form with Flatpickr, dynamic pricing, add-ons (~265 lines).
+    -   `webroot/js/views/Users/auth.js`: Login/register slider toggle (~21 lines).
+    -   `webroot/js/components/delete-confirm.js`: Reusable generic delete confirmation with **Capture Phase** event handling (~80 lines).
+    -   `webroot/js/views/Cars/form.js`: Image preview and color picker for car forms (~40 lines).
+-   Implemented `window.RentifyData` pattern for passing PHP data to external JS files.
+-   Created directory structure: `webroot/js/views/Bookings/`, `views/Admins/`, `views/Invoices/`, `components/`.
+-   **Consolidated** duplicating inline scripts in `Cars/add.php`, `Cars/edit.php` and `Invoices/view_invoices.php`.
+-   **Standardized** Delete Confirmation across `Users`, `Cars`, `Bookings`, `Payments`, and `Invoices` index/edit pages using SweetAlert2.
 
 -   `Users/view.php`: Unique profile card layout, kept as-is.
 -   `Invoices/view.php`: Special printable document layout, kept as-is.

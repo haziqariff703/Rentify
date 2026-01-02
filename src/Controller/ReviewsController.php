@@ -24,11 +24,11 @@ class ReviewsController extends AppController
         // Customer actions (logged-in users, not admin for addReview)
         $customerActions = ['myReviews', 'addReview'];
         if (in_array($action, $customerActions)) {
-            if (!$user) {
+            if (!$this->isAuthenticated()) {
                 $this->Flash->error(__('Please login to access this page.'));
                 return $this->redirect(['controller' => 'Users', 'action' => 'login']);
             }
-            if ($action === 'addReview' && $user->role === 'admin') {
+            if ($action === 'addReview' && $this->isAdmin()) {
                 $this->Flash->error(__('Admins cannot add reviews.'));
                 return $this->redirect(['controller' => 'Admins', 'action' => 'dashboard']);
             }
@@ -38,21 +38,19 @@ class ReviewsController extends AppController
 
         // View action - accessible by any logged-in user
         if ($action === 'view') {
-            if (!$user) {
+            if (!$this->isAuthenticated()) {
                 $this->Flash->error(__('Please login to access this page.'));
                 return $this->redirect(['controller' => 'Users', 'action' => 'login']);
             }
             // Use admin layout for admins
-            if ($user->role === 'admin') {
-                $this->viewBuilder()->setLayout('admin');
-            }
+            $this->setAdminLayoutIfAdmin();
             return;
         }
 
         // Admin-only actions
         $adminActions = ['index', 'add', 'edit', 'delete'];
         if (in_array($action, $adminActions)) {
-            if (!$user || $user->role !== 'admin') {
+            if (!$this->isAdmin()) {
                 $this->Flash->error(__('You are not authorized to access this page.'));
                 return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
             }

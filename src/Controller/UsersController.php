@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Cake\Event\EventInterface;
+use App\Service\ImageUploadService;
 
 /**
  * Users Controller
@@ -14,6 +15,16 @@ use Cake\Event\EventInterface;
 class UsersController extends AppController
 {
     /**
+     * @var \App\Service\ImageUploadService
+     */
+    protected ImageUploadService $ImageUploadService;
+
+    public function initialize(): void
+    {
+        parent::initialize();
+        $this->ImageUploadService = new ImageUploadService();
+    }
+    /**
      * @param \Cake\Event\EventInterface $event
      * @return \Cake\Http\Response|null|void
      */
@@ -22,13 +33,12 @@ class UsersController extends AppController
         parent::beforeFilter($event);
         $this->Authentication->addUnauthenticatedActions(['login', 'add']);
 
-        $user = $this->Authentication->getIdentity();
         $action = $this->request->getParam('action');
 
         // Admin-only actions
         $adminActions = ['index', 'delete', 'view'];
         if (in_array($action, $adminActions)) {
-            if (!$user || $user->role !== 'admin') {
+            if (!$this->isAdmin()) {
                 // Redirect customers trying to view users to their own account
                 if ($action === 'view') {
                     return $this->redirect(['action' => 'myAccount']);
@@ -39,9 +49,7 @@ class UsersController extends AppController
         }
 
         // Use admin layout for admin users
-        if ($user && $user->role === 'admin') {
-            $this->viewBuilder()->setLayout('admin');
-        }
+        $this->setAdminLayoutIfAdmin();
     }
 
     /**
@@ -140,53 +148,7 @@ class UsersController extends AppController
         // Uses default layout (not admin)
     }
 
-    /**
-     * Handle avatar file upload
-     *
-     * @param \App\Model\Entity\User $user User entity
-     * @param \Psr\Http\Message\UploadedFileInterface|null $avatarFile Uploaded file
-     * @return string|null New avatar filename or null if failed/no file
-     */
-    private function _uploadAvatar($user, $avatarFile)
-    {
-        if ($avatarFile && $avatarFile->getError() === UPLOAD_ERR_OK) {
-            $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-            $maxFileSize = 2 * 1024 * 1024; // 2MB
-
-            if (!in_array($avatarFile->getClientMediaType(), $allowedMimeTypes)) {
-                $this->Flash->error(__('Invalid file type. Please upload JPG, PNG, GIF, or WebP.'));
-                return null;
-            }
-
-            if ($avatarFile->getSize() > $maxFileSize) {
-                $this->Flash->error(__('File is too large. Maximum size is 2MB.'));
-                return null;
-            }
-
-            // Create avatars directory if it doesn't exist
-            $uploadDir = WWW_ROOT . 'img' . DS . 'avatars';
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0755, true);
-            }
-
-            // Generate unique filename
-            $extension = pathinfo($avatarFile->getClientFilename(), PATHINFO_EXTENSION);
-            $newFilename = 'avatar_' . $user->id . '_' . time() . '.' . $extension;
-            $targetPath = $uploadDir . DS . $newFilename;
-
-            // Move uploaded file
-            $avatarFile->moveTo($targetPath);
-
-            // Delete old avatar if exists
-            if (!empty($user->avatar) && file_exists(WWW_ROOT . 'img' . DS . $user->avatar)) {
-                @unlink(WWW_ROOT . 'img' . DS . $user->avatar);
-            }
-
-            return 'avatars' . DS . $newFilename;
-        }
-
-        return null;
-    }
+    // Avatar upload is now handled by ImageUploadService
 
     /**
      * Edit Profile method - Customer can edit their own profile
@@ -201,15 +163,17 @@ class UsersController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
 
-            // Handle avatar file upload
+            // Handle avatar file upload using ImageUploadService
             $avatarFile = $this->request->getUploadedFile('avatar_file');
-            $avatarPath = $this->_uploadAvatar($user, $avatarFile);
-            if ($avatarPath) {
-                $data['avatar'] = $avatarPath;
-            } elseif ($avatarFile && $avatarFile->getError() !== UPLOAD_ERR_NO_FILE) {
-                // If there was an error other than "no file", stop and let the user fix it
-                $this->set(compact('user'));
-                return;
+            if ($avatarFile) {
+                $result = $this->ImageUploadService->uploadAvatar($avatarFile, $user->id, $user->avatar);
+                if ($result['success']) {
+                    $data['avatar'] = $result['filename'];
+                } elseif ($result['error']) {
+                    $this->Flash->error(__($result['error']));
+                    $this->set(compact('user'));
+                    return;
+                }
             }
 
             // Only allow customers to update specific fields (not role)
@@ -272,15 +236,17 @@ class UsersController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
 
-            // Handle avatar file upload
+            // Handle avatar file upload using ImageUploadService
             $avatarFile = $this->request->getUploadedFile('avatar_file');
-            $avatarPath = $this->_uploadAvatar($user, $avatarFile);
-            if ($avatarPath) {
-                $data['avatar'] = $avatarPath;
-            } elseif ($avatarFile && $avatarFile->getError() !== UPLOAD_ERR_NO_FILE) {
-                // If there was an error other than "no file", stop
-                $this->set(compact('user'));
-                return;
+            if ($avatarFile) {
+                $result = $this->ImageUploadService->uploadAvatar($avatarFile, $user->id, $user->avatar);
+                if ($result['success']) {
+                    $data['avatar'] = $result['filename'];
+                } elseif ($result['error']) {
+                    $this->Flash->error(__($result['error']));
+                    $this->set(compact('user'));
+                    return;
+                }
             }
 
             // Only include password if it's not empty

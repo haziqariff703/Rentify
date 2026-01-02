@@ -52,4 +52,52 @@ class AppController extends Controller
          */
         //$this->loadComponent('FormProtection');
     }
+
+    /**
+     * Check if current user is authenticated
+     *
+     * @return bool
+     */
+    protected function isAuthenticated(): bool
+    {
+        return $this->Authentication->getIdentity() !== null;
+    }
+
+    /**
+     * Check if current user is an admin
+     *
+     * @return bool
+     */
+    protected function isAdmin(): bool
+    {
+        $user = $this->Authentication->getIdentity();
+        return $user && $user->role === 'admin';
+    }
+
+    /**
+     * Require admin role or redirect with error
+     *
+     * @param string $redirectUrl URL to redirect to (default: home)
+     * @return \Cake\Http\Response|null Returns redirect response if not admin, null otherwise
+     */
+    protected function requireAdmin(array $redirectUrl = ['controller' => 'Pages', 'action' => 'display', 'home']): ?\Cake\Http\Response
+    {
+        if (!$this->isAdmin()) {
+            $this->Flash->error(__('You are not authorized to access this page.'));
+            return $this->redirect($redirectUrl);
+        }
+        return null;
+    }
+
+    /**
+     * Set admin layout if user is admin
+     *
+     * @return void
+     */
+    protected function setAdminLayoutIfAdmin(): void
+    {
+        if ($this->isAdmin()) {
+            $this->viewBuilder()->setLayout('admin');
+        }
+    }
 }

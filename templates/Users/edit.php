@@ -161,7 +161,9 @@
                         ['action' => 'index'],
                         ['class' => 'btn btn-light rounded-pill px-4', 'escape' => false]
                     ) ?>
-                    <button type="button" class="btn btn-danger rounded-pill px-4" id="delete-btn">
+                    <button type="button" class="btn btn-danger rounded-pill px-4" id="delete-btn"
+                        data-confirm-message="Are you sure you want to delete <?= h($user->name) ?>? This action cannot be undone!"
+                        data-confirm-title="Delete User?">
                         <i class="fas fa-trash me-2"></i>Delete
                     </button>
                 </div>
@@ -313,48 +315,6 @@
     </div>
 </div>
 
-<!-- Hidden Delete Form -->
-<?= $this->Form->postLink(
-    '',
-    ['action' => 'delete', $user->id],
-    ['id' => 'delete-form', 'style' => 'display:none;']
-) ?>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Delete confirmation with SweetAlert2
-        const deleteBtn = document.getElementById('delete-btn');
-        if (deleteBtn) {
-            deleteBtn.addEventListener('click', function(e) {
-                e.preventDefault();
 
-                Swal.fire({
-                    title: 'Delete User?',
-                    text: "Are you sure you want to delete <?= h($user->name) ?>? This action cannot be undone!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#dc3545',
-                    cancelButtonColor: '#6c757d',
-                    confirmButtonText: '<i class="fas fa-trash me-1"></i> Yes, delete it!',
-                    cancelButtonText: '<i class="fas fa-times me-1"></i> Cancel'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Show loading state
-                        Swal.fire({
-                            title: 'Deleting...',
-                            text: 'Please wait while we delete this user.',
-                            allowOutsideClick: false,
-                            allowEscapeKey: false,
-                            didOpen: () => {
-                                Swal.showLoading();
-                            }
-                        });
-
-                        // Submit the delete form
-                        document.querySelector('#delete-form a').click();
-                    }
-                });
-            });
-        }
-    });
-</script>
+<script src="<?= $this->Url->assetUrl('js/components/delete-confirm.js') ?>?v=<?= time() ?>"></script>

@@ -111,10 +111,10 @@
                                 '<i class="fas fa-trash"></i>',
                                 ['action' => 'delete', $payment->id],
                                 [
-                                    'confirm' => __('Are you sure you want to delete payment #{0}?', $payment->id),
-                                    'class' => 'btn btn-sm btn-outline-danger',
+                                    'class' => 'btn btn-sm btn-outline-danger delete-confirm',
                                     'escape' => false,
-                                    'title' => 'Delete'
+                                    'title' => 'Delete',
+                                    'data-confirm-message' => __('Are you sure you want to delete payment #{0}?', $payment->id)
                                 ]
                             ) ?>
                         </td>

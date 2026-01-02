@@ -115,10 +115,10 @@
                                 '<i class="fas fa-trash"></i>',
                                 ['action' => 'delete', $carCategory->id],
                                 [
-                                    'class' => 'btn btn-sm btn-outline-danger',
+                                    'class' => 'btn btn-sm btn-outline-danger delete-confirm',
                                     'escape' => false,
                                     'title' => 'Delete',
-                                    'confirm' => __('Are you sure you want to delete {0}?', $carCategory->name)
+                                    'data-confirm-message' => __('Are you sure you want to delete {0}?', $carCategory->name)
                                 ]
                             ) ?>
                         </td>

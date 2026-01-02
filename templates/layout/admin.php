@@ -126,6 +126,10 @@ $cakeDescription = 'Rentify - Admin Panel';
 
     <!-- DataTables Custom Initialization -->
     <script src="<?= $this->Url->assetUrl('js/datatables-init.js') ?>?v=<?= time() ?>"></script>
+    <!-- Flash Toast Auto-Dismiss -->
+    <script src="<?= $this->Url->assetUrl('js/components/flash.js') ?>?v=<?= time() ?>"></script>
+    <!-- SweetAlert2 Delete Confirmation -->
+    <script src="<?= $this->Url->assetUrl('js/components/delete-confirm.js') ?>?v=<?= time() ?>"></script>
 </body>
 
 </html>

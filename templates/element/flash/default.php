@@ -22,14 +22,3 @@ $id = 'toast-' . uniqid();
         <?= $message ?>
     </div>
 </div>
-<script>
-    setTimeout(function() {
-        var toast = document.getElementById('<?= $id ?>');
-        if (toast) {
-            toast.classList.add('fade');
-            setTimeout(function() {
-                toast.remove();
-            }, 300);
-        }
-    }, 3000);
-</script>

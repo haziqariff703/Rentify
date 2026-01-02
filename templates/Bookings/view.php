@@ -44,7 +44,11 @@ $locationLabels = [
                 <?= $this->Form->postLink(
                     '<i class="fas fa-trash me-2"></i>' . __('Delete'),
                     ['action' => 'delete', $booking->id],
-                    ['confirm' => __('Are you sure you want to delete this booking?'), 'class' => 'btn btn-outline-danger', 'escape' => false]
+                    [
+                        'class' => 'btn btn-outline-danger delete-confirm',
+                        'escape' => false,
+                        'data-confirm-message' => __('Are you sure you want to delete this booking?')
+                    ]
                 ) ?>
             <?php endif; ?>
             <?= $this->Html->link(

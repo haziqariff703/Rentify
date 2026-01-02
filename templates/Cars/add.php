@@ -225,25 +225,7 @@ $transmissionOptions = [
     <?= $this->Form->end() ?>
 </div>
 
-<script>
-    // Image preview on file select
-    document.getElementById('imageInput').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const preview = document.getElementById('imagePreview');
-                preview.innerHTML = '<img src="' + e.target.result + '" alt="Preview" style="width:100%; height:200px; object-fit:cover; border-radius:12px;">';
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
-    // Color picker preview update
-    document.querySelector('input[type="color"]').addEventListener('input', function(e) {
-        document.querySelector('.color-preview').style.background = e.target.value;
-    });
-</script>
+<script src="<?= $this->Url->assetUrl('js/views/Cars/form.js') ?>?v=<?= time() ?>"></script>
 
 <style>
     .edit-car-container {

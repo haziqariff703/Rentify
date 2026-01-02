@@ -624,22 +624,4 @@
     }
 </style>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const registerButton = document.getElementById('register');
-        const loginButton = document.getElementById('login');
-        const container = document.getElementById('container');
-
-        if (registerButton && loginButton && container) {
-            // Click "Register" -> add active class (show register form)
-            registerButton.addEventListener('click', () => {
-                container.classList.add('right-panel-active');
-            });
-
-            // Click "Login" -> remove active class (show login form)
-            loginButton.addEventListener('click', () => {
-                container.classList.remove('right-panel-active');
-            });
-        }
-    });
-</script>
+<script src="<?= $this->Url->assetUrl('js/views/Users/auth.js') ?>?v=<?= time() ?>"></script>

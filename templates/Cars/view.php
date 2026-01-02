@@ -34,7 +34,11 @@ $currentStatus = $statusColors[$car->status] ?? ['bg' => '#e2e8f0', 'text' => '#
             <?= $this->Form->postLink(
                 '<i class="fas fa-trash me-2"></i>' . __('Delete'),
                 ['action' => 'delete', $car->id],
-                ['confirm' => __('Are you sure you want to delete this car?'), 'class' => 'btn btn-outline-danger', 'escape' => false]
+                [
+                    'class' => 'btn btn-outline-danger delete-confirm',
+                    'escape' => false,
+                    'data-confirm-message' => __('Are you sure you want to delete this car?')
+                ]
             ) ?>
             <?= $this->Html->link(
                 '<i class="fas fa-arrow-left me-2"></i>' . __('Back to List'),

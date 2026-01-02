@@ -123,10 +123,10 @@ $identity = $this->request->getAttribute('authentication')->getIdentity();
                                 '<i class="fas fa-trash"></i>',
                                 ['action' => 'delete', $car->id],
                                 [
-                                    'confirm' => __('Are you sure you want to delete {0}?', $car->brand . ' ' . $car->car_model),
-                                    'class' => 'btn btn-sm btn-outline-danger',
+                                    'class' => 'btn btn-sm btn-outline-danger delete-confirm',
                                     'escape' => false,
-                                    'title' => 'Delete'
+                                    'title' => 'Delete',
+                                    'data-confirm-message' => __('Are you sure you want to delete {0}?', $car->brand . ' ' . $car->car_model)
                                 ]
                             ) ?>
                         </td>

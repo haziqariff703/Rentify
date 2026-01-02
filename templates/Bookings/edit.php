@@ -160,9 +160,9 @@ $locationOptions = [
             __('Delete Booking'),
             ['action' => 'delete', $booking->id],
             [
-                'confirm' => __('Are you sure you want to delete this booking?'),
-                'class' => 'btn btn-outline-danger btn-lg',
-                'escape' => false
+                'class' => 'btn btn-outline-danger btn-lg delete-confirm',
+                'escape' => false,
+                'data-confirm-message' => __('Are you sure you want to delete this booking?')
             ]
         ) ?>
     </div>

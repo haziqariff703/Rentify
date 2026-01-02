@@ -15,13 +15,12 @@ class PaymentsController extends AppController
     {
         parent::beforeFilter($event);
 
-        $user = $this->Authentication->getIdentity();
         $action = $this->request->getParam('action');
 
         // Actions that require login but not admin
         $userActions = ['myPayments', 'view', 'add'];
         if (in_array($action, $userActions)) {
-            if (!$user) {
+            if (!$this->isAuthenticated()) {
                 $this->Flash->error(__('Please login to access this page.'));
                 return $this->redirect(['controller' => 'Users', 'action' => 'login']);
             }
@@ -30,22 +29,20 @@ class PaymentsController extends AppController
         // Admin-only actions
         $adminActions = ['index', 'edit', 'delete', 'confirmCashPayment'];
         if (in_array($action, $adminActions)) {
-            if (!$user || $user->role !== 'admin') {
+            if (!$this->isAdmin()) {
                 $this->Flash->error(__('You are not authorized to access this page.'));
                 return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
             }
         }
 
         // Block admin from creating new payments - only customers can pay
-        if ($action === 'add' && $user && $user->role === 'admin') {
+        if ($action === 'add' && $this->isAdmin()) {
             $this->Flash->error(__('Admins cannot make payments. Only customers can pay for bookings.'));
             return $this->redirect(['action' => 'index']);
         }
 
         // Use admin layout for admin users
-        if ($user && $user->role === 'admin') {
-            $this->viewBuilder()->setLayout('admin');
-        }
+        $this->setAdminLayoutIfAdmin();
     }
 
     /**

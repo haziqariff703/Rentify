@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Review $review
@@ -18,7 +19,11 @@
             <?= $this->Form->postLink(
                 '<i class="fas fa-trash me-2"></i>' . __('Delete'),
                 ['action' => 'delete', $review->id],
-                ['confirm' => __('Are you sure you want to delete this review?'), 'class' => 'btn btn-outline-danger', 'escape' => false]
+                [
+                    'class' => 'btn btn-outline-danger delete-confirm',
+                    'escape' => false,
+                    'data-confirm-message' => __('Are you sure you want to delete this review?')
+                ]
             ) ?>
             <?= $this->Html->link(
                 '<i class="fas fa-arrow-left me-2"></i>' . __('Back to List'),

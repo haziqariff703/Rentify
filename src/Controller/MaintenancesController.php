@@ -15,13 +15,13 @@ class MaintenancesController extends AppController
     {
         parent::beforeFilter($event);
 
-        $user = $this->Authentication->getIdentity();
-        if (!$user || $user->role !== 'admin') {
-            $this->Flash->error(__('You are not authorized to access this page.'));
-            return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
+        // All actions in this controller require admin role
+        $redirect = $this->requireAdmin();
+        if ($redirect) {
+            return $redirect;
         }
 
-        // Use admin layout for admin users
+        // Use admin layout
         $this->viewBuilder()->setLayout('admin');
     }
 

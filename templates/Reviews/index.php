@@ -105,10 +105,10 @@ $showingIssues = $showingIssues ?? false;
                                 '<i class="fas fa-trash"></i>',
                                 ['action' => 'delete', $review->id],
                                 [
-                                    'confirm' => __('Are you sure you want to delete review #{0}?', $review->id),
-                                    'class' => 'btn btn-sm btn-outline-danger',
+                                    'class' => 'btn btn-sm btn-outline-danger delete-confirm',
                                     'escape' => false,
-                                    'title' => 'Delete'
+                                    'title' => 'Delete',
+                                    'data-confirm-message' => __('Are you sure you want to delete review #{0}?', $review->id)
                                 ]
                             ) ?>
                             <?php if (($review->rating ?? 5) <= 2 && $review->hasValue('car')): ?>

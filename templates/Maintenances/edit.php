@@ -118,9 +118,9 @@ $statusOptions = [
             '<i class="fas fa-trash me-2"></i>' . __('Delete'),
             ['action' => 'delete', $maintenance->id],
             [
-                'confirm' => __('Are you sure you want to delete this maintenance record?'),
-                'class' => 'btn btn-outline-danger btn-lg',
-                'escape' => false
+                'class' => 'btn btn-outline-danger btn-lg delete-confirm',
+                'escape' => false,
+                'data-confirm-message' => __('Are you sure you want to delete this maintenance record?')
             ]
         ) ?>
     </div>

@@ -221,9 +221,9 @@ $transmissionOptions = [
             __('Delete Car'),
             ['action' => 'delete', $car->id],
             [
-                'confirm' => __('Are you sure you want to delete this car?'),
-                'class' => 'btn btn-outline-danger btn-lg',
-                'escape' => false
+                'class' => 'btn btn-outline-danger btn-lg delete-confirm',
+                'escape' => false,
+                'data-confirm-message' => __('Are you sure you want to delete this car?')
             ]
         ) ?>
     </div>
@@ -231,29 +231,7 @@ $transmissionOptions = [
     <?= $this->Form->end() ?>
 </div>
 
-<script>
-    // Image preview on file select
-    document.getElementById('imageInput').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const preview = document.getElementById('imagePreview');
-                if (preview.tagName === 'IMG') {
-                    preview.src = e.target.result;
-                } else {
-                    preview.innerHTML = '<img src="' + e.target.result + '" alt="Preview">';
-                }
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
-    // Color picker preview update
-    document.querySelector('input[type="color"]').addEventListener('input', function(e) {
-        document.querySelector('.color-preview').style.background = e.target.value;
-    });
-</script>
+<script src="<?= $this->Url->assetUrl('js/views/Cars/form.js') ?>?v=<?= time() ?>"></script>
 
 <style>
     .edit-car-container {

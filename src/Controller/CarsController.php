@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Service\ImageUploadService;
+
 /**
  * Cars Controller
  *
@@ -11,6 +13,16 @@ namespace App\Controller;
  */
 class CarsController extends AppController
 {
+    /**
+     * @var \App\Service\ImageUploadService
+     */
+    protected ImageUploadService $ImageUploadService;
+
+    public function initialize(): void
+    {
+        parent::initialize();
+        $this->ImageUploadService = new ImageUploadService();
+    }
     public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         parent::beforeFilter($event);
@@ -119,19 +131,22 @@ class CarsController extends AppController
         if ($this->request->is('post')) {
             $data = $this->request->getData();
 
-            // Handle file upload
-            $imageFile = $this->request->getData('image_file');
-            if ($imageFile && $imageFile->getSize() > 0 && $imageFile->getError() === UPLOAD_ERR_OK) {
-                // Generate unique filename
-                $extension = pathinfo($imageFile->getClientFilename(), PATHINFO_EXTENSION);
-                $filename = strtolower(str_replace(' ', '-', $data['brand'] . '-' . $data['car_model'])) . '-' . time() . '.' . $extension;
-
-                // Move uploaded file to webroot/img/
-                $targetPath = WWW_ROOT . 'img' . DS . $filename;
-                $imageFile->moveTo($targetPath);
-
-                // Set the image field
-                $data['image'] = $filename;
+            // Handle file upload using ImageUploadService
+            $imageFile = $this->request->getUploadedFile('image_file');
+            if ($imageFile) {
+                $result = $this->ImageUploadService->uploadCarImage(
+                    $imageFile,
+                    $data['brand'] ?? '',
+                    $data['car_model'] ?? ''
+                );
+                if ($result['success']) {
+                    $data['image'] = $result['filename'];
+                } elseif ($result['error']) {
+                    $this->Flash->error(__($result['error']));
+                    $categories = $this->Cars->Categories->find('list', limit: 200)->all();
+                    $this->set(compact('car', 'categories'));
+                    return;
+                }
             }
 
             // Remove file upload field before patching entity
@@ -162,19 +177,23 @@ class CarsController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
 
-            // Handle file upload
-            $imageFile = $this->request->getData('image_file');
-            if ($imageFile && $imageFile->getSize() > 0 && $imageFile->getError() === UPLOAD_ERR_OK) {
-                // Generate unique filename
-                $extension = pathinfo($imageFile->getClientFilename(), PATHINFO_EXTENSION);
-                $filename = strtolower(str_replace(' ', '-', $data['brand'] . '-' . $data['car_model'])) . '-' . time() . '.' . $extension;
-
-                // Move uploaded file to webroot/img/
-                $targetPath = WWW_ROOT . 'img' . DS . $filename;
-                $imageFile->moveTo($targetPath);
-
-                // Update the image field with new filename
-                $data['image'] = $filename;
+            // Handle file upload using ImageUploadService
+            $imageFile = $this->request->getUploadedFile('image_file');
+            if ($imageFile && $imageFile->getError() === UPLOAD_ERR_OK) {
+                $result = $this->ImageUploadService->uploadCarImage(
+                    $imageFile,
+                    $data['brand'] ?? $car->brand,
+                    $data['car_model'] ?? $car->car_model,
+                    $car->image // Old image to delete
+                );
+                if ($result['success']) {
+                    $data['image'] = $result['filename'];
+                } elseif ($result['error']) {
+                    $this->Flash->error(__($result['error']));
+                    $categories = $this->Cars->Categories->find('list', limit: 200)->all();
+                    $this->set(compact('car', 'categories'));
+                    return;
+                }
             } else {
                 // Keep existing image if no new upload
                 $data['image'] = $data['existing_image'] ?? $car->image;

@@ -104,10 +104,10 @@ $isAdmin = $identity && $identity->role === 'admin';
                                     '<i class="fas fa-trash"></i>',
                                     ['action' => 'delete', $booking->id],
                                     [
-                                        'class' => 'btn btn-sm btn-outline-danger',
+                                        'class' => 'btn btn-sm btn-outline-danger delete-confirm',
                                         'escape' => false,
                                         'title' => 'Delete',
-                                        'confirm' => __('Are you sure you want to delete booking #{0}?', $booking->id),
+                                        'data-confirm-message' => __('Are you sure you want to delete booking #{0}?', $booking->id)
                                     ]
                                 ) ?>
                             <?php endif; ?>
