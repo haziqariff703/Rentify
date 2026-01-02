@@ -51,6 +51,12 @@ class AppController extends Controller
          * see https://book.cakephp.org/5/en/controllers/components/form-protection.html
          */
         $this->loadComponent('FormProtection');
+
+        // Global pagination settings - increase limit for DataTables
+        $this->paginate = [
+            'limit' => 500,  // Show up to 500 records per page
+            'maxLimit' => 1000,  // Allow up to 1000 if requested
+        ];
     }
 
     /**

@@ -9,17 +9,24 @@ use Cake\I18n\FrozenDate;
 use DateTime;
 
 /**
- * Service to handle Admin Dashboard statistics and charts
+ * Service class for managing Admin Dashboard statistics and charts.
+ *
+ * Aggregates data from multiple tables (Cars, Bookings, Users, Payments,
+ * CarCategories, Maintenances, Reviews) to provide a comprehensive
+ * overview for the admin dashboard. Supports optional date range filtering.
  */
 class AdminDashboardService
 {
     use LocatorAwareTrait;
 
     /**
-     * Get all statistics for the admin dashboard
+     * Get all statistics for the admin dashboard.
      *
-     * @param string|null $period Filter period (today, week, month, quarter, null for all)
-     * @return array
+     * Returns counts, comparisons, chart data, fleet status, and alerts.
+     * Supports optional period filtering for time-sensitive metrics.
+     *
+     * @param string|null $period Filter period: 'today', 'week', 'month', 'quarter', or null for all time.
+     * @return array Associative array containing all dashboard statistics and chart data.
      */
     public function getDashboardStats(?string $period = null): array
     {

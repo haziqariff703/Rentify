@@ -11,6 +11,27 @@ namespace App\Controller;
  */
 class PaymentsController extends AppController
 {
+    /**
+     * Initialize controller - unlock dynamic payment form fields.
+     *
+     * @return void
+     */
+    public function initialize(): void
+    {
+        parent::initialize();
+
+        // Unlock dynamic form fields that are shown/hidden by JavaScript
+        if ($this->components()->has('FormProtection')) {
+            $this->FormProtection->setConfig('unlockedFields', [
+                'payment_method',
+                'bank_name',
+                'card_number',
+                'card_expiry',
+                'card_cvv',
+            ]);
+        }
+    }
+
     public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         parent::beforeFilter($event);

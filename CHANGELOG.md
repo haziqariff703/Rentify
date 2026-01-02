@@ -7,7 +7,9 @@ All notable changes to the Rentify project will be documented in this file.
 ### Changed
 
 -   **Dashboard Optimization**: Refactored `AdminsController::dashboard` logic into `src/Service/AdminDashboardService.php` to reduce controller complexity and improve maintainability.
--   **Dashboard Interactivity Enhancements** (`templates/Admins/dashboard.php`)
+-   **Bookings Refactoring**: Extracted all business logic (Booking creation, cancellation, approval, and auto-completion) from `BookingsController` and `AdminsController` into `BookingService`.
+-   **API Documentation (PHPDoc)**: Added comprehensive PHPDoc blocks to `BookingService`, `AdminDashboardService`, `BookingsController`, and `AdminsController` for improved code clarity and IDE support.
+-   **Dashboard Interactivity**: Added Date Range Filter, Quick Actions, and Inline Approvals (Backend implementation).
     -   **Date Range Filter**: Filter dropdown (Today, This Week, This Month, Last 3 Months) with live filtering of Bookings, Revenue, and Users stats.
     -   **Quick Actions Dropdown**: One-click access to New Booking, Add Car, Add User, Schedule Maintenance, and View Issues.
     -   **Inline Booking Approvals**: Pending bookings mini-list in Action Center with inline ✓ Approve and 👁 View buttons.
