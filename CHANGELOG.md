@@ -2,6 +2,13 @@
 
 All notable changes to the Rentify project will be documented in this file.
 
+## [2026-01-03]
+
+### Fixed
+
+-   Fixed invisible payment receipt details in `view_invoices.php` by changing layout to block/margin-auto and adding `!important` color overrides.
+-   Optimized invoice PDF layout by compacting "Receipt" box width and reducing vertical margins to prevent page splitting.
+
 ## [2026-01-02]
 
 ### Changed
