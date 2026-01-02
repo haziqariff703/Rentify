@@ -39,7 +39,7 @@ class PaymentsController extends AppController
         $action = $this->request->getParam('action');
 
         // Actions that require login but not admin
-        $userActions = ['myPayments', 'view', 'add'];
+        $userActions = ['myPayments', 'view', 'add', 'viewPayment'];
         if (in_array($action, $userActions)) {
             if (!$this->isAuthenticated()) {
                 $this->Flash->error(__('Please login to access this page.'));
@@ -139,6 +139,33 @@ class PaymentsController extends AppController
 
         $payments = $this->paginate($query);
         $this->set(compact('payments'));
+    }
+
+    /**
+     * View Payment - User-only payment confirmation (read-only)
+     * Security: Users can only view their own payments
+     */
+    public function viewPayment($id = null)
+    {
+        // Fetch payment with booking and car details for the thumbnail
+        $payment = $this->Payments->get($id, [
+            'contain' => ['Bookings' => ['Cars', 'Users']],
+        ]);
+
+        // SECURITY CHECK - Ensure user owns this payment
+        $currentUserId = $this->Authentication->getIdentity()->getIdentifier();
+        if ($payment->booking->user_id !== $currentUserId) {
+            $this->Flash->error(__('You are not authorized to view this payment.'));
+            return $this->redirect(['action' => 'myPayments']);
+        }
+
+        // Fetch related invoice for the link
+        $invoicesTable = $this->fetchTable('Invoices');
+        $invoice = $invoicesTable->find()
+            ->where(['booking_id' => $payment->booking_id])
+            ->first();
+
+        $this->set(compact('payment', 'invoice'));
     }
 
     /**

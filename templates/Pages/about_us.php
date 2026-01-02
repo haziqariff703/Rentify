@@ -94,7 +94,7 @@ $this->assign('title', 'About Us');
        ======================================== */
     .mission-section {
         background: #ffffff;
-        padding: 80px 120px;
+        padding: 100px 120px;
     }
 
     .mission-content {
@@ -308,15 +308,63 @@ $this->assign('title', 'About Us');
         <h1 class="hero-title-uber">About us</h1>
     </section>
 
-    <!-- Mission Statement -->
-    <section class="mission-section">
-        <div class="mission-content">
-            <h2 class="mission-quote">We don't just rent cars. We curate experiences.</h2>
-            <p class="mission-text">
-                Rentify was born from a simple obsession: the belief that the journey matters more than the destination.
-                We exist to bridge the gap between premium automotive engineering and everyday accessibility.
-                Whether it's a Proton for a quick errand or a sports car for a weekend escape, we ensure every mile counts.
-            </p>
+    <!-- Mission Statement + Team Section (Dark) -->
+    <section style="background-color: #0f172a; padding: 100px 0;">
+        <div class="container">
+            <div class="row align-items-center">
+                
+                <!-- Text Left -->
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <p style="font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: #ef4444; margin-bottom: 16px;">The Rentify Standard</p>
+                    
+                    <h2 style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 2.5rem; color: #ffffff; margin-bottom: 24px; line-height: 1.3;">
+                        We don't just rent cars.<br>
+                        We curate <span style="position: relative; display: inline-block;">experiences.<span style="position: absolute; bottom: 4px; left: 0; width: 100%; height: 5px; background-color: #ef4444; z-index: -1;"></span></span>
+                    </h2>
+                    
+                    <p style="font-family: 'Syne', sans-serif; font-size: 1.1rem; line-height: 1.9; color: #94a3b8; margin-bottom: 24px;">
+                        Rentify was born from a simple obsession: the belief that the journey matters more than the destination. 
+                        We exist to bridge the gap between premium automotive engineering and everyday accessibility. 
+                        Whether it's a Proton for a quick errand or a sports car for a weekend escape, we ensure every mile counts.
+                    </p>
+
+                    <div class="d-flex align-items-center gap-3 mt-4">
+                        <div style="width: 40px; height: 2px; background-color: #ef4444;"></div>
+                        <span style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: #ffffff;">Meet The Team</span>
+                    </div>
+                </div>
+
+                <!-- Team Photo Right -->
+                <div class="col-lg-6 text-center ps-lg-4">
+                    <div class="position-relative">
+                        <!-- Red glow behind image -->
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70%; height: 70%; background: radial-gradient(circle, rgba(239,68,68,0.15) 0%, rgba(15,23,42,0) 70%); z-index: 0;"></div>
+                        
+                        <?= $this->Html->image('team_founders.png', [
+                            'alt' => 'The Rentify Team',
+                            'class' => 'position-relative',
+                            'style' => 'z-index: 1; width: 100%; filter: drop-shadow(0 25px 50px rgba(0,0,0,0.5));'
+                        ]) ?>
+                        
+                        <!-- Team Names -->
+                        <p style="font-family: 'Inter', sans-serif; font-size: 0.95rem; color: #cbd5e1; margin-top: 28px; letter-spacing: 0.05em;">
+                            <span style="font-weight: 700; color: #ffffff;">Haziq</span> 
+                            <span style="color: #ef4444; margin: 0 8px;">•</span>
+                            <span style="font-weight: 700; color: #ffffff;">Zulfadli</span> 
+                            <span style="color: #ef4444; margin: 0 8px;">•</span>
+                            <span style="font-weight: 700; color: #ffffff;">Rasyid</span> 
+                            <span style="color: #ef4444; margin: 0 8px;">•</span>
+                            <span style="font-weight: 700; color: #ffffff;">Safa</span>
+                        </p>
+                        
+                        <!-- Team Philosophy -->
+                        <p style="font-family: 'Syne', sans-serif; font-size: 0.9rem; color: #64748b; max-width: 450px; margin: 12px auto 0; line-height: 1.7; font-style: italic;">
+                            Four minds, one vision—driven by the belief that every customer deserves the executive treatment, regardless of budget.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </section>
 

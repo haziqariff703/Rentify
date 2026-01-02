@@ -553,7 +553,7 @@ foreach ($payments as $payment) {
                                         <td data-label="Action">
                                             <?= $this->Html->link(
                                                 '<i class="fas fa-eye"></i> View',
-                                                ['action' => 'view', $payment->id],
+                                                ['action' => 'viewPayment', $payment->id],
                                                 ['class' => 'btn-ghost', 'escape' => false]
                                             ) ?>
                                         </td>

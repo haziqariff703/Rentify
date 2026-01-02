@@ -2,6 +2,47 @@
 
 All notable changes to the Rentify project will be documented in this file.
 
+## [2026-01-03]
+
+### Added
+
+-   **User Payment View Page** (`templates/Payments/view_payment.php`)
+    -   Created read-only payment confirmation page for users (separate from admin view).
+    -   Shows car thumbnail, payment details, and links to related invoice/booking.
+    -   No Edit/Delete buttons - user can only view their own payments.
+    -   Security check in controller prevents users from viewing other users' payments.
+-   **viewPayment Controller Action** (`src/Controller/PaymentsController.php`)
+    -   Added `viewPayment()` action with ownership security check.
+    -   Fetches payment with booking, car, and invoice data for display.
+-   **About Us Team Section** (`templates/Pages/about_us.php`)
+    -   Integrated team founders photo into mission statement section.
+    -   Added team members: Haziq, Zulfadli, Rasyid, Safa.
+    -   Red underline accent on "experiences" with team philosophy paragraph.
+    -   Drop shadow effect and responsive two-column layout.
+
+### Changed
+
+-   **My Payments View Button** (`templates/Payments/my_payments.php`)
+    -   Changed View button link from `view` (admin) to `viewPayment` (user).
+-   **PaymentsController beforeFilter** - Added `viewPayment` to user-accessible actions.
+-   **My Account Page Redesign** (`templates/Users/my_account.php`)
+    -   Replaced purple gradient header with clean white profile card.
+    -   Applied unified design system: Montserrat (headings), Inter (body).
+    -   Stats row moved inside profile card with vertical dividers.
+    -   Navy card headers (#1e293b) for Personal Information, Address, My Bookings, My Reviews sections.
+    -   Updated buttons to pill style with hover effects.
+    -   Removed icons from buttons for cleaner look.
+-   **Edit Profile Page Redesign** (`templates/Users/edit_profile.php`)
+    -   Replaced purple gradient header with clean white profile card.
+    -   Navy card headers for Personal Information and Security sections.
+    -   Modernized form inputs with Montserrat/Inter fonts.
+    -   Pill-style Save/Cancel buttons matching my_account.
+    -   Removed icons from buttons for cleaner look.
+
+### Removed
+
+-   Deleted `view_payments.php` (incorrect plural naming) - replaced with `view_payment.php`.
+
 ## [2026-01-02]
 
 ### Changed
