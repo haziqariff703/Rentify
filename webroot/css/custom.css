@@ -799,3 +799,489 @@ a:hover {
         font-size: 26px;
     }
 }
+
+/* ========================================
+   VIEW CONTAINER - STANDARDIZED VIEW PAGES
+   Applies to all view.php pages
+   Typography: Montserrat (headings), Syne (content)
+   ======================================== */
+
+.view-container {
+    font-family: "Syne", sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Typography */
+.view-container h1,
+.view-container h2,
+.view-container h3,
+.view-container h4,
+.view-container h5,
+.view-container h6 {
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+}
+
+/* Page Header */
+.view-container .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e2e8f0;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.view-container .page-header h2 {
+    margin: 0;
+    color: #1e293b;
+    font-size: 1.75rem;
+}
+
+.view-container .page-header .text-muted {
+    margin: 8px 0 0;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.view-container .header-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* View Grid Layout */
+.view-container .view-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 30px;
+}
+
+/* Form Card - Premium Black Header */
+.view-container .form-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.view-container .form-card.full-width {
+    grid-column: 1 / -1;
+}
+
+.view-container .form-card .card-header {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    color: white;
+    padding: 16px 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Subtle texture/noise overlay on header */
+.view-container .form-card .card-header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+}
+
+.view-container .form-card .card-header h5 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.view-container .form-card .card-body {
+    padding: 20px;
+}
+
+/* Image Card Variant */
+.view-container .image-card .card-body {
+    padding: 0;
+    position: relative;
+}
+
+.view-container .car-preview-image {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+}
+
+.view-container .car-info-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    background: linear-gradient(transparent, rgba(67, 67, 67, 0.8));
+    color: white;
+}
+
+.view-container .car-info-overlay h4 {
+    margin: 0 0 4px;
+    font-size: 1.1rem;
+}
+
+.view-container .car-info-overlay .car-price {
+    margin: 0 0 12px;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.view-container .no-image-placeholder {
+    width: 100%;
+    height: 280px;
+    background: #f8fafc;
+    border: 2px dashed #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+}
+
+.view-container .no-image-placeholder i {
+    font-size: 4rem;
+    margin-bottom: 16px;
+}
+
+/* View Table */
+.view-container .view-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.view-container .view-table tr {
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.view-container .view-table tr:last-child {
+    border-bottom: none;
+}
+
+.view-container .view-table th {
+    text-align: left;
+    padding: 12px 16px 12px 0;
+    width: 120px;
+    color: #64748b;
+    font-weight: 500;
+    font-family: "Syne", sans-serif;
+}
+
+.view-container .view-table td {
+    padding: 12px 0;
+    color: #1e293b;
+}
+
+.view-container .price-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #059669;
+    font-family: "Poppins", sans-serif;
+}
+
+/* Specs Grid */
+.view-container .specs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.view-container .spec-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    background: #f8fafc;
+    border-radius: 10px;
+}
+
+.view-container .spec-item i {
+    font-size: 1.2rem;
+    color: #3b82f6;
+    width: 24px;
+}
+
+.view-container .spec-label {
+    display: block;
+    font-size: 0.75rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.view-container .spec-value {
+    display: block;
+    font-weight: 600;
+    color: #1e293b;
+    font-family: "Poppins", sans-serif;
+}
+
+/* Related Sections */
+.view-container .related-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.view-container .related-sections .table {
+    margin: 0;
+}
+
+.view-container .related-sections .table thead th {
+    background: #f8fafc;
+    border-bottom: 2px solid #e2e8f0;
+    font-weight: 600;
+    color: #475569;
+    font-size: 0.85rem;
+}
+
+.view-container .related-sections .table tbody td {
+    vertical-align: middle;
+}
+
+/* Approval Banner */
+.view-container .approval-banner {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.view-container .approval-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: #92400e;
+}
+
+.view-container .approval-content i {
+    font-size: 2rem;
+}
+
+.view-container .approval-content p {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.view-container .approval-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Date Badge */
+.view-container .date-badge {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+/* Plate Badge */
+.view-container .plate-badge {
+    background: #1e293b;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-weight: 600;
+}
+
+/* Status Badge */
+.view-container .status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* Category Badge */
+.view-container .category-badge {
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+/* Color Swatch */
+.view-container .color-swatch {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+/* Reviews List */
+.view-container .reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.view-container .review-item {
+    padding: 16px;
+    background: #f8fafc;
+    border-radius: 8px;
+}
+
+.view-container .review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.view-container .review-rating i {
+    margin-right: 2px;
+}
+
+.view-container .review-date {
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.view-container .review-comment {
+    margin: 0;
+    color: #475569;
+}
+
+/* Booking Status Summary */
+.view-container .booking-summary .status-count {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+}
+
+.view-container .status-count.pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.view-container .status-count.confirmed {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.view-container .status-count.completed {
+    background: #e0e7ff;
+    color: #4338ca;
+}
+
+.view-container .status-count.cancelled {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Image Filename */
+.view-container .image-filename {
+    text-align: center;
+    color: #64748b;
+    font-size: 0.9rem;
+    padding: 12px;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .view-container .view-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .view-container .specs-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .view-container .specs-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .view-container .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .view-container .approval-banner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Additional View Container Components */
+
+/* Method Badge (Payments) */
+.view-container .method-badge {
+    background-color: #e0e7ff;
+    color: #4338ca;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Amount Badge (Payments) */
+.view-container .amount-badge {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #059669;
+}
+
+/* Rating Display (Reviews) */
+.view-container .rating-stars i,
+.view-container .rating-display i {
+    font-size: 1rem;
+    margin-right: 2px;
+}
+
+.view-container .rating-display {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.view-container .rating-text {
+    margin-left: 8px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+/* Comment Content (Reviews) */
+.view-container .comment-content {
+    padding: 16px;
+    background: #f8fafc;
+    border-radius: 8px;
+    min-height: 100px;
+}
+
+.view-container .comment-content p {
+    margin: 0;
+    line-height: 1.6;
+    color: #334155;
+}

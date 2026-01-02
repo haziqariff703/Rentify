@@ -1,428 +1,245 @@
 <?php
 
 /**
+ * User Profile View - Standardized Layout
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\User $user
  */
 ?>
 
-<style>
-    .profile-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 20px;
-        padding: 40px;
-        color: white;
-        margin-bottom: 30px;
-    }
-
-    .profile-avatar {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        border: 4px solid rgba(255, 255, 255, 0.3);
-        object-fit: cover;
-        background: rgba(255, 255, 255, 0.2);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 3rem;
-    }
-
-    .info-card {
-        background: white;
-        border-radius: 16px;
-        padding: 25px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        border: 1px solid #f0f0f0;
-        transition: all 0.3s ease;
-        height: 100%;
-    }
-
-    .info-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    }
-
-    .info-label {
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: #6c757d;
-        margin-bottom: 5px;
-    }
-
-    .info-value {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #2d3748;
-    }
-
-    .stat-badge {
-        background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%);
-        border-radius: 12px;
-        padding: 15px 20px;
-        text-align: center;
-    }
-
-    .stat-number {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #667eea;
-    }
-
-    .stat-label {
-        font-size: 0.8rem;
-        color: #6c757d;
-    }
-
-    .user-id-badge {
-        background: rgba(255, 255, 255, 0.2);
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        margin-top: 8px;
-        display: inline-block;
-    }
-
-    .related-section {
-        background: white;
-        border-radius: 16px;
-        padding: 25px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        border: 1px solid #f0f0f0;
-        margin-top: 30px;
-    }
-
-    .related-section h5 {
-        color: #2d3748;
-        font-weight: 700;
-        margin-bottom: 20px;
-        padding-bottom: 15px;
-        border-bottom: 2px solid #f0f0f0;
-    }
-
-    .related-section table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .related-section th {
-        background: #f8f9fa;
-        padding: 12px 15px;
-        text-align: left;
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: #6c757d;
-        border-bottom: 2px solid #e9ecef;
-    }
-
-    .related-section td {
-        padding: 12px 15px;
-        border-bottom: 1px solid #f0f0f0;
-        vertical-align: middle;
-    }
-
-    .related-section tr:hover {
-        background: #f8f9fa;
-    }
-
-    .action-btn {
-        padding: 5px 12px;
-        border-radius: 6px;
-        font-size: 0.8rem;
-        text-decoration: none;
-        margin-right: 5px;
-        display: inline-block;
-    }
-
-    .action-btn-view {
-        background: #e3f2fd;
-        color: #1976d2;
-    }
-
-    .action-btn-edit {
-        background: #fff3e0;
-        color: #f57c00;
-    }
-
-    .action-btn-delete {
-        background: #ffebee;
-        color: #d32f2f;
-    }
-
-    .status-badge {
-        padding: 4px 10px;
-        border-radius: 20px;
-        font-size: 0.75rem;
-        font-weight: 600;
-    }
-
-    .empty-state {
-        text-align: center;
-        padding: 40px;
-        color: #6c757d;
-    }
-
-    .empty-state i {
-        font-size: 3rem;
-        margin-bottom: 15px;
-        opacity: 0.5;
-    }
-</style>
-
-<div class="container py-5">
-    <!-- Profile Header -->
-    <div class="profile-header">
-        <div class="row align-items-center">
-            <div class="col-auto">
-                <?php if (!empty($user->avatar) && file_exists(WWW_ROOT . 'img' . DS . $user->avatar)): ?>
-                    <img src="<?= $this->Url->webroot('img/' . $user->avatar) ?>" alt="Avatar" class="profile-avatar">
-                <?php else: ?>
-                    <div class="profile-avatar">
-                        <i class="fas fa-user"></i>
-                    </div>
-                <?php endif; ?>
-            </div>
-            <div class="col">
-                <h2 class="fw-bold mb-1"><?= h($user->name) ?></h2>
-                <p class="mb-2 opacity-75"><?= h($user->email) ?></p>
-                <span class="badge bg-light text-dark px-3 py-2 rounded-pill">
-                    <i class="fas fa-user-tag me-1"></i> <?= ucfirst(h($user->role)) ?>
+<div class="view-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div>
+            <h2>User Profile: <?= h($user->name) ?></h2>
+            <p class="text-muted">
+                <span class="badge bg-light text-dark px-3 py-2 rounded-pill shadow-sm">
+                    <i class="fas fa-user-tag me-1 text-primary"></i> <?= ucfirst(h($user->role)) ?>
                 </span>
-                <div class="user-id-badge">
-                    <i class="fas fa-hashtag me-1"></i>User ID: <?= h($user->id) ?>
-                </div>
-            </div>
-            <div class="col-auto">
-                <div class="d-flex gap-2">
-                    <?= $this->Html->link(
-                        '<i class="fas fa-edit me-2"></i>Edit User',
-                        ['action' => 'edit', $user->id],
-                        ['class' => 'btn btn-light btn-lg rounded-pill px-4', 'escape' => false]
-                    ) ?>
-                    <?= $this->Html->link(
-                        '<i class="fas fa-arrow-left me-2"></i>Back to Users',
-                        ['action' => 'index'],
-                        ['class' => 'btn btn-outline-light btn-lg rounded-pill px-4', 'escape' => false]
-                    ) ?>
-                </div>
-            </div>
+                <span class="ms-2 plate-badge">
+                    <i class="fas fa-hashtag me-1"></i>ID: <?= h($user->id) ?>
+                </span>
+            </p>
         </div>
-    </div>
-
-    <!-- Stats Row -->
-    <div class="row g-4 mb-4">
-        <div class="col-md-4">
-            <div class="stat-badge">
-                <div class="stat-number"><?= count($user->bookings ?? []) ?></div>
-                <div class="stat-label">Total Bookings</div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="stat-badge">
-                <div class="stat-number"><?= count($user->reviews ?? []) ?></div>
-                <div class="stat-label">Reviews Given</div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="stat-badge">
-                <div class="stat-number"><?= $user->created ? $user->created->format('Y') : '-' ?></div>
-                <div class="stat-label">Member Since</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Info Cards -->
-    <div class="row g-4">
-        <div class="col-md-6">
-            <div class="info-card">
-                <h5 class="fw-bold mb-4"><i class="fas fa-id-card text-primary me-2"></i>Personal Information</h5>
-
-                <div class="mb-3">
-                    <div class="info-label">User ID</div>
-                    <div class="info-value">#<?= h($user->id) ?></div>
-                </div>
-
-                <div class="mb-3">
-                    <div class="info-label">Full Name</div>
-                    <div class="info-value"><?= h($user->name) ?></div>
-                </div>
-
-                <div class="mb-3">
-                    <div class="info-label">IC Number</div>
-                    <div class="info-value"><?= h($user->ic_number) ?: '-' ?></div>
-                </div>
-
-                <div class="mb-3">
-                    <div class="info-label">Email Address</div>
-                    <div class="info-value"><?= h($user->email) ?></div>
-                </div>
-
-                <div>
-                    <div class="info-label">Phone Number</div>
-                    <div class="info-value"><?= h($user->phone) ?: '-' ?></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="info-card">
-                <h5 class="fw-bold mb-4"><i class="fas fa-map-marker-alt text-primary me-2"></i>Address</h5>
-
-                <div class="mb-4">
-                    <div class="info-label">Registered Address</div>
-                    <div class="info-value">
-                        <?= $user->address ? nl2br(h($user->address)) : '<span class="text-muted">No address provided</span>' ?>
-                    </div>
-                </div>
-
-                <hr class="my-4">
-
-                <h5 class="fw-bold mb-4"><i class="fas fa-clock text-primary me-2"></i>Account Details</h5>
-
-                <div class="mb-3">
-                    <div class="info-label">Member Since</div>
-                    <div class="info-value"><?= $user->created ? $user->created->format('d M Y') : '-' ?></div>
-                </div>
-
-                <div>
-                    <div class="info-label">Last Updated</div>
-                    <div class="info-value"><?= $user->modified ? $user->modified->format('d M Y, h:i A') : '-' ?></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Quick Links -->
-    <div class="mt-5 text-center">
-        <h5 class="text-muted mb-4">Quick Links</h5>
-        <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <div class="header-actions">
             <?= $this->Html->link(
-                '<i class="fas fa-tachometer-alt me-2"></i>Dashboard',
-                ['controller' => 'Admins', 'action' => 'dashboard'],
-                ['class' => 'btn btn-outline-primary rounded-pill px-4', 'escape' => false]
+                '<i class="fas fa-edit me-2"></i>Edit User',
+                ['action' => 'edit', $user->id],
+                ['class' => 'btn btn-primary rounded-pill px-4', 'escape' => false]
             ) ?>
             <?= $this->Html->link(
-                '<i class="fas fa-users me-2"></i>Users List',
-                ['controller' => 'Users', 'action' => 'index'],
+                '<i class="fas fa-arrow-left me-2"></i>Back to List',
+                ['action' => 'index'],
                 ['class' => 'btn btn-outline-secondary rounded-pill px-4', 'escape' => false]
             ) ?>
         </div>
     </div>
 
-    <!-- Related Bookings -->
-    <div class="related-section">
-        <h5><i class="fas fa-calendar-alt me-2"></i>Related Bookings</h5>
-        <?php if (!empty($user->bookings)): ?>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Car ID</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th>Total Price</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($user->bookings as $booking): ?>
-                            <tr>
-                                <td>#<?= h($booking->id) ?></td>
-                                <td><?= h($booking->car_id) ?></td>
-                                <td><?= h($booking->start_date->format('d M Y')) ?></td>
-                                <td><?= h($booking->end_date->format('d M Y')) ?></td>
-                                <td>RM <?= $this->Number->format($booking->total_price, ['places' => 2]) ?></td>
-                                <td>
-                                    <?php
-                                    $statusClass = match ($booking->booking_status) {
-                                        'confirmed' => 'bg-success text-white',
-                                        'pending' => 'bg-warning text-dark',
-                                        'cancelled' => 'bg-danger text-white',
-                                        'completed' => 'bg-info text-white',
-                                        default => 'bg-secondary text-white'
-                                    };
-                                    ?>
-                                    <span class="status-badge <?= $statusClass ?>"><?= ucfirst(h($booking->booking_status)) ?></span>
-                                </td>
-                                <td>
-                                    <?= $this->Html->link('View', ['controller' => 'Bookings', 'action' => 'view', $booking->id], ['class' => 'action-btn action-btn-view']) ?>
-                                    <?= $this->Html->link('Edit', ['controller' => 'Bookings', 'action' => 'edit', $booking->id], ['class' => 'action-btn action-btn-edit']) ?>
-                                    <?= $this->Form->postLink(
-                                        'Delete',
-                                        ['controller' => 'Bookings', 'action' => 'delete', $booking->id],
-                                        [
-                                            'class' => 'action-btn action-btn-delete',
-                                            'confirm' => __('Are you sure you want to delete booking #{0}?', $booking->id),
-                                        ]
-                                    ) ?>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+    <!-- User Quick Stats Row -->
+    <div class="specs-grid mb-4">
+        <div class="spec-item shadow-sm border-0">
+            <i class="fas fa-calendar-check text-primary"></i>
+            <div>
+                <span class="spec-label">Total Bookings</span>
+                <span class="spec-value text-primary fs-5"><?= count($user->bookings ?? []) ?></span>
             </div>
-        <?php else: ?>
-            <div class="empty-state">
-                <i class="fas fa-calendar-times d-block"></i>
-                <p>No bookings found for this user.</p>
+        </div>
+        <div class="spec-item shadow-sm border-0">
+            <i class="fas fa-star text-warning"></i>
+            <div>
+                <span class="spec-label">Reviews Given</span>
+                <span class="spec-value text-warning fs-5"><?= count($user->reviews ?? []) ?></span>
             </div>
-        <?php endif; ?>
+        </div>
+        <div class="spec-item shadow-sm border-0">
+            <i class="fas fa-user-clock text-info"></i>
+            <div>
+                <span class="spec-label">Member Since</span>
+                <span class="spec-value text-info fs-5"><?= $user->created ? $user->created->format('Y') : '-' ?></span>
+            </div>
+        </div>
     </div>
 
-    <!-- Related Reviews -->
-    <div class="related-section">
-        <h5><i class="fas fa-star me-2"></i>Related Reviews</h5>
-        <?php if (!empty($user->reviews)): ?>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Car ID</th>
-                            <th>Rating</th>
-                            <th>Comment</th>
-                            <th>Created</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($user->reviews as $review): ?>
-                            <tr>
-                                <td>#<?= h($review->id) ?></td>
-                                <td><?= h($review->car_id) ?></td>
-                                <td>
-                                    <?php for ($i = 1; $i <= 5; $i++): ?>
-                                        <i class="fas fa-star <?= $i <= $review->rating ? 'text-warning' : 'text-muted' ?>"></i>
-                                    <?php endfor; ?>
-                                </td>
-                                <td><?= h($review->comment) ?></td>
-                                <td><?= h($review->created->format('d M Y')) ?></td>
-                                <td>
-                                    <?= $this->Html->link('View', ['controller' => 'Reviews', 'action' => 'view', $review->id], ['class' => 'action-btn action-btn-view']) ?>
-                                    <?= $this->Html->link('Edit', ['controller' => 'Reviews', 'action' => 'edit', $review->id], ['class' => 'action-btn action-btn-edit']) ?>
-                                    <?= $this->Form->postLink(
-                                        'Delete',
-                                        ['controller' => 'Reviews', 'action' => 'delete', $review->id],
-                                        [
-                                            'class' => 'action-btn action-btn-delete',
-                                            'confirm' => __('Are you sure you want to delete review #{0}?', $review->id),
-                                        ]
-                                    ) ?>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
+    <div class="view-grid">
+        <!-- Avatar/Identity Card -->
+        <div class="form-card image-card">
+            <div class="card-header">
+                <h5><i class="fas fa-id-badge me-2"></i><?= __('User Identity') ?></h5>
+            </div>
+            <div class="card-body">
+                <?php if (!empty($user->avatar) && file_exists(WWW_ROOT . 'img' . DS . $user->avatar)): ?>
+                    <img src="<?= $this->Url->webroot('img/' . $user->avatar) ?>" alt="Avatar" class="car-preview-image">
+                <?php else: ?>
+                    <div class="no-image-placeholder">
+                        <i class="fas fa-user"></i>
+                        <span class="mt-2">No Profile Image</span>
+                    </div>
+                <?php endif; ?>
+                <div class="car-info-overlay">
+                    <h4><?= h($user->name) ?></h4>
+                    <div class="car-price opacity-75"><?= h($user->email) ?></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Personal Information Card -->
+        <div class="form-card">
+            <div class="card-header">
+                <h5><i class="fas fa-user-circle me-2"></i><?= __('Personal Information') ?></h5>
+            </div>
+            <div class="card-body">
+                <table class="view-table">
+                    <tr>
+                        <th><?= __('Full Name') ?></th>
+                        <td class="fw-bold"><?= h($user->name) ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= __('Email') ?></th>
+                        <td><?= h($user->email) ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= __('IC Number') ?></th>
+                        <td><?= h($user->ic_number) ?: '<span class="text-muted italic">Not specified</span>' ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= __('Phone') ?></th>
+                        <td><?= h($user->phone) ?: '<span class="text-muted italic">Not specified</span>' ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= __('Role') ?></th>
+                        <td><span class="badge bg-primary-soft text-primary"><?= ucfirst(h($user->role)) ?></span></td>
+                    </tr>
                 </table>
             </div>
-        <?php else: ?>
-            <div class="empty-state">
-                <i class="fas fa-comment-slash d-block"></i>
-                <p>No reviews found for this user.</p>
+        </div>
+
+        <!-- Address Card -->
+        <div class="form-card">
+            <div class="card-header">
+                <h5><i class="fas fa-map-marker-alt me-2"></i><?= __('Contact Address') ?></h5>
             </div>
-        <?php endif; ?>
+            <div class="card-body">
+                <div class="p-3 bg-light rounded shadow-sm">
+                    <?php if ($user->address): ?>
+                        <p class="mb-0 text-dark"><?= nl2br(h($user->address)) ?></p>
+                    <?php else: ?>
+                        <p class="mb-0 text-muted italic"><i class="fas fa-info-circle me-1"></i>No address provided</p>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Metadata Card -->
+        <div class="form-card">
+            <div class="card-header">
+                <h5><i class="fas fa-clock me-2"></i><?= __('Account Details') ?></h5>
+            </div>
+            <div class="card-body">
+                <table class="view-table">
+                    <tr>
+                        <th><?= __('Member Since') ?></th>
+                        <td><?= $user->created ? $user->created->format('d M Y') : '-' ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= __('Last Updated') ?></th>
+                        <td><?= $user->modified ? $user->modified->format('d M Y, h:i A') : '-' ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= __('Status') ?></th>
+                        <td><span class="status-badge confirmed">Active</span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Related Bookings -->
+        <div class="form-card full-width mt-4">
+            <div class="card-header">
+                <h5><i class="fas fa-calendar-alt me-2"></i><?= __('Booking History') ?></h5>
+            </div>
+            <div class="card-body">
+                <?php if (!empty($user->bookings)): ?>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Car</th>
+                                    <th>Dates</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($user->bookings as $booking): ?>
+                                    <tr>
+                                        <td><span class="fw-bold">#<?= h($booking->id) ?></span></td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-car text-muted me-2"></i>
+                                                <span>Car #<?= h($booking->car_id) ?></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="small">
+                                                <span class="text-muted">From:</span> <?= $booking->start_date->format('d M Y') ?><br>
+                                                <span class="text-muted">To:</span> <?= $booking->end_date->format('d M Y') ?>
+                                            </div>
+                                        </td>
+                                        <td><span class="text-success fw-bold">RM <?= $this->Number->format($booking->total_price, ['places' => 2]) ?></span></td>
+                                        <td>
+                                            <?= $this->Status->bookingBadge($booking->booking_status) ?>
+                                        </td>
+                                        <td class="text-end">
+                                            <?= $this->Html->link('<i class="fas fa-eye"></i>', ['controller' => 'Bookings', 'action' => 'view', $booking->id], ['class' => 'btn btn-sm btn-outline-primary rounded-circle shadow-sm', 'escape' => false, 'title' => 'View Booking']) ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php else: ?>
+                    <div class="text-center py-5 text-muted">
+                        <i class="fas fa-calendar-times mb-3 fs-1 opacity-25"></i>
+                        <p>No bookings found for this user.</p>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <!-- Related Reviews -->
+        <div class="form-card full-width mt-4">
+            <div class="card-header">
+                <h5><i class="fas fa-star me-2"></i><?= __('User Reviews') ?></h5>
+            </div>
+            <div class="card-body">
+                <?php if (!empty($user->reviews)): ?>
+                    <div class="reviews-list">
+                        <?php foreach ($user->reviews as $review): ?>
+                            <div class="review-item border-bottom pb-3 mb-3">
+                                <div class="review-header d-flex justify-content-between align-items-center mb-2">
+                                    <div class="review-rating text-warning">
+                                        <?php for ($i = 1; $i <= 5; $i++): ?>
+                                            <i class="fas fa-star <?= $i <= $review->rating ? '' : 'text-muted' ?>"></i>
+                                        <?php endfor; ?>
+                                    </div>
+                                    <span class="review-date small text-muted"><?= $review->created->format('d M Y') ?></span>
+                                </div>
+                                <p class="review-comment mb-0 italic text-dark"><?= h($review->comment) ?></p>
+                                <div class="mt-2">
+                                    <?= $this->Html->link('View Car', ['controller' => 'Cars', 'action' => 'view', $review->car_id], ['class' => 'small text-primary text-decoration-none']) ?>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php else: ?>
+                    <div class="text-center py-5 text-muted">
+                        <i class="fas fa-comment-slash mb-3 fs-1 opacity-25"></i>
+                        <p>No reviews found for this user.</p>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
 </div>

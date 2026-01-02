@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Payment $payment
@@ -16,7 +17,7 @@ $status = strtolower($payment->payment_status ?? 'pending');
 $currentStatus = $statusColors[$status] ?? ['bg' => '#e2e8f0', 'text' => '#475569'];
 ?>
 
-<div class="view-payment-container">
+<div class="view-container">
     <!-- Page Header -->
     <div class="page-header">
         <div>
@@ -140,139 +141,3 @@ $currentStatus = $statusColors[$status] ?? ['bg' => '#e2e8f0', 'text' => '#47556
         </div>
     </div>
 </div>
-
-<style>
-    .view-payment-container {
-        max-width: 1000px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-
-    .page-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 30px;
-        padding-bottom: 20px;
-        border-bottom: 2px solid #e2e8f0;
-        flex-wrap: wrap;
-        gap: 16px;
-    }
-
-    .page-header h2 {
-        margin: 0;
-        color: #1e293b;
-    }
-
-    .page-header .text-muted {
-        margin: 8px 0 0;
-        display: flex;
-        gap: 10px;
-        align-items: center;
-    }
-
-    .status-badge {
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        text-transform: uppercase;
-    }
-
-    .amount-badge {
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: #059669;
-    }
-
-    .header-actions {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-
-    .view-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 24px;
-    }
-
-    .form-card {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        overflow: hidden;
-    }
-
-    .form-card .card-header {
-        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-        color: white;
-        padding: 16px 20px;
-    }
-
-    .form-card .card-header h5 {
-        margin: 0;
-        font-size: 1rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-    }
-
-    .form-card .card-body {
-        padding: 20px;
-    }
-
-    .view-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .view-table tr {
-        border-bottom: 1px solid #f1f5f9;
-    }
-
-    .view-table tr:last-child {
-        border-bottom: none;
-    }
-
-    .view-table th {
-        text-align: left;
-        padding: 12px 16px 12px 0;
-        width: 120px;
-        color: #64748b;
-        font-weight: 500;
-    }
-
-    .view-table td {
-        padding: 12px 0;
-        color: #1e293b;
-    }
-
-    .price-value {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #059669;
-    }
-
-    .method-badge {
-        background-color: #e0e7ff;
-        color: #4338ca;
-        padding: 4px 12px;
-        border-radius: 12px;
-        font-size: 0.85rem;
-        font-weight: 500;
-        display: inline-flex;
-        align-items: center;
-    }
-
-    @media (max-width: 768px) {
-        .view-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .page-header {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-    }
-</style>

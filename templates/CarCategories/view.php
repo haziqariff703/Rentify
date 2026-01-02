@@ -6,7 +6,7 @@
  */
 ?>
 
-<div class="category-view-container">
+<div class="view-container">
     <!-- Page Header -->
     <div class="page-header">
         <div>
@@ -213,34 +213,7 @@
 </div>
 
 <style>
-    .category-view-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-
-    .page-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 30px;
-        padding-bottom: 20px;
-        border-bottom: 2px solid #e2e8f0;
-        flex-wrap: wrap;
-        gap: 16px;
-    }
-
-    .page-header h2 {
-        margin: 0;
-        color: #1e293b;
-    }
-
-    .header-actions {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-
+    /* CarCategories-specific styles (not in global .view-container) */
     .cards-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -248,36 +221,6 @@
         margin-bottom: 24px;
     }
 
-    .form-card {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        overflow: hidden;
-    }
-
-    .form-card.full-width {
-        grid-column: 1 / -1;
-    }
-
-    .form-card .card-header {
-        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-        color: white;
-        padding: 16px 20px;
-    }
-
-    .form-card .card-header h5 {
-        margin: 0;
-        font-size: 1rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-    }
-
-    .form-card .card-body {
-        padding: 20px;
-    }
-
-    /* Policy Items */
     .policy-item {
         display: flex;
         align-items: center;
@@ -294,7 +237,7 @@
     .policy-icon {
         width: 40px;
         height: 40px;
-        background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
         border-radius: 10px;
         display: flex;
         align-items: center;
@@ -320,7 +263,6 @@
         font-size: 1.1rem;
     }
 
-    /* Service Items */
     .service-item {
         display: flex;
         align-items: center;
@@ -366,7 +308,6 @@
         color: #059669;
     }
 
-    /* Cars Table */
     .car-thumb {
         width: 60px;
         height: 40px;
@@ -385,14 +326,6 @@
         color: #94a3b8;
     }
 
-    .table thead th {
-        background: #f8fafc;
-        border-bottom: 2px solid #e2e8f0;
-        font-weight: 600;
-        color: #475569;
-    }
-
-    /* Empty State */
     .empty-state {
         text-align: center;
         padding: 40px;
@@ -404,11 +337,6 @@
         margin-bottom: 16px;
     }
 
-    .empty-state p {
-        margin-bottom: 16px;
-    }
-
-    /* Metadata Footer */
     .metadata-footer {
         margin-top: 24px;
         text-align: center;
@@ -419,11 +347,6 @@
     @media (max-width: 768px) {
         .cards-grid {
             grid-template-columns: 1fr;
-        }
-
-        .page-header {
-            flex-direction: column;
-            align-items: flex-start;
         }
 
         .policy-content,

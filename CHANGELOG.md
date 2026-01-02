@@ -2,6 +2,35 @@
 
 All notable changes to the Rentify project will be documented in this file.
 
+## [2026-01-02]
+
+### Changed
+
+-   **View Page CSS Standardization & Font Upgrade** (`webroot/css/custom.css`)
+    -   Created unified `.view-container` component system with ~500 lines of CSS.
+    -   **Typography Upgrade**: Switched primary heading and data font to **Poppins** (bold) for a cleaner, more professional look.
+    -   Card headers: Premium black gradient with subtle texture overlay.
+    -   Includes shared styles for `.page-header`, `.view-grid`, `.form-card`, `.view-table`, `.specs-grid`, `.related-sections`, status badges, and more.
+-   **Header Overlay Adjustment**: Updated car info overlay gradient in `custom.css` to use a refined dark gray (`#434343`) for better contrast.
+
+### Refactored
+
+-   **Standardized All View Templates**
+    -   `Users/view.php`: Completely refactored to the standardized system. Replaced the unique hero-header with a clean grid-based profile structure matching the rest of the application.
+    -   `Bookings/view.php`: Removed ~335 lines of internal CSS, now uses `.view-container`.
+    -   `Cars/view.php`: Removed ~310 lines of internal CSS, now uses `.view-container`.
+    -   `Payments/view.php`: Removed ~137 lines of internal CSS, now uses `.view-container`.
+    -   `Reviews/view.php`: Removed ~140 lines of internal CSS, now uses `.view-container`.
+    -   `Maintenances/view.php`: Completely redesigned from CakePHP baked template to modern `.view-container` layout.
+    -   `CarCategories/view.php`: Reduced inline CSS significantly, kept page-specific styles only.
+-   Standardized container class naming across all view pages.
+
+### Not Changed (Intentionally Preserved)
+
+-   `Users/view.php`: Unique profile card layout, kept as-is.
+-   `Invoices/view.php`: Special printable document layout, kept as-is.
+-   `Maintenances/view.php`: CakePHP default baked layout, kept as-is.
+
 ## [2026-01-01]
 
 ### Fixed
