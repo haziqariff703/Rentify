@@ -27,7 +27,8 @@ $cakeDescription = 'Rentify - Admin Panel';
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/pp-neue-montreal" rel="stylesheet">
 
     <!-- DataTables CSS with Bootstrap 5 -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
@@ -36,47 +37,10 @@ $cakeDescription = 'Rentify - Admin Panel';
     <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/components.css') ?>?v=<?= time() ?>">
     <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/dashboard.css') ?>?v=<?= time() ?>">
     <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/shared.css') ?>?v=<?= time() ?>">
+    <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/layout.css') ?>?v=<?= time() ?>">
     <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/custom.css') ?>?v=<?= time() ?>">
     <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/crud.css') ?>?v=<?= time() ?>">
     <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/datatables-custom.css') ?>?v=<?= time() ?>">
-
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-        }
-
-        /* Admin content wrapper - includes main + footer */
-        .admin-content-wrapper {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        /* Main content takes available space */
-        .admin-main {
-            flex: 1;
-            margin-left: 0;
-            /* Override the default margin since wrapper handles it */
-            padding: 24px 32px;
-        }
-
-        /* Footer inside admin area */
-        .admin-content-wrapper .site-footer {
-            margin-left: 0;
-            /* No extra margin needed, wrapper handles it */
-        }
-
-        @media (max-width: 1200px) {
-            .admin-content-wrapper {
-                margin-left: 0;
-            }
-
-            .admin-main {
-                padding: 16px;
-            }
-        }
-    </style>
 
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>

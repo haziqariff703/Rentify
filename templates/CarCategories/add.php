@@ -43,6 +43,20 @@
                     'label' => ['text' => 'Description', 'class' => 'form-label'],
                     'placeholder' => 'Describe this category...'
                 ]) ?>
+                <div class="mb-3">
+                    <label class="form-label">Badge Color</label>
+                    <div class="color-picker-group">
+                        <?= $this->Form->control('badge_color', [
+                            'type' => 'color',
+                            'label' => false,
+                            'id' => 'badgeColorPicker',
+                            'value' => '#3b82f6',
+                            'class' => 'form-control form-control-color'
+                        ]) ?>
+                        <span class="color-preview" id="colorPreview" style="background: #3b82f6;">#3b82f6</span>
+                    </div>
+                    <small class="text-muted">This color will be used for cars in this category unless overridden.</small>
+                </div>
             </div>
         </div>
 
@@ -275,4 +289,41 @@
             align-items: flex-start;
         }
     }
+
+    .color-picker-group {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .form-control-color {
+        width: 60px;
+        height: 40px;
+        padding: 4px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .color-preview {
+        padding: 6px 14px;
+        border-radius: 6px;
+        font-family: monospace;
+        font-size: 0.85rem;
+        color: white;
+        font-weight: 600;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const picker = document.getElementById('badgeColorPicker');
+        const preview = document.getElementById('colorPreview');
+        if (picker && preview) {
+            picker.addEventListener('input', function() {
+                preview.style.background = this.value;
+                preview.textContent = this.value;
+            });
+        }
+    });
+</script>

@@ -149,20 +149,6 @@ $transmissionOptions = [
                                 'placeholder' => 'e.g. 5.8s'
                             ]) ?></td>
                     </tr>
-                    <tr>
-                        <th><?= __('Badge Color') ?></th>
-                        <td>
-                            <div class="color-picker-wrapper">
-                                <?= $this->Form->control('badge_color', [
-                                    'label' => false,
-                                    'type' => 'color',
-                                    'class' => 'form-control form-control-color',
-                                    'value' => $car->badge_color ?? '#3b82f6'
-                                ]) ?>
-                                <span class="color-preview" style="background: <?= h($car->badge_color ?? '#3b82f6') ?>"></span>
-                            </div>
-                        </td>
-                    </tr>
                 </table>
             </div>
         </div>
@@ -217,6 +203,8 @@ $transmissionOptions = [
             __('Save Changes'),
             ['class' => 'btn btn-primary btn-lg', 'escape' => false]
         ) ?>
+        <?= $this->Form->end() ?>
+
         <?= $this->Form->postLink(
             __('Delete Car'),
             ['action' => 'delete', $car->id],
@@ -227,8 +215,6 @@ $transmissionOptions = [
             ]
         ) ?>
     </div>
-
-    <?= $this->Form->end() ?>
 </div>
 
 <script src="<?= $this->Url->assetUrl('js/views/Cars/form.js') ?>?v=<?= time() ?>"></script>

@@ -3,6 +3,21 @@
  * Common styles used across all layouts: reset, navbar, footer
  */
 
+/* Global Font Definitions */
+body {
+    font-family: "Raleway", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.navbar-brand {
+    font-family: "PP Neue Montreal", sans-serif;
+}
+
 /* Reset */
 * {
     margin: 0;

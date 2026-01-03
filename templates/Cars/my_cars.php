@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Rentify Premium Fleet Catalog - 2-Column Grid Edition
  * Features: Responsive grid, fixed sidebar, uniform cards, no spotlight effect
@@ -134,7 +135,7 @@ $this->assign('title', 'The Garage');
        ======================================== */
     .fleet-banner {
         background-image:
-            linear-gradient(to bottom, 
+            linear-gradient(to bottom,
                 rgba(15, 23, 42, 0.95) 0%,
                 rgba(15, 23, 42, 0.90) 40%,
                 rgba(15, 23, 42, 0.60) 100%),
@@ -142,7 +143,7 @@ $this->assign('title', 'The Garage');
         background-size: cover;
         background-position: center center;
         background-repeat: no-repeat;
-        
+
         /* Full Width Edge-to-Edge */
         width: 100vw;
         position: relative;
@@ -151,7 +152,7 @@ $this->assign('title', 'The Garage');
         margin-left: -50vw;
         margin-right: -50vw;
         margin-top: -3rem;
-        
+
         padding: 100px 0 120px;
         text-align: center;
         color: white;
@@ -305,8 +306,9 @@ $this->assign('title', 'The Garage');
         flex-direction: column;
         font-family: 'Montserrat', sans-serif;
         border: 1px solid #e2e8f0;
+        border-top: 4px solid var(--car-theme, #0f172a);
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     }
 
     @media (min-width: 768px) {
@@ -318,7 +320,7 @@ $this->assign('title', 'The Garage');
 
     .car-card:hover {
         transform: translateY(-4px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+        box-shadow: 0 12px 30px color-mix(in srgb, var(--car-theme, #0f172a) 25%, transparent);
     }
 
     /* Car Image Section - 40% Width */
@@ -592,7 +594,7 @@ $this->assign('title', 'The Garage');
 <section class="platinum-studio-wrapper">
     <div class="container-fluid px-4">
         <div class="dashboard-row">
-            
+
             <!-- Filter Sidebar (25% Width) -->
             <div class="sidebar-column">
                 <div class="filter-card">
@@ -656,8 +658,12 @@ $this->assign('title', 'The Garage');
                 <div class="car-list">
                     <?php foreach ($cars as $car): ?>
                         <div class="car-item" data-category="<?= h($car->category ? $car->category->name : 'Uncategorized') ?>" data-availability="<?= h($car->availability) ?>">
-                            <div class="car-card">
-                                
+                            <?php
+                            // Get color from category (single source of truth)
+                            $themeColor = h($car->category->badge_color ?? '#0f172a');
+                            ?>
+                            <div class="car-card" style="--car-theme: <?= $themeColor ?>;">
+
                                 <!-- Car Image - 40% Width -->
                                 <div class="car-image-container">
                                     <?php if ($car->image): ?>
@@ -689,14 +695,27 @@ $this->assign('title', 'The Garage');
                                     <div class="car-header">
                                         <h3 class="car-name"><?= h($car->brand . ' ' . $car->car_model) ?></h3>
                                         <div class="car-reviews">
+                                            <?php
+                                            // Calculate average rating from reviews
+                                            $reviewCount = count($car->reviews ?? []);
+                                            $avgRating = 0;
+                                            if ($reviewCount > 0) {
+                                                $totalRating = array_sum(array_column($car->reviews, 'rating'));
+                                                $avgRating = $totalRating / $reviewCount;
+                                            }
+                                            ?>
                                             <span class="stars">
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star-half-alt"></i>
+                                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                                    <?php if ($avgRating >= $i): ?>
+                                                        <i class="fas fa-star"></i>
+                                                    <?php elseif ($avgRating >= $i - 0.5): ?>
+                                                        <i class="fas fa-star-half-alt"></i>
+                                                    <?php else: ?>
+                                                        <i class="far fa-star"></i>
+                                                    <?php endif; ?>
+                                                <?php endfor; ?>
                                             </span>
-                                            <span class="count">(<?= rand(12, 89) ?> reviews)</span>
+                                            <span class="count">(<?= $reviewCount ?> reviews)</span>
                                         </div>
                                     </div>
 
@@ -754,26 +773,20 @@ $this->assign('title', 'The Garage');
         <button class="spec-modal-close" onclick="closeCarModal()">
             <i class="fas fa-times"></i>
         </button>
-        
+
         <!-- Modal Body: 50/50 Split -->
         <div class="spec-modal-body">
             <!-- Left: Full-Height Image -->
             <div class="spec-modal-image" id="modalImage"></div>
-            
+
             <!-- Right: Details -->
             <div class="spec-modal-details">
                 <!-- Header -->
                 <div class="spec-header">
                     <h2 class="spec-title" id="modalTitle">Car Name</h2>
                     <div class="spec-reviews">
-                        <span class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </span>
-                        <span class="count">(43 reviews)</span>
+                        <span class="stars" id="modalStars"></span>
+                        <span class="count" id="modalReviewCount">(0 reviews)</span>
                     </div>
                     <!-- Badges -->
                     <div class="spec-badges" id="modalBadges">
@@ -1072,23 +1085,32 @@ $this->assign('title', 'The Garage');
 
 <!-- Cars Data for Modal -->
 <script>
-    const carsData = <?= json_encode(array_map(function($car) {
-        return [
-            'id' => $car->id,
-            'brand' => $car->brand,
-            'car_model' => $car->car_model,
-            'price_per_day' => $car->price_per_day,
-            'image' => $car->image,
-            'engine' => $car->engine,
-            'zero_to_sixty' => $car->zero_to_sixty,
-            'transmission' => $car->transmission,
-            'seats' => $car->seats,
-            'year' => $car->year,
-            'badge_color' => $car->badge_color,
-            'category' => $car->category ? $car->category->name : 'Car',
-            'availability' => $car->availability
-        ];
-    }, $cars)) ?>;
+    const carsData = <?= json_encode(array_map(function ($car) {
+                            // Calculate average rating
+                            $reviewCount = count($car->reviews ?? []);
+                            $avgRating = 0;
+                            if ($reviewCount > 0) {
+                                $totalRating = array_sum(array_column($car->reviews, 'rating'));
+                                $avgRating = round($totalRating / $reviewCount, 1);
+                            }
+                            return [
+                                'id' => $car->id,
+                                'brand' => $car->brand,
+                                'car_model' => $car->car_model,
+                                'price_per_day' => $car->price_per_day,
+                                'image' => $car->image,
+                                'engine' => $car->engine,
+                                'zero_to_sixty' => $car->zero_to_sixty,
+                                'transmission' => $car->transmission,
+                                'seats' => $car->seats,
+                                'year' => $car->year,
+                                'badge_color' => $car->category ? $car->category->badge_color : '#0f172a',
+                                'category' => $car->category ? $car->category->name : 'Car',
+                                'availability' => $car->availability,
+                                'avgRating' => $avgRating,
+                                'reviewCount' => $reviewCount
+                            ];
+                        }, $cars)) ?>;
 
     const imageBasePath = '<?= $this->Url->image('') ?>';
     const bookingUrl = '<?= $this->Url->build(['controller' => 'Bookings', 'action' => 'add']) ?>';
@@ -1104,6 +1126,21 @@ $this->assign('title', 'The Garage');
         document.getElementById('modalZeroSixty').textContent = car.zero_to_sixty || 'N/A';
         document.getElementById('modalSeats').textContent = car.seats || 'N/A';
         document.getElementById('modalYear').textContent = car.year || 'N/A';
+
+        // Render dynamic stars
+        const starsContainer = document.getElementById('modalStars');
+        let starsHtml = '';
+        for (let i = 1; i <= 5; i++) {
+            if (car.avgRating >= i) {
+                starsHtml += '<i class="fas fa-star"></i>';
+            } else if (car.avgRating >= i - 0.5) {
+                starsHtml += '<i class="fas fa-star-half-alt"></i>';
+            } else {
+                starsHtml += '<i class="far fa-star"></i>';
+            }
+        }
+        starsContainer.innerHTML = starsHtml;
+        document.getElementById('modalReviewCount').textContent = '(' + car.reviewCount + ' reviews)';
 
         const badge = document.getElementById('modalBadge');
         badge.textContent = car.category;

@@ -27,6 +27,24 @@ class CarsController extends AppController
     {
         parent::beforeFilter($event);
 
+        // Unlock fields that might cause FormProtection errors
+        $this->FormProtection->setConfig('unlockedFields', [
+            'badge_color',
+            'image_file',
+            'existing_image',
+            'brand',
+            'car_model',
+            'category_id',
+            'engine',
+            'plate_number',
+            'price_per_day',
+            'seats',
+            'status',
+            'transmission',
+            'year',
+            'zero_to_sixty'
+        ]);
+
         // Allow public access to myCars, index, and view
         // myCars is the user-facing fleet catalog
         // index will redirect non-admins to myCars
@@ -66,9 +84,9 @@ class CarsController extends AppController
     {
         $today = new \Cake\I18n\Date();
 
-        // Query ALL cars (including maintenance) with their categories
+        // Query ALL cars (including maintenance) with their categories and reviews
         $cars = $this->Cars->find()
-            ->contain(['Categories'])
+            ->contain(['Categories', 'Reviews'])
             ->all()
             ->toArray();
 

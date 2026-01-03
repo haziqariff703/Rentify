@@ -84,7 +84,11 @@ $currentStatus = $statusColors[$car->status] ?? ['bg' => '#e2e8f0', 'text' => '#
                         <th><?= __('Category') ?></th>
                         <td>
                             <?php if ($car->hasValue('category')): ?>
-                                <span class="category-badge" style="background: <?= h($car->badge_color ?? '#3b82f6') ?>20; color: <?= h($car->badge_color ?? '#3b82f6') ?>">
+                                <?php
+                                // Get color from category (single source of truth)
+                                $themeColor = h($car->category->badge_color ?? '#3b82f6');
+                                ?>
+                                <span class="category-badge" style="background: <?= $themeColor ?>20; color: <?= $themeColor ?>">
                                     <?= h($car->category->name) ?>
                                 </span>
                             <?php else: ?>
@@ -162,10 +166,11 @@ $currentStatus = $statusColors[$car->status] ?? ['bg' => '#e2e8f0', 'text' => '#
                     <div class="spec-item">
                         <i class="fas fa-palette"></i>
                         <div>
-                            <span class="spec-label"><?= __('Badge Color') ?></span>
+                            <span class="spec-label"><?= __('Theme Color') ?></span>
                             <span class="spec-value">
-                                <span class="color-swatch" style="background: <?= h($car->badge_color ?? '#3b82f6') ?>"></span>
-                                <?= h($car->badge_color ?? '#3b82f6') ?>
+                                <?php $catColor = h($car->category->badge_color ?? '#3b82f6'); ?>
+                                <span class="color-swatch" style="background: <?= $catColor ?>"></span>
+                                <?= $catColor ?> (from <?= h($car->category->name ?? 'Category') ?>)
                             </span>
                         </div>
                     </div>
@@ -290,7 +295,7 @@ $currentStatus = $statusColors[$car->status] ?? ['bg' => '#e2e8f0', 'text' => '#
                                     <tr>
                                         <td><code>#<?= h($maintenance->id) ?></code></td>
                                         <td><?= h($maintenance->description) ?></td>
-                                        <td>RM <?= $this->Number->format($maintenance->cost) ?></td>
+                                        <td>RM <?= $this->Number->format($maintenance->cost ?? 0) ?></td>
                                         <td><?= h($maintenance->maintenance_date) ?></td>
                                         <td><span class="badge bg-warning text-dark"><?= h($maintenance->status) ?></span></td>
                                         <td>

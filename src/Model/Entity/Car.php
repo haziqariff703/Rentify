@@ -52,7 +52,6 @@ class Car extends Entity
         'seats' => true,
         'engine' => true,
         'zero_to_sixty' => true,
-        'badge_color' => true,
         'created' => true,
         'modified' => true,
         'category' => true,

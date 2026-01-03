@@ -157,20 +157,6 @@ $transmissionOptions = [
                                 'placeholder' => 'e.g. 5.8s'
                             ]) ?></td>
                     </tr>
-                    <tr>
-                        <th><?= __('Badge Color') ?></th>
-                        <td>
-                            <div class="color-picker-wrapper">
-                                <?= $this->Form->control('badge_color', [
-                                    'label' => false,
-                                    'type' => 'color',
-                                    'class' => 'form-control form-control-color',
-                                    'value' => '#3b82f6'
-                                ]) ?>
-                                <span class="color-preview" style="background: #3b82f6"></span>
-                            </div>
-                        </td>
-                    </tr>
                 </table>
             </div>
         </div>

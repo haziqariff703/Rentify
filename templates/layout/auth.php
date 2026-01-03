@@ -21,181 +21,24 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@527&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/pp-neue-montreal" rel="stylesheet">
 
     <!-- Custom CSS -->
+    <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/shared.css') ?>?v=<?= time() ?>">
     <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/custom.css') ?>?v=<?= time() ?>">
 
     <!-- Components CSS -->
     <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/components.css') ?>?v=<?= time() ?>">
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Syne', sans-serif;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        /* Force Navbar Dark Styling - Navy Background */
-        .navbar,
-        #navbar {
-            background-color: #0f172a !important;
-        }
-
-        .navbar-brand {
-            color: #ffffff !important;
-        }
-
-        .navbar-brand:hover {
-            color: #3b82f6 !important;
-        }
-
-        .nav-link {
-            color: rgba(255, 255, 255, 0.85) !important;
-        }
-
-        .nav-link:hover {
-            color: #3b82f6 !important;
-        }
-
-        .btn-outline-light {
-            color: #ffffff !important;
-            border-color: rgba(255, 255, 255, 0.3) !important;
-        }
-
-        .btn-outline-light:hover {
-            background-color: rgba(255, 255, 255, 0.1) !important;
-            border-color: #ffffff !important;
-        }
-
-        /* Header Positioning */
-        #navbar {
-            position: relative !important;
-            z-index: 1000;
-        }
-
-        /* Main Content Area */
-        .auth-content-wrapper {
-            flex: 1;
-            position: relative;
-            overflow: hidden;
-            padding: 20px 0;
-            background: #f4f5f7ff;
-        }
-
-        /* Footer Enhanced Styling with Grain Texture */
-        .site-footer {
-            position: relative !important;
-            z-index: 1000;
-            margin-top: 0;
-            padding: 80px 0 40px !important;
-            overflow: hidden;
-        }
-
-        .site-footer::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .site-footer>* {
-            position: relative;
-            z-index: 2;
-        }
-
-        .site-footer .footer-description {
-            font-size: 15px !important;
-            line-height: 1.8 !important;
-            margin-bottom: 24px !important;
-        }
-
-        .site-footer .footer-social {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-        }
-
-        .site-footer .footer-heading {
-            font-size: 14px !important;
-            margin-bottom: 24px !important;
-            letter-spacing: 0.8px !important;
-        }
-
-        .site-footer .footer-links li {
-            margin-bottom: 14px !important;
-        }
-
-        .site-footer .footer-links a {
-            font-size: 15px !important;
-        }
-
-        .site-footer .footer-contact li {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-            font-size: 15px !important;
-        }
-
-        .site-footer .footer-contact li i {
-            width: 20px;
-            font-size: 16px;
-            color: #3b82f6;
-        }
-
-        .site-footer .social-icon {
-            width: 44px !important;
-            height: 44px !important;
-            border-radius: 12px !important;
-            font-size: 16px;
-        }
-
-        .site-footer .footer-bottom {
-            margin-top: 60px !important;
-            padding-top: 30px !important;
-            gap: 20px !important;
-        }
-
-        .site-footer .footer-bottom p {
-            font-size: 14px !important;
-        }
-
-        .site-footer .footer-bottom-links {
-            display: flex;
-            gap: 24px;
-        }
-
-        .site-footer .footer-bottom a {
-            font-size: 14px !important;
-        }
-
-        /* Force Glassmorphism on Auth Sidebar */
-        .glassmorphism-sidebar {
-            background: rgba(15, 23, 42, 0.25) !important;
-            backdrop-filter: blur(20px) saturate(180%) brightness(0.8) !important;
-            -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(0.8) !important;
-            z-index: 1050 !important;
-        }
-    </style>
+    <!-- Layout CSS -->
+    <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/layout.css') ?>?v=<?= time() ?>">
 
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
     <?= $this->fetch('script') ?>
 </head>
 
-<body>
+<body class="auth-layout">
 
     <!-- Glassmorphism Sidebar -->
     <?= $this->element('sidebar') ?>

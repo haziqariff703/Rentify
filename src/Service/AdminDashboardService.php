@@ -48,16 +48,17 @@ class AdminDashboardService
         $totalMaintenances = $maintenancesTable->find()->count();
         $totalReviews = $reviewsTable->find()->count();
 
-        // Filtered Counts
+        // Filtered Counts - filter by start_date (when the booking occurs)
         $bookingsQuery = $bookingsTable->find();
         if ($dateFilter) {
-            $bookingsQuery->where(['Bookings.created >=' => $dateFilter['start']]);
+            $bookingsQuery->where(['Bookings.start_date >=' => $dateFilter['start']]);
             if ($dateFilter['end']) {
-                $bookingsQuery->where(['Bookings.created <=' => $dateFilter['end']]);
+                $bookingsQuery->where(['Bookings.start_date <=' => $dateFilter['end']]);
             }
         }
         $totalBookings = $bookingsQuery->count();
 
+        // Users - keep created date filter (when they registered)
         $usersQuery = $usersTable->find()->where(['role !=' => 'admin']);
         if ($dateFilter) {
             $usersQuery->where(['created >=' => $dateFilter['start']]);
@@ -67,15 +68,20 @@ class AdminDashboardService
         }
         $totalUsers = $usersQuery->count();
 
-        // Total Revenue (filtered)
-        $revenueQuery = $paymentsTable->find();
+        // Total Revenue - filtered by booking start_date (consistent with chart)
+        // For filtered periods, use bookings.total_price to match the chart data
         if ($dateFilter) {
-            $revenueQuery->where(['created >=' => $dateFilter['start']]);
+            $revenueQuery = $bookingsTable->find();
+            $revenueQuery->where(['start_date >=' => $dateFilter['start']]);
             if ($dateFilter['end']) {
-                $revenueQuery->where(['created <=' => $dateFilter['end']]);
+                $revenueQuery->where(['start_date <=' => $dateFilter['end']]);
             }
+            $totalRevenue = $revenueQuery->select(['total' => $revenueQuery->func()->sum('total_price')])->first();
+        } else {
+            // For "All Time", use payments table for actual collected revenue
+            $revenueQuery = $paymentsTable->find();
+            $totalRevenue = $revenueQuery->select(['total' => $revenueQuery->func()->sum('amount')])->first();
         }
-        $totalRevenue = $revenueQuery->select(['total' => $revenueQuery->func()->sum('amount')])->first();
         $totalRevenue = (float)($totalRevenue->total ?? 0);
 
         // Pending Bookings
@@ -101,8 +107,8 @@ class AdminDashboardService
         // Month-over-Month Comparison
         $comparisons = $this->getComparisons($bookingsTable, $paymentsTable, $usersTable);
 
-        // Charts
-        $trends = $this->getRevenueAndBookingTrends($bookingsTable);
+        // Charts - pass the period for proper filtering
+        $trends = $this->getRevenueAndBookingTrends($bookingsTable, $dateFilter, $period);
         $fleetStatus = $this->getFleetStatus($carsTable);
         $hourlyPulse = $this->getHourlyPulse($bookingsTable);
 
@@ -126,8 +132,8 @@ class AdminDashboardService
             ])
             ->count();
 
-        // Top Performing Cars
-        $topCars = $this->getTopCars($bookingsTable);
+        // Top Performing Cars - pass dateFilter
+        $topCars = $this->getTopCars($bookingsTable, $dateFilter);
 
         // Alerts
         $scheduledMaintenances = $maintenancesTable->find()
@@ -214,8 +220,156 @@ class AdminDashboardService
         return compact('bookingsChange', 'revenueChange', 'newUsersThisWeek');
     }
 
-    private function getRevenueAndBookingTrends($bookingsTable): array
+    private function getRevenueAndBookingTrends($bookingsTable, ?array $dateFilter = null, ?string $period = null): array
     {
+        // Determine the appropriate date range for the chart
+        if ($dateFilter && $period === 'today') {
+            // For "today" - show hourly breakdown or just today's data point
+            $start = $dateFilter['start'];
+            $end = $dateFilter['end'];
+
+            // Get today's totals as single data point
+            $todayRevenue = $bookingsTable->find()
+                ->select(['total' => $bookingsTable->find()->func()->sum('total_price')])
+                ->where([
+                    'start_date >=' => $start,
+                    'start_date <=' => $end
+                ])
+                ->first();
+
+            $todayBookings = $bookingsTable->find()
+                ->where([
+                    'start_date >=' => $start,
+                    'start_date <=' => $end
+                ])
+                ->count();
+
+            $revenueLabels = ['Today'];
+            $revenueData = [(float)($todayRevenue->total ?? 0)];
+            $bookingCountData = [$todayBookings];
+
+            return compact('revenueLabels', 'revenueData', 'bookingCountData');
+        } elseif ($dateFilter && in_array($period, ['week', 'month'])) {
+            // For week/month - show daily breakdown
+            $start = $dateFilter['start'];
+            $end = $dateFilter['end'];
+
+            // Revenue by day
+            $revenueQuery = $bookingsTable->find();
+            $revenueResults = $revenueQuery->select([
+                'day_str' => $revenueQuery->newExpr("DATE_FORMAT(start_date, '%Y-%m-%d')"),
+                'total' => $revenueQuery->func()->sum('total_price')
+            ])
+                ->where([
+                    'start_date >=' => $start,
+                    'start_date <=' => $end
+                ])
+                ->group('day_str')
+                ->order(['day_str' => 'ASC'])
+                ->all();
+
+            $revenueByDay = [];
+            foreach ($revenueResults as $row) {
+                $revenueByDay[$row->day_str] = (float)$row->total;
+            }
+
+            // Bookings by day
+            $bookingCountQuery = $bookingsTable->find();
+            $bookingCountResults = $bookingCountQuery->select([
+                'day_str' => $bookingCountQuery->newExpr("DATE_FORMAT(start_date, '%Y-%m-%d')"),
+                'count' => $bookingCountQuery->func()->count('*')
+            ])
+                ->where([
+                    'start_date >=' => $start,
+                    'start_date <=' => $end
+                ])
+                ->group('day_str')
+                ->order(['day_str' => 'ASC'])
+                ->all();
+
+            $bookingsByDay = [];
+            foreach ($bookingCountResults as $row) {
+                $bookingsByDay[$row->day_str] = (int)$row->count;
+            }
+
+            // Merge
+            $allDays = array_unique(array_merge(array_keys($revenueByDay), array_keys($bookingsByDay)));
+            sort($allDays);
+
+            $revenueLabels = [];
+            $revenueData = [];
+            $bookingCountData = [];
+
+            foreach ($allDays as $dayStr) {
+                $dateObj = DateTime::createFromFormat('Y-m-d', $dayStr);
+                $revenueLabels[] = $dateObj ? $dateObj->format('M j') : $dayStr;
+                $revenueData[] = $revenueByDay[$dayStr] ?? 0;
+                $bookingCountData[] = $bookingsByDay[$dayStr] ?? 0;
+            }
+
+            return compact('revenueLabels', 'revenueData', 'bookingCountData');
+        } elseif ($dateFilter && $period === 'quarter') {
+            // For quarter (Last 3 Months) - show monthly breakdown
+            $start = $dateFilter['start'];
+            $end = $dateFilter['end'];
+
+            // Revenue by month
+            $revenueQuery = $bookingsTable->find();
+            $revenueResults = $revenueQuery->select([
+                'month_str' => $revenueQuery->newExpr("DATE_FORMAT(start_date, '%Y-%m')"),
+                'total' => $revenueQuery->func()->sum('total_price')
+            ])
+                ->where([
+                    'start_date >=' => $start,
+                    'start_date <=' => $end
+                ])
+                ->group('month_str')
+                ->order(['month_str' => 'ASC'])
+                ->all();
+
+            $revenueByMonth = [];
+            foreach ($revenueResults as $row) {
+                $revenueByMonth[$row->month_str] = (float)$row->total;
+            }
+
+            // Bookings by month
+            $bookingCountQuery = $bookingsTable->find();
+            $bookingCountResults = $bookingCountQuery->select([
+                'month_str' => $bookingCountQuery->newExpr("DATE_FORMAT(start_date, '%Y-%m')"),
+                'count' => $bookingCountQuery->func()->count('*')
+            ])
+                ->where([
+                    'start_date >=' => $start,
+                    'start_date <=' => $end
+                ])
+                ->group('month_str')
+                ->order(['month_str' => 'ASC'])
+                ->all();
+
+            $bookingsByMonth = [];
+            foreach ($bookingCountResults as $row) {
+                $bookingsByMonth[$row->month_str] = (int)$row->count;
+            }
+
+            // Merge
+            $allMonths = array_unique(array_merge(array_keys($revenueByMonth), array_keys($bookingsByMonth)));
+            sort($allMonths);
+
+            $revenueLabels = [];
+            $revenueData = [];
+            $bookingCountData = [];
+
+            foreach ($allMonths as $monthStr) {
+                $dateObj = DateTime::createFromFormat('Y-m', $monthStr);
+                $revenueLabels[] = $dateObj ? $dateObj->format('M Y') : $monthStr;
+                $revenueData[] = $revenueByMonth[$monthStr] ?? 0;
+                $bookingCountData[] = $bookingsByMonth[$monthStr] ?? 0;
+            }
+
+            return compact('revenueLabels', 'revenueData', 'bookingCountData');
+        }
+
+        // Default: last 6 months (no filter or unknown period)
         $sixMonthsAgo = new FrozenDate('-6 months');
 
         // Revenue by month
@@ -318,17 +472,27 @@ class AdminDashboardService
         return compact('hourlyBookingCounts', 'hourlyBookingLabels');
     }
 
-    private function getTopCars($bookingsTable)
+    private function getTopCars($bookingsTable, ?array $dateFilter = null)
     {
         $topCars = $bookingsTable->find();
-        return $topCars->select([
+        $query = $topCars->select([
             'car_model' => 'Cars.car_model',
             'car_image' => 'Cars.image',
             'total_revenue' => $topCars->func()->sum('Bookings.total_price'),
             'booking_count' => $topCars->func()->count('Bookings.id')
         ])
             ->contain(['Cars'])
-            ->where(['Bookings.booking_status IN' => ['confirmed', 'completed']])
+            ->where(['Bookings.booking_status IN' => ['confirmed', 'completed']]);
+
+        // Apply date filter if provided
+        if ($dateFilter) {
+            $query->where(['Bookings.start_date >=' => $dateFilter['start']]);
+            if ($dateFilter['end']) {
+                $query->where(['Bookings.start_date <=' => $dateFilter['end']]);
+            }
+        }
+
+        return $query
             ->group(['Bookings.car_id', 'Cars.car_model', 'Cars.image'])
             ->order(['total_revenue' => 'DESC'])
             ->limit(5)

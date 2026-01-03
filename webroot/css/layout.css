@@ -1,91 +1,234 @@
-/* Custom styles for the default layout to match the professional look */
+/* =========================================
+   Layout: General / Shared
+   ========================================= */
+/* Custom scrollbar for better aesthetics (from home.php, applied widely if desired, but scoping to be safe or general) */
+::-webkit-scrollbar {
+    width: 8px;
+}
 
-/* Navbar similar to Bootstrap's .navbar-dark .bg-dark */
-.custom-navbar {
-    background-color: #212529;
-    color: #fff;
-    padding: 1rem 2rem;
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* =========================================
+   Layout: Auth (from auth.php)
+   ========================================= */
+/* Force Navbar Dark Styling - Navy Background */
+.auth-layout .navbar,
+.auth-layout #navbar {
+    background-color: #0f172a !important;
+}
+
+.auth-layout .navbar-brand {
+    color: #ffffff !important;
+}
+
+.auth-layout .navbar-brand:hover {
+    color: #3b82f6 !important;
+}
+
+.auth-layout .nav-link {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.auth-layout .nav-link:hover {
+    color: #3b82f6 !important;
+}
+
+.auth-layout .btn-outline-light {
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.auth-layout .btn-outline-light:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-color: #ffffff !important;
+}
+
+/* Header Positioning */
+.auth-layout #navbar {
+    position: relative !important;
+    z-index: 1000;
+}
+
+/* Main Content Area */
+.auth-content-wrapper {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    padding: 20px 0;
+    background: #f4f5f7ff;
+}
+
+/* Footer Enhanced Styling with Grain Texture */
+.auth-layout .site-footer {
+    position: relative !important;
+    z-index: 1000;
+    margin-top: 0;
+    padding: 80px 0 40px !important;
+    overflow: hidden;
+}
+
+.auth-layout .site-footer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.auth-layout .site-footer > * {
+    position: relative;
+    z-index: 2;
+}
+
+.auth-layout .site-footer .footer-description {
+    font-size: 15px !important;
+    line-height: 1.8 !important;
+    margin-bottom: 24px !important;
+}
+
+.auth-layout .site-footer .footer-social {
     display: flex;
-    justify-content: space-between;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.auth-layout .site-footer .footer-heading {
+    font-size: 14px !important;
+    margin-bottom: 24px !important;
+    letter-spacing: 0.8px !important;
+}
+
+.auth-layout .site-footer .footer-links li {
+    margin-bottom: 14px !important;
+}
+
+.auth-layout .site-footer .footer-links a {
+    font-size: 15px !important;
+    line-height: 1.5; /* Default but ensuring legibility */
+}
+
+.auth-layout .site-footer .footer-contact li {
+    display: flex;
     align-items: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    gap: 12px;
+    margin-bottom: 16px;
+    font-size: 15px !important;
 }
 
-.custom-navbar a {
-    color: rgba(255, 255, 255, 0.85);
-    text-decoration: none;
-    transition: color 0.2s;
+.auth-layout .site-footer .footer-contact li i {
+    width: 20px;
+    font-size: 16px;
+    color: #3b82f6;
 }
 
-.custom-navbar a:hover {
-    color: #fff;
+.auth-layout .site-footer .social-icon {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 12px !important;
+    font-size: 16px;
 }
 
-.custom-navbar-brand {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #fff !important;
+.auth-layout .site-footer .footer-bottom {
+    margin-top: 60px !important;
+    padding-top: 30px !important;
+    gap: 20px !important;
 }
 
-.custom-navbar-nav {
+.auth-layout .site-footer .footer-bottom p {
+    font-size: 14px !important;
+}
+
+.auth-layout .site-footer .footer-bottom-links {
     display: flex;
-    gap: 1.5rem;
-    list-style: none;
-    margin: 0;
-    padding: 0;
+    gap: 24px;
 }
 
-/* Footer similar to home layout */
-.custom-footer {
-    background-color: #212529;
-    color: #fff;
-    padding: 2rem 0;
-    text-align: center;
-    margin-top: auto; /* Push to bottom if using flex column on body */
+.auth-layout .site-footer .footer-bottom a {
+    font-size: 14px !important;
 }
 
-.custom-footer a {
-    color: #0d6efd; /* Bootstrap primary blue */
-    text-decoration: none;
+/* Force Glassmorphism on Auth Sidebar */
+.auth-layout .glassmorphism-sidebar {
+    background: rgba(15, 23, 42, 0.25) !important;
+    backdrop-filter: blur(20px) saturate(180%) brightness(0.8) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(0.8) !important;
+    z-index: 1050 !important;
 }
 
-.custom-footer a:hover {
-    text-decoration: underline;
+/* =========================================
+   Layout: Admin (from admin.php)
+   ========================================= */
+/* Admin content wrapper - includes main + footer */
+.admin-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
-/* Animations */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translate3d(0, 40px, 0);
+/* Main content takes available space */
+.admin-main {
+    flex: 1;
+    margin-left: 0;
+    /* Override the default margin since wrapper handles it */
+    padding: 24px 32px;
+}
+
+/* Footer inside admin area */
+.admin-content-wrapper .site-footer {
+    margin-left: 0;
+    /* No extra margin needed, wrapper handles it */
+}
+
+@media (max-width: 1200px) {
+    .admin-content-wrapper {
+        margin-left: 0;
     }
-    to {
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
+
+    .admin-main {
+        padding: 16px;
     }
 }
 
-.animate-fade-in-up {
-    animation-duration: 0.8s;
-    animation-fill-mode: both;
-    animation-name: fadeInUp;
+/* =========================================
+   Layout: Home (from home.php)
+   ========================================= */
+/* Force Glassmorphism on Homepage Sidebar */
+.home-layout .glassmorphism-sidebar {
+    background: rgba(15, 23, 42, 0.25) !important;
+    backdrop-filter: blur(20px) saturate(180%) brightness(0.8) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(0.8) !important;
+    z-index: 1050 !important;
+    /* Higher than hero/video-overlay */
 }
 
-.delay-100 { animation-delay: 0.1s; }
-.delay-200 { animation-delay: 0.2s; }
-.delay-300 { animation-delay: 0.3s; }
-
-/* Enhanced Card Styling for Home */
-.feature-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+/* Ensure video overlay stays behind sidebar */
+.video-overlay {
+    z-index: 1 !important;
 }
 
-.feature-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+.hero-section {
+    z-index: 0;
 }
 
-/* Hero Section Text Shadow */
-.hero-text-shadow {
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+.hero-section .position-relative.z-10 {
+    z-index: 10;
+}
+
+/* Homepage-only: Override navbar to fixed position (removes gap) */
+.home-layout #navbar {
+    position: fixed !important;
 }

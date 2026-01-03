@@ -26,19 +26,15 @@ $cakeDescription = 'Rentify - Premium Car Rental';
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/pp-neue-montreal" rel="stylesheet">
 
     <!-- CSS with cache-busting -->
     <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/components.css') ?>?v=<?= time() ?>">
     <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/shared.css') ?>?v=<?= time() ?>">
+    <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/layout.css') ?>?v=<?= time() ?>">
     <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/custom.css') ?>?v=<?= time() ?>">
     <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/crud.css') ?>?v=<?= time() ?>">
-
-    <style>
-        body {
-            font-family: 'Syne', sans-serif;
-        }
-    </style>
 
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>

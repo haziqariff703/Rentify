@@ -451,6 +451,16 @@
     font-weight: 500;
 }
 
+/* Brand Color Indicator */
+.brand-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
 /* Booking Count Badge */
 .booking-count-badge {
     padding: 4px 10px;

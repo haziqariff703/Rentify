@@ -78,12 +78,19 @@ $identity = $this->request->getAttribute('authentication')->getIdentity();
                                 </div>
                             <?php endif; ?>
                         </td>
-                        <td><?= h($car->brand) ?></td>
+                        <td>
+                            <?php
+                            // Get color from category (single source of truth)
+                            $themeColor = h($car->category->badge_color ?? '#3b82f6');
+                            ?>
+                            <span class="brand-indicator" style="background: <?= $themeColor ?>;"></span>
+                            <?= h($car->brand) ?>
+                        </td>
                         <td><?= h($car->car_model) ?></td>
                         <td><?= h($car->year) ?></td>
                         <td><code><?= h($car->plate_number) ?></code></td>
                         <td>
-                            <span class="category-badge">
+                            <span class="category-badge" style="background: <?= $themeColor ?>20; color: <?= $themeColor ?>; border: 1px solid <?= $themeColor ?>40;">
                                 <?= $car->hasValue('category') ? h($car->category->name) : 'General' ?>
                             </span>
                         </td>

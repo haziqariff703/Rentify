@@ -2,6 +2,49 @@
 
 All notable changes to the Rentify project will be documented in this file.
 
+## [2026-01-04]
+
+### Added
+
+-   **CarCategories Badge Color** (`config/Migrations/20260103165136_AddBadgeColorToCarCategories.php`)
+    -   Added `badge_color` column to `car_categories` table for category-wide theming.
+    -   Updated `CarCategory` entity and table with validation.
+    -   Added color picker to `CarCategories/add.php` and `edit.php` with live preview.
+
+### Changed
+
+-   **UI/UX Enhancement: Badge Color Integration**
+    -   `templates/Cars/index.php`: Added colored "brand indicator" dot and dynamic category badges.
+    -   `templates/Cars/my_cars.php`: Added `--car-theme` CSS variable for themed top border and buttons.
+    -   `webroot/css/datatables-custom.css`: Added `.brand-indicator` CSS class.
+
+### Removed
+
+-   **Simplified Badge Color Architecture** (`config/Migrations/20260103173526_DropBadgeColorFromCars.php`)
+    -   Removed `badge_color` column from `cars` table (was redundant).
+    -   Cars now inherit their theme color from their category (single source of truth).
+    -   Removed badge color pickers from `Cars/add.php` and `Cars/edit.php`.
+    -   Updated `Car` entity to remove `badge_color` from accessible fields.
+-   **The Garage UI Updates** (`templates/Cars/my_cars.php`)
+    -   "Book Now" button now uses black gradient instead of theme color.
+    -   Reviews/stars on car cards now display actual average rating from database.
+    -   Modal popup reviews/stars also display actual rating from database.
+    -   `CarsController::myCars()` updated to include Reviews in query.
+
+### Fixed
+
+-   **Dashboard Filter Not Working** (`src/Service/AdminDashboardService.php`)
+    -   Fixed period filter (Today/Week/Month/Quarter) now correctly filters KPI cards.
+    -   Changed booking filter from `created` date to `start_date` (booking date).
+    -   Performance Overview chart now respects filter: shows daily data for week/month, monthly for quarter.
+    -   Top Performing Cars widget now respects filter period.
+    -   Revenue KPI card now consistent with chart (uses bookings.total_price for filtered periods).
+-   **Insurance Tier Badge Colors** (`templates/CarCategories/index.php`)
+    -   Insurance tier badges now use tier-specific colors matching the view page (Basic=gray, Standard=blue, Premium=gold).
+-   **Booking Management UI** (`templates/Bookings/index.php`)
+    -   Enabled "New Booking" button for all users (previously hidden for admins).
+    -   Aligned button styling with other index pages.
+
 ## [2026-01-03]
 
 ### Added

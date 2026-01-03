@@ -17,13 +17,11 @@ $isAdmin = $identity && $identity->role === 'admin';
             <h2><?= __('Booking Management') ?></h2>
             <p><?= __('Manage all customer bookings') ?></p>
         </div>
-        <?php if (!$isAdmin): ?>
-            <?= $this->Html->link(
-                '<i class="fas fa-plus me-2"></i>' . __('New Booking'),
-                ['action' => 'add'],
-                ['class' => 'btn-add', 'escape' => false]
-            ) ?>
-        <?php endif; ?>
+        <?= $this->Html->link(
+            '<i class="fas fa-plus me-2"></i>' . __('New Booking'),
+            ['action' => 'add'],
+            ['class' => 'btn-add', 'escape' => false]
+        ) ?>
     </div>
 
     <!-- Bookings DataTable -->

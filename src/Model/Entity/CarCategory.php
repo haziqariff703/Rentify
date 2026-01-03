@@ -19,6 +19,7 @@ use Cake\ORM\Entity;
  * @property string|null $chauffeur_daily_rate
  * @property bool $gps_available
  * @property string|null $gps_daily_rate
+ * @property string|null $badge_color
  * @property \Cake\I18n\DateTime|null $created
  * @property \Cake\I18n\DateTime|null $modified
  * 
@@ -41,6 +42,7 @@ class CarCategory extends Entity
         'chauffeur_daily_rate' => true,
         'gps_available' => true,
         'gps_daily_rate' => true,
+        'badge_color' => true,
         'created' => true,
         'modified' => true,
         'cars' => true,

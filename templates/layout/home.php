@@ -26,70 +26,21 @@ $cakeDescription = 'Rentify - Premium Car Rental';
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@527&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/pp-neue-montreal" rel="stylesheet">
 
     <!-- CSS with cache-busting -->
     <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/components.css') ?>?v=<?= time() ?>">
     <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/shared.css') ?>?v=<?= time() ?>">
+    <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/layout.css') ?>?v=<?= time() ?>">
     <link rel="stylesheet" href="<?= $this->Url->assetUrl('css/custom.css') ?>?v=<?= time() ?>">
-
-    <style>
-        body {
-            font-family: 'Syne', sans-serif;
-        }
-
-        /* Force Glassmorphism on Homepage Sidebar */
-        .glassmorphism-sidebar {
-            background: rgba(15, 23, 42, 0.25) !important;
-            backdrop-filter: blur(20px) saturate(180%) brightness(0.8) !important;
-            -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(0.8) !important;
-            z-index: 1050 !important;
-            /* Higher than hero/video-overlay */
-        }
-
-        /* Ensure video overlay stays behind sidebar */
-        .video-overlay {
-            z-index: 1 !important;
-        }
-
-        .hero-section {
-            z-index: 0;
-        }
-
-        .hero-section .position-relative.z-10 {
-            z-index: 10;
-        }
-
-        /* Homepage-only: Override navbar to fixed position (removes gap) */
-        #navbar {
-            position: fixed !important;
-        }
-
-        /* Custom scrollbar for better aesthetics */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
-    </style>
 
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
     <?= $this->fetch('script') ?>
 </head>
 
-<body class="bg-light text-dark d-flex flex-column min-vh-100 position-relative pb-4">
+<body class="home-layout bg-light text-dark d-flex flex-column min-vh-100 position-relative pb-4">
 
     <!-- Glassmorphism Sidebar -->
     <?= $this->element('sidebar') ?>

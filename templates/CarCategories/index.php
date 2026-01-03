@@ -65,8 +65,10 @@
                         <td>
                             <?php
                             $tier = strtolower($carCategory->insurance_tier ?: 'basic');
+                            $tierColors = ['basic' => 'secondary', 'standard' => 'info', 'premium' => 'warning'];
+                            $tierColor = $tierColors[$tier] ?? 'secondary';
                             ?>
-                            <span class="category-badge">
+                            <span class="badge bg-<?= $tierColor ?>">
                                 <?= ucfirst($tier) ?>
                             </span>
                         </td>
@@ -107,7 +109,7 @@
                                 ['class' => 'btn btn-sm btn-outline-primary', 'escape' => false, 'title' => 'View']
                             ) ?>
                             <?= $this->Html->link(
-                                '<i class="fas fa-pen"></i>',
+                                '<i class="fas fa-edit"></i>',
                                 ['action' => 'edit', $carCategory->id],
                                 ['class' => 'btn btn-sm btn-outline-warning', 'escape' => false, 'title' => 'Edit']
                             ) ?>

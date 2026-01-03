@@ -104,6 +104,12 @@ class CarCategoriesTable extends Table
             ->greaterThanOrEqual('gps_daily_rate', 0)
             ->allowEmptyString('gps_daily_rate');
 
+        $validator
+            ->scalar('badge_color')
+            ->maxLength('badge_color', 7)
+            ->regex('badge_color', '/^#[0-9A-Fa-f]{6}$/', 'Must be a valid hex color (e.g., #3b82f6)')
+            ->allowEmptyString('badge_color');
+
         return $validator;
     }
 }
