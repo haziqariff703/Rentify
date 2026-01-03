@@ -44,6 +44,9 @@ All notable changes to the Rentify project will be documented in this file.
 -   **Booking Management UI** (`templates/Bookings/index.php`)
     -   Enabled "New Booking" button for all users (previously hidden for admins).
     -   Aligned button styling with other index pages.
+-   **Edit Booking Page Fix** (`templates/Bookings/edit.php`)
+    -   Fixed `FormProtectionException` (URL mismatch/Security Component error) by moving delete button's hidden form outside the main edit form using `block => true`.
+    -   (Note: Reverted Flatpickr implementation due to compatibility issues).
 
 ## [2026-01-03]
 

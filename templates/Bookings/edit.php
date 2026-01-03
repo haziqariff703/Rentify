@@ -9,6 +9,7 @@
  * @var string[]|\Cake\Collection\CollectionInterface $cars
  */
 
+
 $statusOptions = [
     'pending' => 'Pending',
     'confirmed' => 'Confirmed',
@@ -162,12 +163,14 @@ $locationOptions = [
             [
                 'class' => 'btn btn-outline-danger btn-lg delete-confirm',
                 'escape' => false,
+                'block' => true,
                 'data-confirm-message' => __('Are you sure you want to delete this booking?')
             ]
         ) ?>
     </div>
 
     <?= $this->Form->end() ?>
+    <?= $this->fetch('postLink') ?>
 </div>
 
 <style>
@@ -353,6 +356,7 @@ $locationOptions = [
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
     }
+
 
     /* Responsive */
     @media (max-width: 992px) {
