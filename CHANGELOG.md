@@ -2,6 +2,20 @@
 
 All notable changes to the Rentify project will be documented in this file.
 
+## [2026-01-05]
+
+### Fixed
+
+-   **Review Form Protection Error** (`src/Controller/ReviewsController.php`)
+    -   Fixed `FormProtectionException` error "Unexpected field `rating` in POST data" when submitting reviews.
+    -   Unlocked the `rating` field from form protection since it uses custom HTML radio inputs for the star rating UI.
+    -   Form now submits successfully while maintaining security for other fields.
+-   **Car Image Path 404 Error** (`src/Service/ImageUploadService.php`)
+    -   Fixed image upload using Windows `DS` constant (`\`) instead of forward slash (`/`) for web URLs.
+    -   This caused car images to have paths like `cars\image.jpg` which broke when URL-encoded in JavaScript (showed as `%C3%BE`).
+    -   Changed to use explicit forward slash `/` for web-compatible URL paths.
+    -   Manually fixed existing database records with backslash paths.
+
 ## [2026-01-04]
 
 ### Added

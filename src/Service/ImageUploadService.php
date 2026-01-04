@@ -108,8 +108,8 @@ class ImageUploadService
             }
         }
 
-        // Return the relative path from webroot/img/
-        $relativePath = $targetDir . DS . $newFilename;
+        // Return the relative path from webroot/img/ (use forward slash for web URLs)
+        $relativePath = $targetDir . '/' . $newFilename;
 
         return [
             'success' => true,

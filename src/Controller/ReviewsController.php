@@ -16,6 +16,11 @@ class ReviewsController extends AppController
         parent::beforeFilter($event);
 
         $action = $this->request->getParam('action');
+
+        // Unlock 'rating' field for addReview - uses custom HTML inputs for star rating UI
+        if ($action === 'addReview') {
+            $this->FormProtection->setConfig('unlockedFields', ['rating']);
+        }
         $user = $this->Authentication->getIdentity();
 
         // Public access for carReviews
