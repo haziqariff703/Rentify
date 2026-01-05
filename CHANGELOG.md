@@ -4,6 +4,13 @@ All notable changes to the Rentify project will be documented in this file.
 
 ## [2026-01-05]
 
+### Added
+
+-   **Password Visibility Toggle** (`templates/Users/login.php`, `templates/Users/add.php`)
+    -   Added eye icon toggle to show/hide password in login and registration forms.
+    -   Icon changes from `fa-eye` to `fa-eye-slash` when clicked.
+    -   Styled with hover effect and positioned inside the input field.
+
 ### Fixed
 
 -   **Review Form Protection Error** (`src/Controller/ReviewsController.php`)

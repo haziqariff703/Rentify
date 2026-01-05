@@ -58,15 +58,17 @@
                 ]) ?>
             </div>
 
-            <div class="form-group">
+            <div class="form-group password-group">
                 <i class="fas fa-lock"></i>
                 <?= $this->Form->control('password', [
                     'label' => false,
                     'placeholder' => 'Password',
-                    'class' => 'form-input',
+                    'class' => 'form-input password-input',
                     'type' => 'password',
-                    'required' => true
+                    'required' => true,
+                    'id' => 'register-password'
                 ]) ?>
+                <i class="fas fa-eye password-toggle" data-target="register-password"></i>
             </div>
 
             <button type="submit" class="auth-btn">Register</button>
@@ -101,15 +103,17 @@
                 ]) ?>
             </div>
 
-            <div class="form-group">
+            <div class="form-group password-group">
                 <i class="fas fa-lock"></i>
                 <?= $this->Form->control('password', [
                     'label' => false,
                     'placeholder' => 'Password',
-                    'class' => 'form-input',
+                    'class' => 'form-input password-input',
                     'type' => 'password',
-                    'required' => true
+                    'required' => true,
+                    'id' => 'login-password'
                 ]) ?>
+                <i class="fas fa-eye password-toggle" data-target="login-password"></i>
             </div>
 
             <div class="form-options">
@@ -612,6 +616,53 @@
             padding: 30px 25px;
         }
     }
+
+    /* Password Toggle */
+    .password-group {
+        position: relative !important;
+        width: 100% !important;
+        display: block !important;
+    }
+
+    .password-toggle {
+        position: absolute !important;
+        right: 15px !important;
+        left: auto !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        color: #94a3b8 !important;
+        font-size: 14px !important;
+        cursor: pointer !important;
+        z-index: 10 !important;
+        transition: color 0.3s ease !important;
+    }
+
+    .password-toggle:hover {
+        color: #3b82f6 !important;
+    }
+
+    .password-input {
+        padding-right: 45px !important;
+    }
 </style>
 
 <script src="<?= $this->Url->assetUrl('js/views/Users/auth.js') ?>?v=<?= time() ?>"></script>
+<script>
+    // Password visibility toggle
+    document.querySelectorAll('.password-toggle').forEach(function(toggle) {
+        toggle.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-target');
+            const input = document.getElementById(targetId);
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                this.classList.remove('fa-eye');
+                this.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                this.classList.remove('fa-eye-slash');
+                this.classList.add('fa-eye');
+            }
+        });
+    });
+</script>
