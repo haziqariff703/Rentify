@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Entity;
@@ -13,6 +14,7 @@ use Cake\ORM\Entity;
  * @property string|null $description
  * @property string|null $cost
  * @property \Cake\I18n\Date|null $maintenance_date
+ * @property \Cake\I18n\Date|null $end_date
  * @property string|null $status
  * @property \Cake\I18n\DateTime|null $created
  * @property \Cake\I18n\DateTime|null $modified
@@ -35,6 +37,7 @@ class Maintenance extends Entity
         'description' => true,
         'cost' => true,
         'maintenance_date' => true,
+        'end_date' => true,
         'status' => true,
         'created' => true,
         'modified' => true,

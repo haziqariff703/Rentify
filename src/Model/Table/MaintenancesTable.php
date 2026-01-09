@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -80,6 +81,10 @@ class MaintenancesTable extends Table
         $validator
             ->scalar('status')
             ->allowEmptyString('status');
+
+        $validator
+            ->date('end_date')
+            ->allowEmptyDate('end_date');
 
         return $validator;
     }

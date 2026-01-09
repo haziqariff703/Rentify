@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Review $review
@@ -53,7 +54,7 @@
             </div>
 
             <div class="form-actions">
-                <?= $this->Form->button('<i class="fas fa-save me-2"></i>' . __('Create Review'), ['class' => 'btn btn-primary', 'escape' => false]) ?>
+                <?= $this->Form->button(__('Create Review'), ['class' => 'btn btn-primary', 'escape' => false]) ?>
                 <?= $this->Html->link('<i class="fas fa-times me-2"></i>' . __('Cancel'), ['action' => 'index'], ['class' => 'btn btn-outline-secondary', 'escape' => false]) ?>
             </div>
 

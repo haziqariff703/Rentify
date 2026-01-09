@@ -2,6 +2,39 @@
 
 All notable changes to the Rentify project will be documented in this file.
 
+## [2026-01-10]
+
+### Added
+
+-   **Maintenance End Date Field** (`src/Model/Entity/Maintenance.php`, `src/Model/Table/MaintenancesTable.php`)
+    -   Added `end_date` column to Entity's `$_accessible` array for form mass-assignment.
+    -   Added `end_date` validation rule to Table.
+-   **Start/End Date Input in Maintenance Forms** (`templates/Maintenances/add.php`, `templates/Maintenances/edit.php`)
+    -   Renamed "Scheduled Date" to "Start Date".
+    -   Added new "End Date" input field with helper text.
+-   **Enhanced Badge Styling** (`templates/CarCategories/index.php`)
+    -   Increased font size for "Insurance" and "Total Cars" badges to 0.85rem for better readability.
+    -   Added subtle box-shadow and refined padding to category badges.
+
+### Changed
+
+-   **Auto-set End Date on Completion** (`src/Controller/MaintenancesController.php`)
+    -   In `add()` and `edit()` actions, if status is 'completed' and `end_date` is empty, it now auto-sets to the current date.
+-   **Improved Review Resolved Logic** (`templates/Reviews/index.php`)
+    -   The "Resolved" check now uses `end_date` if available, otherwise falls back to the `modified` date.
+    -   This ensures that setting status to 'Completed' via the Edit form correctly clears the "issue" flag.
+
+### Fixed
+
+-   **Dashboard Action Center Issue Count** (`src/Service/AdminDashboardService.php`)
+    -   "Car Issues Reported" count now correctly excludes resolved issues.
+    -   Only counts low-rating reviews where no completed maintenance exists after the review date.
+    -   Issue widget now hides when all issues are resolved.
+-   **Reviews Issues Filter Logic** (`src/Controller/ReviewsController.php`, `templates/Reviews/index.php`)
+    -   "Show Issues Only" filter now excludes resolved issues (reviews with completed maintenance after review date).
+    -   Added empty state with success message when all issues are resolved.
+    -   "Back to All Reviews" button displayed when showing the empty state.
+
 ## [2026-01-05]
 
 ### Added

@@ -189,19 +189,54 @@ class ReviewsController extends AppController
      */
     public function index()
     {
+        $showingIssues = (bool) $this->request->getQuery('issues');
+
         $query = $this->Reviews->find()
             ->contain(['Users', 'Cars' => ['Maintenances'], 'Bookings']);
 
-        // Filter for issue reviews if requested (low ratings)
-        if ($this->request->getQuery('issues')) {
+        // Filter for issue reviews if requested (low ratings that are NOT resolved)
+        if ($showingIssues) {
             $query->where(['Reviews.rating <=' => 2]);
+
+            // Get all reviews, then filter out resolved ones in PHP
+            $allIssueReviews = $query->all()->toArray();
+
+            $unresolvedReviews = [];
+            foreach ($allIssueReviews as $review) {
+                $isResolved = false;
+                $carStatus = strtolower($review->car->status ?? '');
+
+                // Cars in maintenance are still "issues" being addressed
+                if ($carStatus === 'maintenance') {
+                    $unresolvedReviews[] = $review;
+                    continue;
+                }
+
+                // Check if there's a completed maintenance after the review date
+                if (!empty($review->car->maintenances)) {
+                    foreach ($review->car->maintenances as $maintenance) {
+                        if ($maintenance->status === 'completed') {
+                            $completionDate = $maintenance->end_date ?? $maintenance->modified;
+                            if ($completionDate && $completionDate->format('Y-m-d') >= $review->created->format('Y-m-d')) {
+                                $isResolved = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (!$isResolved) {
+                    $unresolvedReviews[] = $review;
+                }
+            }
+
+            // Pass the filtered reviews directly (bypassing pagination for filtered view)
+            $this->set('reviews', $unresolvedReviews);
+            $this->set('showingIssues', $showingIssues);
+            return;
         }
 
         $reviews = $this->paginate($query);
-
-        // Pass filter state to template
-        $showingIssues = (bool) $this->request->getQuery('issues');
-
         $this->set(compact('reviews', 'showingIssues'));
     }
 

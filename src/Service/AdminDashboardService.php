@@ -140,16 +140,46 @@ class AdminDashboardService
             ->where(['status' => 'scheduled'])
             ->count();
 
+        // Count only UNRESOLVED issues (low-rating reviews without completed maintenance after review date)
         $issueReviews = $reviewsTable->find()
-            ->contain(['Cars', 'Users'])
+            ->contain(['Cars' => ['Maintenances'], 'Users'])
             ->where(['Reviews.rating <=' => 2])
             ->order(['Reviews.created' => 'DESC'])
-            ->limit(5)
             ->all();
 
-        $issueReviewsCount = $reviewsTable->find()
-            ->where(['Reviews.rating <=' => 2])
-            ->count();
+        // Filter out resolved issues
+        $unresolvedIssues = [];
+        foreach ($issueReviews as $review) {
+            $isResolved = false;
+            $carStatus = strtolower($review->car->status ?? '');
+
+            // Skip cars currently in maintenance (they're being fixed)
+            if ($carStatus === 'maintenance') {
+                $unresolvedIssues[] = $review;
+                continue;
+            }
+
+            // Check if there's a completed maintenance after the review date
+            if (!empty($review->car->maintenances)) {
+                foreach ($review->car->maintenances as $maintenance) {
+                    if ($maintenance->status === 'completed') {
+                        $completionDate = $maintenance->end_date ?? $maintenance->modified;
+                        if ($completionDate && $completionDate->format('Y-m-d') >= $review->created->format('Y-m-d')) {
+                            $isResolved = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (!$isResolved) {
+                $unresolvedIssues[] = $review;
+            }
+        }
+
+        $issueReviewsCount = count($unresolvedIssues);
+        // Limit for display
+        $issueReviews = array_slice($unresolvedIssues, 0, 5);
 
         return array_merge(
             compact(

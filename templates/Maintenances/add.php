@@ -49,7 +49,7 @@ $statusOptions = [
                             ]) ?></td>
                     </tr>
                     <tr>
-                        <th><?= __('Scheduled Date') ?> <span class="text-danger">*</span></th>
+                        <th><?= __('Start Date') ?> <span class="text-danger">*</span></th>
                         <td><?= $this->Form->control('maintenance_date', [
                                 'label' => false,
                                 'class' => 'form-control',
@@ -57,6 +57,16 @@ $statusOptions = [
                                 'value' => date('Y-m-d'),
                                 'required' => true
                             ]) ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= __('End Date') ?></th>
+                        <td><?= $this->Form->control('end_date', [
+                                'label' => false,
+                                'class' => 'form-control',
+                                'type' => 'date'
+                            ]) ?>
+                            <small class="text-muted">Leave blank if not completed yet.</small>
+                        </td>
                     </tr>
                     <tr>
                         <th><?= __('Status') ?></th>

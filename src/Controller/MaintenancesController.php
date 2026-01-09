@@ -68,7 +68,12 @@ class MaintenancesController extends AppController
         }
 
         if ($this->request->is('post')) {
-            $maintenance = $this->Maintenances->patchEntity($maintenance, $this->request->getData());
+            $data = $this->request->getData();
+            // Auto-set end_date if status is completed and end_date is empty
+            if (($data['status'] ?? '') === 'completed' && empty($data['end_date'])) {
+                $data['end_date'] = new \Cake\I18n\Date();
+            }
+            $maintenance = $this->Maintenances->patchEntity($maintenance, $data);
             if ($this->Maintenances->save($maintenance)) {
                 // Update Car Status based on maintenance status
                 $car = $this->Maintenances->Cars->get($maintenance->car_id);
@@ -103,7 +108,12 @@ class MaintenancesController extends AppController
     {
         $maintenance = $this->Maintenances->get($id, contain: []);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $maintenance = $this->Maintenances->patchEntity($maintenance, $this->request->getData());
+            $data = $this->request->getData();
+            // Auto-set end_date if status is completed and end_date is empty
+            if (($data['status'] ?? '') === 'completed' && empty($data['end_date'])) {
+                $data['end_date'] = new \Cake\I18n\Date();
+            }
+            $maintenance = $this->Maintenances->patchEntity($maintenance, $data);
             if ($this->Maintenances->save($maintenance)) {
                 // Auto-update car status based on maintenance status
                 $car = $this->Maintenances->Cars->get($maintenance->car_id);

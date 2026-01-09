@@ -48,12 +48,22 @@ $statusOptions = [
                             ]) ?></td>
                     </tr>
                     <tr>
-                        <th><?= __('Scheduled Date') ?></th>
+                        <th><?= __('Start Date') ?></th>
                         <td><?= $this->Form->control('maintenance_date', [
                                 'label' => false,
                                 'class' => 'form-control',
                                 'type' => 'date'
                             ]) ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= __('End Date') ?></th>
+                        <td><?= $this->Form->control('end_date', [
+                                'label' => false,
+                                'class' => 'form-control',
+                                'type' => 'date'
+                            ]) ?>
+                            <small class="text-muted">Auto-set to today if completed and left blank.</small>
+                        </td>
                     </tr>
                     <tr>
                         <th><?= __('Status') ?></th>

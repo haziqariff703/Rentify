@@ -6,6 +6,26 @@
  */
 ?>
 
+<style>
+    .insurance-badge {
+        font-size: 0.85rem !important;
+        padding: 5px 12px !important;
+        font-weight: 500 !important;
+        border-radius: 8px !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+
+    .cars-count-badge {
+        font-size: 0.85rem !important;
+        padding: 5px 12px !important;
+        font-weight: 600 !important;
+        border-radius: 8px !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+</style>
+
 <div class="container py-4">
     <!-- Page Header -->
     <div class="crud-page-header">
@@ -68,7 +88,7 @@
                             $tierColors = ['basic' => 'secondary', 'standard' => 'info', 'premium' => 'warning'];
                             $tierColor = $tierColors[$tier] ?? 'secondary';
                             ?>
-                            <span class="badge bg-<?= $tierColor ?>">
+                            <span class="badge bg-<?= $tierColor ?> insurance-badge">
                                 <?= ucfirst($tier) ?>
                             </span>
                         </td>
@@ -98,7 +118,7 @@
                             <?php endif; ?>
                         </td>
                         <td>
-                            <span class="badge bg-light text-dark">
+                            <span class="badge bg-light text-dark cars-count-badge">
                                 <?= count($carCategory->cars ?? []) ?> cars
                             </span>
                         </td>
