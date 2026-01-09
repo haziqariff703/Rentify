@@ -17,6 +17,10 @@ All notable changes to the Rentify project will be documented in this file.
     -   Fixed `FormProtectionException` error "Unexpected field `rating` in POST data" when submitting reviews.
     -   Unlocked the `rating` field from form protection since it uses custom HTML radio inputs for the star rating UI.
     -   Form now submits successfully while maintaining security for other fields.
+-   **Maintenance Edit Form Protection Error** (`templates/Maintenances/edit.php`)
+    -   Fixed `FormProtectionException` URL mismatch error when editing maintenance records.
+    -   Moved delete `postLink` button outside the main edit form to prevent nested form conflicts.
+    -   The `postLink` helper generates its own hidden form, which conflicted with the outer form's CSRF token.
 -   **Car Image Path 404 Error** (`src/Service/ImageUploadService.php`)
     -   Fixed image upload using Windows `DS` constant (`\`) instead of forward slash (`/`) for web URLs.
     -   This caused car images to have paths like `cars\image.jpg` which broke when URL-encoded in JavaScript (showed as `%C3%BE`).

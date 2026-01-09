@@ -111,21 +111,24 @@ $statusOptions = [
     <!-- Form Actions -->
     <div class="form-actions">
         <?= $this->Form->button(
-            '<i class="fas fa-save me-2"></i>' . __('Save Changes'),
+            __('Save Changes'),
             ['class' => 'btn btn-primary btn-lg', 'escape' => false]
         ) ?>
+    </div>
+
+    <?= $this->Form->end() ?>
+
+    <div class="form-actions mt-3">
         <?= $this->Form->postLink(
             '<i class="fas fa-trash me-2"></i>' . __('Delete'),
             ['action' => 'delete', $maintenance->id],
             [
                 'class' => 'btn btn-outline-danger btn-lg delete-confirm',
                 'escape' => false,
-                'data-confirm-message' => __('Are you sure you want to delete this maintenance record?')
+                'confirm' => __('Are you sure you want to delete this maintenance record?')
             ]
         ) ?>
     </div>
-
-    <?= $this->Form->end() ?>
 </div>
 
 <style>
