@@ -1,4 +1,5 @@
 <?php
+
 /**
  * View Payment - User Transaction Confirmation (Read-Only)
  * Shows payment details with car thumbnail and links to related documents
@@ -321,7 +322,7 @@ $this->assign('title', 'Payment #' . $payment->id);
                         <?php if ($payment->has('booking')): ?>
                             <div class="detail-row">
                                 <span class="detail-label">Booking</span>
-                                <a href="<?= $this->Url->build(['controller' => 'Bookings', 'action' => 'view', $payment->booking->id]) ?>" class="link-button">
+                                <a href="<?= $this->Url->build(['controller' => 'Bookings', 'action' => 'viewBookings', $payment->booking->id]) ?>" class="link-button">
                                     View Booking #<?= h($payment->booking->id) ?> <i class="fas fa-arrow-right"></i>
                                 </a>
                             </div>

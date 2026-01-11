@@ -2,6 +2,14 @@
 
 All notable changes to the Rentify project will be documented in this file.
 
+## [2026-01-11]
+
+### Changed
+
+-   **User Booking Link in Payment View** (`templates/Payments/view_payment.php`)
+    -   Updated the booking detail link to redirect to `viewBookings` (customer view) instead of `view` (admin view).
+    -   This ensures that non-admin users are directed to the appropriate modern UI for booking details and prevented from accessing admin-only sections.
+
 ## [2026-01-10]
 
 ### Added

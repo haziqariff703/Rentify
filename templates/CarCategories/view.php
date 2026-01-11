@@ -156,7 +156,7 @@
                                 <tr>
                                     <td>
                                         <?php if ($car->image): ?>
-                                            <img src="<?= $this->Url->webroot('img/cars/' . $car->image) ?>"
+                                            <img src="<?= $this->Url->webroot('img/' . $car->image) ?>"
                                                 alt="<?= h($car->car_model) ?>"
                                                 class="car-thumb">
                                         <?php else: ?>
