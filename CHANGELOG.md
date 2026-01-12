@@ -22,6 +22,39 @@ All notable changes to the Rentify project will be documented in this file.
     -   Creates: 1 Admin, 15 Customers, 7 Categories, 25 Cars, 40 Bookings, Invoices, Payments, 15 Maintenances, 30 Reviews.
     -   Run with: `bin/cake migrations seed --seed DatabaseSeeder`
 
+### Changed
+
+-   **DatabaseSeeder Admin Role** (`config/Seeds/DatabaseSeeder.php`)
+    -   Explicitly added `'role' => 'admin'` parameter to admin user creation for clarity.
+    -   Ensures the admin user is created with the correct role (admin@rentify.com).
+
+### Fixed
+
+-   **FakerPHP Dependency** (`composer.json`)
+    -   Updated from deprecated `fzaninotto/faker` to actively maintained `fakerphp/faker` v1.23.
+    -   Resolved "Class 'Faker\Factory' not found" error when running database seeder.
+    -   Ran `composer update fakerphp/faker --with-dependencies` to install the new package.
+-   **BookingFactory Smart Add-On Assignment** (`src/Factory/BookingFactory.php`)
+    -   Updated `define()` method to check car category capabilities before assigning add-ons.
+    -   Only assigns chauffeur service if `category->chauffeur_available` is true.
+    -   Only assigns GPS service if `category->gps_available` is true.
+    -   Prevents validation errors during seeding by ensuring only valid service combinations are created.
+-   **InvoiceFactory Counter Initialization** (`src/Factory/InvoiceFactory.php`)
+    -   Added smart counter initialization that checks existing invoices in database.
+    -   Prevents invoice number collisions when seeding into non-empty database.
+    -   Extracts the highest invoice number and continues from there.
+-   **DatabaseSeeder Type Safety** (`config/Seeds/DatabaseSeeder.php`)
+    -   Added validation to skip bookings without valid `total_price` when creating invoices/payments.
+    -   Added explicit float casting for all amount parameters to ensure type compatibility.
+    -   Prevents "Argument #2 ($amount) must be of type float" errors.
+-   **UserFactory Password Hashing Fix** (`src/Factory/UserFactory.php`)
+    -   Removed manual password hashing in the factory.
+    -   The `User` entity already handles hashing via `_setPassword` mutator.
+    -   Fixed "Wrong Password" issue caused by double-hashing (Factory hash + Entity hash).
+-   **Database Seeding Success**
+    -   Successfully seeds complete dataset: 1 Admin, 15 Customers, 7 Categories, 25 Cars, 40 Bookings, 27 Invoices, 18 Payments, 15 Maintenances, 18 Reviews.
+    -   All validation rules and business logic constraints are respected during seeding.
+
 ## [2026-01-11]
 
 ### Changed

@@ -71,10 +71,23 @@ class BookingFactory extends AbstractFactory
             $status = 'ongoing';
         }
 
-        // Random add-ons
-        $hasChauffeur = $this->faker->boolean(20);
-        $hasGps = $this->faker->boolean(40);
-        $hasFullInsurance = $this->faker->boolean(60);
+        // Check car category capabilities if car_id is provided
+        $hasChauffeur = false;
+        $hasGps = false;
+        $hasFullInsurance = $this->faker->boolean(60); // Insurance is always available
+
+        if (isset($overrides['car_id'])) {
+            $carsTable = \Cake\ORM\TableRegistry::getTableLocator()->get('Cars');
+            $car = $carsTable->get($overrides['car_id'], ['contain' => ['Categories']]);
+
+            // Only assign add-ons if the category supports them
+            if (!empty($car->category->chauffeur_available)) {
+                $hasChauffeur = $this->faker->boolean(20);
+            }
+            if (!empty($car->category->gps_available)) {
+                $hasGps = $this->faker->boolean(40);
+            }
+        }
 
         // Calculate estimated total (actual calculation would use car price + add-ons)
         $basePrice = $this->faker->randomFloat(2, 50, 500) * $duration;

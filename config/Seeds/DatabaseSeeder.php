@@ -63,6 +63,7 @@ class DatabaseSeeder extends BaseSeed
             'name' => 'Super Admin',
             'email' => 'admin@rentify.com',
             'ic_number' => '850101-01-1234',
+            'role' => 'admin',
         ]);
         $this->output('  ✓ Created admin: admin@rentify.com');
 
@@ -179,13 +180,21 @@ class DatabaseSeeder extends BaseSeed
         // Create invoices for completed and approved bookings
         $invoiceableStatuses = ['completed', 'approved', 'ongoing'];
         foreach ($invoiceableStatuses as $status) {
-            if (!isset($bookings[$status])) continue;
+            if (!isset($bookings[$status]))
+                continue;
 
             foreach ($bookings[$status] as $booking) {
+                // Skip if booking doesn't have a valid total_price
+                if (empty($booking->total_price) || $booking->total_price <= 0) {
+                    continue;
+                }
+
+                $amount = (float) $booking->total_price;
+
                 if ($status === 'completed') {
-                    $invoiceFactory->createPaid($booking->id, $booking->total_price);
+                    $invoiceFactory->createPaid($booking->id, $amount);
                 } else {
-                    $invoiceFactory->createUnpaid($booking->id, $booking->total_price);
+                    $invoiceFactory->createUnpaid($booking->id, $amount);
                 }
                 $invoiceCount++;
             }
@@ -203,17 +212,21 @@ class DatabaseSeeder extends BaseSeed
         // Create payments for completed bookings
         if (isset($bookings['completed'])) {
             foreach ($bookings['completed'] as $booking) {
-                $paymentFactory->createPaid($booking->id, $booking->total_price);
-                $paymentCount++;
+                if (!empty($booking->total_price) && $booking->total_price > 0) {
+                    $paymentFactory->createPaid($booking->id, (float) $booking->total_price);
+                    $paymentCount++;
+                }
             }
         }
 
         // Create some partial payments for approved bookings
         if (isset($bookings['approved'])) {
             foreach (array_slice($bookings['approved'], 0, 3) as $booking) {
-                $partialAmount = $booking->total_price * 0.5;
-                $paymentFactory->createPaid($booking->id, $partialAmount);
-                $paymentCount++;
+                if (!empty($booking->total_price) && $booking->total_price > 0) {
+                    $partialAmount = (float) ($booking->total_price * 0.5);
+                    $paymentFactory->createPaid($booking->id, $partialAmount);
+                    $paymentCount++;
+                }
             }
         }
         $this->output("  ✓ Created {$paymentCount} payments");

@@ -37,9 +37,25 @@ class InvoiceFactory extends AbstractFactory
     {
         $now = DateTime::now();
 
+        // Initialize counter from database if not set properly
+        if (self::$invoiceCounter === 1000) {
+            $lastInvoice = $this->table->find()
+                ->select(['invoice_number'])
+                ->order(['id' => 'DESC'])
+                ->first();
+
+            if ($lastInvoice) {
+                // Extract number from invoice format: INV-2026-001234
+                preg_match('/INV-\d{4}-(\d+)/', $lastInvoice->invoice_number, $matches);
+                if (!empty($matches[1])) {
+                    self::$invoiceCounter = (int) $matches[1];
+                }
+            }
+        }
+
         // Generate unique invoice number
         self::$invoiceCounter++;
-        $invoiceNumber = 'INV-' . date('Y') . '-' . str_pad((string)self::$invoiceCounter, 6, '0', STR_PAD_LEFT);
+        $invoiceNumber = 'INV-' . date('Y') . '-' . str_pad((string) self::$invoiceCounter, 6, '0', STR_PAD_LEFT);
 
         $data = [
             'booking_id' => null, // Should be set via override
@@ -116,7 +132,7 @@ class InvoiceFactory extends AbstractFactory
     public function generateInvoiceNumber(string $prefix = 'INV'): string
     {
         self::$invoiceCounter++;
-        return $prefix . '-' . date('Y') . '-' . str_pad((string)self::$invoiceCounter, 6, '0', STR_PAD_LEFT);
+        return $prefix . '-' . date('Y') . '-' . str_pad((string) self::$invoiceCounter, 6, '0', STR_PAD_LEFT);
     }
 
     /**

@@ -63,7 +63,7 @@ class UserFactory extends AbstractFactory
         $data = [
             'name' => $firstName . ' ' . $lastName,
             'email' => strtolower($firstName . '.' . $lastName . $this->faker->numberBetween(1, 999)) . '@' . $this->faker->safeEmailDomain,
-            'password' => (new DefaultPasswordHasher())->hash('password123'),
+            'password' => 'password123',
             'phone' => $this->generateMalaysianPhone(),
             'address' => $this->faker->streetAddress . ', ' .
                 $this->faker->randomElement($malaysianStates) . ', ' .
@@ -127,10 +127,10 @@ class UserFactory extends AbstractFactory
         $day = $birthDate->format('d');
 
         // State codes (simplified - common states)
-        $stateCode = str_pad((string)$this->faker->numberBetween(1, 16), 2, '0', STR_PAD_LEFT);
+        $stateCode = str_pad((string) $this->faker->numberBetween(1, 16), 2, '0', STR_PAD_LEFT);
 
         // Last 4 digits
-        $lastFour = str_pad((string)$this->faker->numberBetween(1, 9999), 4, '0', STR_PAD_LEFT);
+        $lastFour = str_pad((string) $this->faker->numberBetween(1, 9999), 4, '0', STR_PAD_LEFT);
 
         return $year . $month . $day . '-' . $stateCode . '-' . $lastFour;
     }
