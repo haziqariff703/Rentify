@@ -76,16 +76,16 @@
         },
         {
             "name": "cakephp/cakephp",
-            "version": "5.2.10",
+            "version": "5.2.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/cakephp.git",
-                "reference": "7b871bc048c59774c07f283814bf8af9ea88ea27"
+                "reference": "6bbb83e96e3d5ca41915ce32ad4e486da3f6d1dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/7b871bc048c59774c07f283814bf8af9ea88ea27",
-                "reference": "7b871bc048c59774c07f283814bf8af9ea88ea27",
+                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/6bbb83e96e3d5ca41915ce32ad4e486da3f6d1dc",
+                "reference": "6bbb83e96e3d5ca41915ce32ad4e486da3f6d1dc",
                 "shasum": ""
             },
             "require": {
@@ -193,7 +193,7 @@
                 "issues": "https://github.com/cakephp/cakephp/issues",
                 "source": "https://github.com/cakephp/cakephp"
             },
-            "time": "2025-12-05T22:11:11+00:00"
+            "time": "2026-01-09T04:19:52+00:00"
         },
         {
             "name": "cakephp/chronos",
@@ -2522,20 +2522,20 @@
         },
         {
             "name": "cakephp/bake",
-            "version": "3.5.1",
+            "version": "3.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/bake.git",
-                "reference": "f6dc5f8578430f3540faa0474866bb494f7d92e1"
+                "reference": "c8dc9c6cce30b067adda5baa6d19f82481b12453"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/bake/zipball/f6dc5f8578430f3540faa0474866bb494f7d92e1",
-                "reference": "f6dc5f8578430f3540faa0474866bb494f7d92e1",
+                "url": "https://api.github.com/repos/cakephp/bake/zipball/c8dc9c6cce30b067adda5baa6d19f82481b12453",
+                "reference": "c8dc9c6cce30b067adda5baa6d19f82481b12453",
                 "shasum": ""
             },
             "require": {
-                "brick/varexporter": "^0.6.0",
+                "brick/varexporter": "^0.6.0 || ^0.7.0",
                 "cakephp/cakephp": "^5.1",
                 "cakephp/twig-view": "^2.0.2",
                 "nikic/php-parser": "^5.0.0",
@@ -2575,7 +2575,7 @@
                 "issues": "https://github.com/cakephp/bake/issues",
                 "source": "https://github.com/cakephp/bake"
             },
-            "time": "2025-10-22T13:48:10+00:00"
+            "time": "2026-01-12T00:13:14+00:00"
         },
         {
             "name": "cakephp/cakephp-codesniffer",
@@ -2698,21 +2698,22 @@
         },
         {
             "name": "cakephp/twig-view",
-            "version": "2.0.3",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/twig-view.git",
-                "reference": "b11df8e8734ae556d98b143192377dbc6a6f5360"
+                "reference": "db51ee49c0cb9be4af39497f1724393b7ce51211"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/twig-view/zipball/b11df8e8734ae556d98b143192377dbc6a6f5360",
-                "reference": "b11df8e8734ae556d98b143192377dbc6a6f5360",
+                "url": "https://api.github.com/repos/cakephp/twig-view/zipball/db51ee49c0cb9be4af39497f1724393b7ce51211",
+                "reference": "db51ee49c0cb9be4af39497f1724393b7ce51211",
                 "shasum": ""
             },
             "require": {
                 "cakephp/cakephp": "^5.0.0",
                 "jasny/twig-extensions": "^1.3",
+                "php": ">=8.1",
                 "twig/markdown-extra": "^3.0",
                 "twig/twig": "^3.11.1"
             },
@@ -2724,7 +2725,7 @@
                 "cakephp/debug_kit": "^5.0",
                 "michelf/php-markdown": "^1.9",
                 "mikey179/vfsstream": "^1.6.10",
-                "phpunit/phpunit": "^10.5.5 || ^11.1.3"
+                "phpunit/phpunit": "^11.5.3 | ^12.1.3"
             },
             "type": "cakephp-plugin",
             "autoload": {
@@ -2755,7 +2756,7 @@
                 "issues": "https://github.com/cakephp/twig-view/issues",
                 "source": "https://github.com/cakephp/twig-view"
             },
-            "time": "2024-10-11T07:53:08+00:00"
+            "time": "2026-01-05T22:35:06+00:00"
         },
         {
             "name": "composer/class-map-generator",
