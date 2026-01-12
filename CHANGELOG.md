@@ -9,6 +9,11 @@ All notable changes to the Rentify project will be documented in this file.
 -   **User Booking Link in Payment View** (`templates/Payments/view_payment.php`)
     -   Updated the booking detail link to redirect to `viewBookings` (customer view) instead of `view` (admin view).
     -   This ensures that non-admin users are directed to the appropriate modern UI for booking details and prevented from accessing admin-only sections.
+-   **Fixed AdminsSeed Seeder** (`config/Seeds/AdminsSeed.php`)
+    -   Added missing `Authentication\PasswordHasher\DefaultPasswordHasher` import to fix "Class not found" error during seeding.
+-   **Cleaned Up Migrations and Seeds**
+    -   Removed all legacy migration files in `config/Migrations/`, leaving only `20260111030154_InitialSchema.php`.
+    -   Removed all legacy seed files in `config/Seeds/`, leaving only `AdminsSeed.php`.
 
 ## [2026-01-10]
 
