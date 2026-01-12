@@ -30,6 +30,16 @@ All notable changes to the Rentify project will be documented in this file.
 
 ### Fixed
 
+-   **DatabaseSeeder Duplicate Email Error** (`config/Seeds/DatabaseSeeder.php`)
+    -   Added `truncateTables()` method that clears all tables before seeding.
+    -   Tables are truncated in the correct order (child tables first) to respect foreign key constraints.
+    -   Temporarily disables `FOREIGN_KEY_CHECKS` during truncation to prevent constraint errors.
+    -   Fixes `email._isUnique` error when re-running the seeder on an existing database.
+-   **Booking Invoice Redirect Error** (`src/Controller/BookingsController.php`)
+    -   Fixed "Record not found in table `invoices`" error after creating a new booking.
+    -   The redirect was incorrectly using `$booking->id` (booking ID) instead of the invoice ID.
+    -   Now finds the invoice by `booking_id` and redirects to the correct invoice view page.
+    -   Added fallback redirect to `myBookings` if invoice is not found.
 -   **FakerPHP Dependency** (`composer.json`)
     -   Updated from deprecated `fzaninotto/faker` to actively maintained `fakerphp/faker` v1.23.
     -   Resolved "Class 'Faker\Factory' not found" error when running database seeder.

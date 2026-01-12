@@ -46,6 +46,10 @@ class DatabaseSeeder extends BaseSeed
         $this->output('Starting database seeding with FakerPHP factories...');
         $this->output('');
 
+        // Clear existing data first to prevent duplicate key errors
+        $this->truncateTables();
+        $this->output('');
+
         // Track created entities for relationships
         $users = [];
         $categories = [];
@@ -316,6 +320,58 @@ class DatabaseSeeder extends BaseSeed
         $this->output('  • 15 Maintenance records');
         $this->output('  • ' . $reviewCount . ' Reviews');
         $this->output('');
+    }
+
+    /**
+     * Truncate all tables in the correct order to avoid foreign key constraint issues
+     *
+     * Tables are truncated in reverse order of dependencies:
+     * 1. Reviews (depends on users, cars, bookings)
+     * 2. Payments (depends on bookings)
+     * 3. Invoices (depends on bookings)
+     * 4. Maintenances (depends on cars)
+     * 5. Bookings (depends on users, cars)
+     * 6. Cars (depends on car_categories)
+     * 7. CarCategories
+     * 8. Users
+     *
+     * @return void
+     */
+    protected function truncateTables(): void
+    {
+        $this->output('Clearing existing data...');
+
+        // Get connection
+        $connection = \Cake\Datasource\ConnectionManager::get('default');
+
+        // Disable foreign key checks temporarily
+        $connection->execute('SET FOREIGN_KEY_CHECKS = 0');
+
+        // Tables in order (child tables first due to foreign keys)
+        $tables = [
+            'reviews',
+            'payments',
+            'invoices',
+            'maintenances',
+            'bookings',
+            'cars',
+            'car_categories',
+            'users',
+        ];
+
+        foreach ($tables as $table) {
+            try {
+                $connection->execute("TRUNCATE TABLE `{$table}`");
+                $this->output("  ✓ Cleared {$table}");
+            } catch (\Exception $e) {
+                $this->output("  ✗ Failed to clear {$table}: " . $e->getMessage());
+            }
+        }
+
+        // Re-enable foreign key checks
+        $connection->execute('SET FOREIGN_KEY_CHECKS = 1');
+
+        $this->output('  Done clearing tables.');
     }
 
     /**

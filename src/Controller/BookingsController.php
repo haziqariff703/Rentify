@@ -156,7 +156,19 @@ class BookingsController extends AppController
 
             if ($booking) {
                 $this->Flash->success(__('Booking successful! Invoice generated (incl. 6% Tax).'));
-                return $this->redirect(['controller' => 'Invoices', 'action' => 'viewInvoices', $booking->id]);
+
+                // Find the invoice created for this booking
+                $invoicesTable = \Cake\ORM\TableRegistry::getTableLocator()->get('Invoices');
+                $invoice = $invoicesTable->find()
+                    ->where(['booking_id' => $booking->id])
+                    ->first();
+
+                if ($invoice) {
+                    return $this->redirect(['controller' => 'Invoices', 'action' => 'viewInvoices', $invoice->id]);
+                }
+
+                // Fallback to myBookings if invoice not found
+                return $this->redirect(['action' => 'myBookings']);
             }
             $this->Flash->error(__('Unable to add booking. This car might be unavailable for those dates.'));
         }
