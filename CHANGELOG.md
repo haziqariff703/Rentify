@@ -2,6 +2,26 @@
 
 All notable changes to the Rentify project will be documented in this file.
 
+## [2026-01-12]
+
+### Added
+
+-   **FakerPHP Factory System** (`src/Factory/`)
+    -   Created comprehensive factory system using FakerPHP for generating realistic test/seed data.
+    -   **AbstractFactory** (`AbstractFactory.php`): Base class with `create()`, `createMany()`, `make()`, `makeMany()` methods.
+    -   **UserFactory** (`UserFactory.php`): Malaysian-specific IC numbers (age 21-60), phone formats, states, and addresses.
+    -   **CarCategoryFactory** (`CarCategoryFactory.php`): 7 predefined categories (Economy, Compact, Standard, SUV, Luxury, Sports, MPV) with realistic pricing tiers.
+    -   **CarFactory** (`CarFactory.php`): Malaysian car brands (Perodua, Proton, Toyota, Honda, Mazda, BMW, Mercedes-Benz) with realistic models, specs, and plate numbers.
+    -   **BookingFactory** (`BookingFactory.php`): 15 Malaysian pickup locations, status-based creation methods (pending, approved, completed, ongoing, cancelled).
+    -   **InvoiceFactory** (`InvoiceFactory.php`): Auto-incrementing invoice numbers, status variations (unpaid, paid, overdue).
+    -   **PaymentFactory** (`PaymentFactory.php`): Malaysian payment methods (FPX, Touch n Go, GrabPay, ShopeePay, etc.).
+    -   **MaintenanceFactory** (`MaintenanceFactory.php`): 8 maintenance types with realistic descriptions and cost ranges.
+    -   **ReviewFactory** (`ReviewFactory.php`): Weighted rating distribution with positive/neutral/negative review templates.
+-   **DatabaseSeeder** (`config/Seeds/DatabaseSeeder.php`)
+    -   Comprehensive seeder that generates a complete realistic dataset using all factories.
+    -   Creates: 1 Admin, 15 Customers, 7 Categories, 25 Cars, 40 Bookings, Invoices, Payments, 15 Maintenances, 30 Reviews.
+    -   Run with: `bin/cake migrations seed --seed DatabaseSeeder`
+
 ## [2026-01-11]
 
 ### Changed
