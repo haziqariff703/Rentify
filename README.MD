@@ -19,7 +19,7 @@ _Built with the tools and technologies:_
 ![DataTables](https://img.shields.io/badge/DataTables-000000?style=for-the-badge&logo=datatable&logoColor=white)
 ![FakerPHP](https://img.shields.io/badge/FakerPHP-D33C43?style=for-the-badge&logo=php&logoColor=white)
 ![FullCalendar](https://img.shields.io/badge/FullCalendar-3788D8?style=for-the-badge&logo=fullcalendar&logoColor=white)
-![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chart.js&logoColor=white)
+![ApexCharts](https://img.shields.io/badge/ApexCharts-3788D8?style=for-the-badge&logo=apexcharts&logoColor=white)
 ![SweetAlert2](https://img.shields.io/badge/SweetAlert2-B9372F?style=for-the-badge&logo=sweetalert2&logoColor=white)
 
 </div>
@@ -107,7 +107,7 @@ Access the application at: `http://localhost:8765`
 A high-density "Command Center" for administrators:
 
 - **Financial KPIs**: Real-time tracking of Total Revenue, Revenue Growth (MoM), and Booking Volume.
-- **Fleet Analytics**: Donut charts visualizing car availability and maintenance distribution.
+- **Fleet Analytics**: Interactive **ApexCharts** visualizing car availability and maintenance distribution.
 - **Performance Pulse**: Hourly booking trends over the last 24 hours to identify peak rental times.
 - **Action Center**: Inline approval system for pending bookings and maintenance alerts.
 
