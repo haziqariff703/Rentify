@@ -73,11 +73,20 @@ Follow these steps to build and run Rentify locally:
     - Create a new database named `rentify`.
 3. **Setup Environment:**
     - Copy `config/app_local.example.php` to `config/app_local.php`.
-    - Update the `Datasources` array with your database host, username, and password (ensure database is set to `rentify`).
+    - Update `config/app_local.php` with your DB credentials (ensure database is set to `rentify`).
 4. **Install Dependencies:**
     ```bash
     composer install
     ```
+5. **Setup Database Schema:**
+    - Run the initial migration to create all tables:
+        ```bash
+        bin/cake migrations migrate
+        ```
+    - Seed the default admin account:
+        ```bash
+        bin/cake migrations seed --seed AdminsSeed
+        ```
 
 ### Usage
 
