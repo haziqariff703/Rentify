@@ -62,16 +62,19 @@ Developed as part of the **IMS566** course, it demonstrates a complete implement
 
 ### Installation
 
-Build Rentify from source and install dependencies:
+Follow these steps to build and run Rentify locally:
 
 1. **Clone the repository:**
     ```bash
     git clone https://github.com/haziqariff703/rentify
     ```
-2. **Setup Environment:**
+2. **Create Database:**
+    - Open **phpMyAdmin**.
+    - Create a new database named `rentify`.
+3. **Setup Environment:**
     - Copy `config/app_local.example.php` to `config/app_local.php`.
-    - Update the `Datasources` array with your database host, username, and password.
-3. **Install Dependencies:**
+    - Update the `Datasources` array with your database host, username, and password (ensure database is set to `rentify`).
+4. **Install Dependencies:**
     ```bash
     composer install
     ```
@@ -133,10 +136,14 @@ The system now includes an automated lifecycle manager for unpaid bookings:
 
 ### Squashed Migrations
 
-The project uses a **Clean Baseline** migration strategy. All previous incremental migrations have been consolidated into a single "Initial Schema".
+The project uses a **Clean Baseline** migration strategy. All previous incremental migrations have been consolidated into a single "Initial Schema" to ensure a clean setup.
 
-- **Location**: `config/Migrations/20260111030154_InitialSchema.php`
-- **To Setup**: `bin/cake migrations migrate`
+- **Requirement**: You must create the `rentify` database in phpMyAdmin first.
+- **Initial Migration**: Run the following command to create all required tables:
+    ```bash
+    bin/cake migrations migrate
+    ```
+- **Migration File**: `config/Migrations/20260111030154_InitialSchema.php`
 
 ### Faker Seeding System
 
