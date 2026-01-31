@@ -2,477 +2,492 @@
 
 All notable changes to the Rentify project will be documented in this file.
 
+## [2026-01-31]
+
+### Added
+
+- **Auto-Expire Unpaid Bookings** (`src/Service/BookingService.php`)
+    - Added `autoExpireUnpaidBookings()` method to automatically cancel bookings (and their invoices) where the start date has passed but payment was never made.
+    - This prevents users from seeing "Pay Now" for bookings they can no longer use.
+    - Mirrors the existing `autoCompletePastBookings()` pattern.
+
+### Changed
+
+- **InvoicesController Integration** (`src/Controller/InvoicesController.php`)
+    - `myInvoices()` now calls `BookingService::autoExpireUnpaidBookings()` at the start.
+    - Unpaid invoices for past bookings are automatically marked as "Cancelled" before displaying the list.
+
 ## [2026-01-12]
 
 ### Added
 
--   **FakerPHP Factory System** (`src/Factory/`)
-    -   Created comprehensive factory system using FakerPHP for generating realistic test/seed data.
-    -   **AbstractFactory** (`AbstractFactory.php`): Base class with `create()`, `createMany()`, `make()`, `makeMany()` methods.
-    -   **UserFactory** (`UserFactory.php`): Malaysian-specific IC numbers (age 21-60), phone formats, states, and addresses.
-    -   **CarCategoryFactory** (`CarCategoryFactory.php`): 7 predefined categories (Economy, Compact, Standard, SUV, Luxury, Sports, MPV) with realistic pricing tiers.
-    -   **CarFactory** (`CarFactory.php`): Malaysian car brands (Perodua, Proton, Toyota, Honda, Mazda, BMW, Mercedes-Benz) with realistic models, specs, and plate numbers.
-    -   **BookingFactory** (`BookingFactory.php`): 15 Malaysian pickup locations, status-based creation methods (pending, approved, completed, ongoing, cancelled).
-    -   **InvoiceFactory** (`InvoiceFactory.php`): Auto-incrementing invoice numbers, status variations (unpaid, paid, overdue).
-    -   **PaymentFactory** (`PaymentFactory.php`): Malaysian payment methods (FPX, Touch n Go, GrabPay, ShopeePay, etc.).
-    -   **MaintenanceFactory** (`MaintenanceFactory.php`): 8 maintenance types with realistic descriptions and cost ranges.
-    -   **ReviewFactory** (`ReviewFactory.php`): Weighted rating distribution with positive/neutral/negative review templates.
--   **DatabaseSeeder** (`config/Seeds/DatabaseSeeder.php`)
-    -   Comprehensive seeder that generates a complete realistic dataset using all factories.
-    -   Creates: 1 Admin, 15 Customers, 7 Categories, 25 Cars, 40 Bookings, Invoices, Payments, 15 Maintenances, 30 Reviews.
-    -   Run with: `bin/cake migrations seed --seed DatabaseSeeder`
+- **FakerPHP Factory System** (`src/Factory/`)
+    - Created comprehensive factory system using FakerPHP for generating realistic test/seed data.
+    - **AbstractFactory** (`AbstractFactory.php`): Base class with `create()`, `createMany()`, `make()`, `makeMany()` methods.
+    - **UserFactory** (`UserFactory.php`): Malaysian-specific IC numbers (age 21-60), phone formats, states, and addresses.
+    - **CarCategoryFactory** (`CarCategoryFactory.php`): 7 predefined categories (Economy, Compact, Standard, SUV, Luxury, Sports, MPV) with realistic pricing tiers.
+    - **CarFactory** (`CarFactory.php`): Malaysian car brands (Perodua, Proton, Toyota, Honda, Mazda, BMW, Mercedes-Benz) with realistic models, specs, and plate numbers.
+    - **BookingFactory** (`BookingFactory.php`): 15 Malaysian pickup locations, status-based creation methods (pending, approved, completed, ongoing, cancelled).
+    - **InvoiceFactory** (`InvoiceFactory.php`): Auto-incrementing invoice numbers, status variations (unpaid, paid, overdue).
+    - **PaymentFactory** (`PaymentFactory.php`): Malaysian payment methods (FPX, Touch n Go, GrabPay, ShopeePay, etc.).
+    - **MaintenanceFactory** (`MaintenanceFactory.php`): 8 maintenance types with realistic descriptions and cost ranges.
+    - **ReviewFactory** (`ReviewFactory.php`): Weighted rating distribution with positive/neutral/negative review templates.
+- **DatabaseSeeder** (`config/Seeds/DatabaseSeeder.php`)
+    - Comprehensive seeder that generates a complete realistic dataset using all factories.
+    - Creates: 1 Admin, 15 Customers, 7 Categories, 25 Cars, 40 Bookings, Invoices, Payments, 15 Maintenances, 30 Reviews.
+    - Run with: `bin/cake migrations seed --seed DatabaseSeeder`
 
 ### Changed
 
--   **DatabaseSeeder Admin Role** (`config/Seeds/DatabaseSeeder.php`)
-    -   Explicitly added `'role' => 'admin'` parameter to admin user creation for clarity.
-    -   Ensures the admin user is created with the correct role (admin@rentify.com).
+- **DatabaseSeeder Admin Role** (`config/Seeds/DatabaseSeeder.php`)
+    - Explicitly added `'role' => 'admin'` parameter to admin user creation for clarity.
+    - Ensures the admin user is created with the correct role (admin@rentify.com).
 
 ### Fixed
 
--   **DatabaseSeeder Duplicate Email Error** (`config/Seeds/DatabaseSeeder.php`)
-    -   Added `truncateTables()` method that clears all tables before seeding.
-    -   Tables are truncated in the correct order (child tables first) to respect foreign key constraints.
-    -   Temporarily disables `FOREIGN_KEY_CHECKS` during truncation to prevent constraint errors.
-    -   Fixes `email._isUnique` error when re-running the seeder on an existing database.
--   **Booking Invoice Redirect Error** (`src/Controller/BookingsController.php`)
-    -   Fixed "Record not found in table `invoices`" error after creating a new booking.
-    -   The redirect was incorrectly using `$booking->id` (booking ID) instead of the invoice ID.
-    -   Now finds the invoice by `booking_id` and redirects to the correct invoice view page.
-    -   Added fallback redirect to `myBookings` if invoice is not found.
--   **FakerPHP Dependency** (`composer.json`)
-    -   Updated from deprecated `fzaninotto/faker` to actively maintained `fakerphp/faker` v1.23.
-    -   Resolved "Class 'Faker\Factory' not found" error when running database seeder.
-    -   Ran `composer update fakerphp/faker --with-dependencies` to install the new package.
--   **BookingFactory Smart Add-On Assignment** (`src/Factory/BookingFactory.php`)
-    -   Updated `define()` method to check car category capabilities before assigning add-ons.
-    -   Only assigns chauffeur service if `category->chauffeur_available` is true.
-    -   Only assigns GPS service if `category->gps_available` is true.
-    -   Prevents validation errors during seeding by ensuring only valid service combinations are created.
--   **InvoiceFactory Counter Initialization** (`src/Factory/InvoiceFactory.php`)
-    -   Added smart counter initialization that checks existing invoices in database.
-    -   Prevents invoice number collisions when seeding into non-empty database.
-    -   Extracts the highest invoice number and continues from there.
--   **DatabaseSeeder Type Safety** (`config/Seeds/DatabaseSeeder.php`)
-    -   Added validation to skip bookings without valid `total_price` when creating invoices/payments.
-    -   Added explicit float casting for all amount parameters to ensure type compatibility.
-    -   Prevents "Argument #2 ($amount) must be of type float" errors.
--   **UserFactory Password Hashing Fix** (`src/Factory/UserFactory.php`)
-    -   Removed manual password hashing in the factory.
-    -   The `User` entity already handles hashing via `_setPassword` mutator.
-    -   Fixed "Wrong Password" issue caused by double-hashing (Factory hash + Entity hash).
--   **Database Seeding Success**
-    -   Successfully seeds complete dataset: 1 Admin, 15 Customers, 7 Categories, 25 Cars, 40 Bookings, 27 Invoices, 18 Payments, 15 Maintenances, 18 Reviews.
-    -   All validation rules and business logic constraints are respected during seeding.
+- **DatabaseSeeder Duplicate Email Error** (`config/Seeds/DatabaseSeeder.php`)
+    - Added `truncateTables()` method that clears all tables before seeding.
+    - Tables are truncated in the correct order (child tables first) to respect foreign key constraints.
+    - Temporarily disables `FOREIGN_KEY_CHECKS` during truncation to prevent constraint errors.
+    - Fixes `email._isUnique` error when re-running the seeder on an existing database.
+- **Booking Invoice Redirect Error** (`src/Controller/BookingsController.php`)
+    - Fixed "Record not found in table `invoices`" error after creating a new booking.
+    - The redirect was incorrectly using `$booking->id` (booking ID) instead of the invoice ID.
+    - Now finds the invoice by `booking_id` and redirects to the correct invoice view page.
+    - Added fallback redirect to `myBookings` if invoice is not found.
+- **FakerPHP Dependency** (`composer.json`)
+    - Updated from deprecated `fzaninotto/faker` to actively maintained `fakerphp/faker` v1.23.
+    - Resolved "Class 'Faker\Factory' not found" error when running database seeder.
+    - Ran `composer update fakerphp/faker --with-dependencies` to install the new package.
+- **BookingFactory Smart Add-On Assignment** (`src/Factory/BookingFactory.php`)
+    - Updated `define()` method to check car category capabilities before assigning add-ons.
+    - Only assigns chauffeur service if `category->chauffeur_available` is true.
+    - Only assigns GPS service if `category->gps_available` is true.
+    - Prevents validation errors during seeding by ensuring only valid service combinations are created.
+- **InvoiceFactory Counter Initialization** (`src/Factory/InvoiceFactory.php`)
+    - Added smart counter initialization that checks existing invoices in database.
+    - Prevents invoice number collisions when seeding into non-empty database.
+    - Extracts the highest invoice number and continues from there.
+- **DatabaseSeeder Type Safety** (`config/Seeds/DatabaseSeeder.php`)
+    - Added validation to skip bookings without valid `total_price` when creating invoices/payments.
+    - Added explicit float casting for all amount parameters to ensure type compatibility.
+    - Prevents "Argument #2 ($amount) must be of type float" errors.
+- **UserFactory Password Hashing Fix** (`src/Factory/UserFactory.php`)
+    - Removed manual password hashing in the factory.
+    - The `User` entity already handles hashing via `_setPassword` mutator.
+    - Fixed "Wrong Password" issue caused by double-hashing (Factory hash + Entity hash).
+- **Database Seeding Success**
+    - Successfully seeds complete dataset: 1 Admin, 15 Customers, 7 Categories, 25 Cars, 40 Bookings, 27 Invoices, 18 Payments, 15 Maintenances, 18 Reviews.
+    - All validation rules and business logic constraints are respected during seeding.
 
 ## [2026-01-11]
 
 ### Changed
 
--   **User Booking Link in Payment View** (`templates/Payments/view_payment.php`)
-    -   Updated the booking detail link to redirect to `viewBookings` (customer view) instead of `view` (admin view).
-    -   This ensures that non-admin users are directed to the appropriate modern UI for booking details and prevented from accessing admin-only sections.
--   **Fixed AdminsSeed Seeder** (`config/Seeds/AdminsSeed.php`)
-    -   Added missing `Authentication\PasswordHasher\DefaultPasswordHasher` import to fix "Class not found" error during seeding.
--   **Cleaned Up Migrations and Seeds**
-    -   Removed all legacy migration files in `config/Migrations/`, leaving only `20260111030154_InitialSchema.php`.
-    -   Removed all legacy seed files in `config/Seeds/`, leaving only `AdminsSeed.php`.
+- **User Booking Link in Payment View** (`templates/Payments/view_payment.php`)
+    - Updated the booking detail link to redirect to `viewBookings` (customer view) instead of `view` (admin view).
+    - This ensures that non-admin users are directed to the appropriate modern UI for booking details and prevented from accessing admin-only sections.
+- **Fixed AdminsSeed Seeder** (`config/Seeds/AdminsSeed.php`)
+    - Added missing `Authentication\PasswordHasher\DefaultPasswordHasher` import to fix "Class not found" error during seeding.
+- **Cleaned Up Migrations and Seeds**
+    - Removed all legacy migration files in `config/Migrations/`, leaving only `20260111030154_InitialSchema.php`.
+    - Removed all legacy seed files in `config/Seeds/`, leaving only `AdminsSeed.php`.
 
 ## [2026-01-10]
 
 ### Added
 
--   **Maintenance End Date Field** (`src/Model/Entity/Maintenance.php`, `src/Model/Table/MaintenancesTable.php`)
-    -   Added `end_date` column to Entity's `$_accessible` array for form mass-assignment.
-    -   Added `end_date` validation rule to Table.
--   **Start/End Date Input in Maintenance Forms** (`templates/Maintenances/add.php`, `templates/Maintenances/edit.php`)
-    -   Renamed "Scheduled Date" to "Start Date".
-    -   Added new "End Date" input field with helper text.
--   **Enhanced Badge Styling** (`templates/CarCategories/index.php`)
-    -   Increased font size for "Insurance" and "Total Cars" badges to 0.85rem for better readability.
-    -   Added subtle box-shadow and refined padding to category badges.
+- **Maintenance End Date Field** (`src/Model/Entity/Maintenance.php`, `src/Model/Table/MaintenancesTable.php`)
+    - Added `end_date` column to Entity's `$_accessible` array for form mass-assignment.
+    - Added `end_date` validation rule to Table.
+- **Start/End Date Input in Maintenance Forms** (`templates/Maintenances/add.php`, `templates/Maintenances/edit.php`)
+    - Renamed "Scheduled Date" to "Start Date".
+    - Added new "End Date" input field with helper text.
+- **Enhanced Badge Styling** (`templates/CarCategories/index.php`)
+    - Increased font size for "Insurance" and "Total Cars" badges to 0.85rem for better readability.
+    - Added subtle box-shadow and refined padding to category badges.
 
 ### Changed
 
--   **Auto-set End Date on Completion** (`src/Controller/MaintenancesController.php`)
-    -   In `add()` and `edit()` actions, if status is 'completed' and `end_date` is empty, it now auto-sets to the current date.
--   **Improved Review Resolved Logic** (`templates/Reviews/index.php`)
-    -   The "Resolved" check now uses `end_date` if available, otherwise falls back to the `modified` date.
-    -   This ensures that setting status to 'Completed' via the Edit form correctly clears the "issue" flag.
+- **Auto-set End Date on Completion** (`src/Controller/MaintenancesController.php`)
+    - In `add()` and `edit()` actions, if status is 'completed' and `end_date` is empty, it now auto-sets to the current date.
+- **Improved Review Resolved Logic** (`templates/Reviews/index.php`)
+    - The "Resolved" check now uses `end_date` if available, otherwise falls back to the `modified` date.
+    - This ensures that setting status to 'Completed' via the Edit form correctly clears the "issue" flag.
 
 ### Fixed
 
--   **Dashboard Action Center Issue Count** (`src/Service/AdminDashboardService.php`)
-    -   "Car Issues Reported" count now correctly excludes resolved issues.
-    -   Only counts low-rating reviews where no completed maintenance exists after the review date.
-    -   Issue widget now hides when all issues are resolved.
--   **Reviews Issues Filter Logic** (`src/Controller/ReviewsController.php`, `templates/Reviews/index.php`)
-    -   "Show Issues Only" filter now excludes resolved issues (reviews with completed maintenance after review date).
-    -   Added empty state with success message when all issues are resolved.
-    -   "Back to All Reviews" button displayed when showing the empty state.
+- **Dashboard Action Center Issue Count** (`src/Service/AdminDashboardService.php`)
+    - "Car Issues Reported" count now correctly excludes resolved issues.
+    - Only counts low-rating reviews where no completed maintenance exists after the review date.
+    - Issue widget now hides when all issues are resolved.
+- **Reviews Issues Filter Logic** (`src/Controller/ReviewsController.php`, `templates/Reviews/index.php`)
+    - "Show Issues Only" filter now excludes resolved issues (reviews with completed maintenance after review date).
+    - Added empty state with success message when all issues are resolved.
+    - "Back to All Reviews" button displayed when showing the empty state.
 
 ## [2026-01-05]
 
 ### Added
 
--   **Password Visibility Toggle** (`templates/Users/login.php`, `templates/Users/add.php`)
-    -   Added eye icon toggle to show/hide password in login and registration forms.
-    -   Icon changes from `fa-eye` to `fa-eye-slash` when clicked.
-    -   Styled with hover effect and positioned inside the input field.
+- **Password Visibility Toggle** (`templates/Users/login.php`, `templates/Users/add.php`)
+    - Added eye icon toggle to show/hide password in login and registration forms.
+    - Icon changes from `fa-eye` to `fa-eye-slash` when clicked.
+    - Styled with hover effect and positioned inside the input field.
 
 ### Fixed
 
--   **Review Form Protection Error** (`src/Controller/ReviewsController.php`)
-    -   Fixed `FormProtectionException` error "Unexpected field `rating` in POST data" when submitting reviews.
-    -   Unlocked the `rating` field from form protection since it uses custom HTML radio inputs for the star rating UI.
-    -   Form now submits successfully while maintaining security for other fields.
--   **Maintenance Edit Form Protection Error** (`templates/Maintenances/edit.php`)
-    -   Fixed `FormProtectionException` URL mismatch error when editing maintenance records.
-    -   Moved delete `postLink` button outside the main edit form to prevent nested form conflicts.
-    -   The `postLink` helper generates its own hidden form, which conflicted with the outer form's CSRF token.
--   **Car Image Path 404 Error** (`src/Service/ImageUploadService.php`)
-    -   Fixed image upload using Windows `DS` constant (`\`) instead of forward slash (`/`) for web URLs.
-    -   This caused car images to have paths like `cars\image.jpg` which broke when URL-encoded in JavaScript (showed as `%C3%BE`).
-    -   Changed to use explicit forward slash `/` for web-compatible URL paths.
-    -   Manually fixed existing database records with backslash paths.
+- **Review Form Protection Error** (`src/Controller/ReviewsController.php`)
+    - Fixed `FormProtectionException` error "Unexpected field `rating` in POST data" when submitting reviews.
+    - Unlocked the `rating` field from form protection since it uses custom HTML radio inputs for the star rating UI.
+    - Form now submits successfully while maintaining security for other fields.
+- **Maintenance Edit Form Protection Error** (`templates/Maintenances/edit.php`)
+    - Fixed `FormProtectionException` URL mismatch error when editing maintenance records.
+    - Moved delete `postLink` button outside the main edit form to prevent nested form conflicts.
+    - The `postLink` helper generates its own hidden form, which conflicted with the outer form's CSRF token.
+- **Car Image Path 404 Error** (`src/Service/ImageUploadService.php`)
+    - Fixed image upload using Windows `DS` constant (`\`) instead of forward slash (`/`) for web URLs.
+    - This caused car images to have paths like `cars\image.jpg` which broke when URL-encoded in JavaScript (showed as `%C3%BE`).
+    - Changed to use explicit forward slash `/` for web-compatible URL paths.
+    - Manually fixed existing database records with backslash paths.
 
 ## [2026-01-04]
 
 ### Added
 
--   **CarCategories Badge Color** (`config/Migrations/20260103165136_AddBadgeColorToCarCategories.php`)
-    -   Added `badge_color` column to `car_categories` table for category-wide theming.
-    -   Updated `CarCategory` entity and table with validation.
-    -   Added color picker to `CarCategories/add.php` and `edit.php` with live preview.
+- **CarCategories Badge Color** (`config/Migrations/20260103165136_AddBadgeColorToCarCategories.php`)
+    - Added `badge_color` column to `car_categories` table for category-wide theming.
+    - Updated `CarCategory` entity and table with validation.
+    - Added color picker to `CarCategories/add.php` and `edit.php` with live preview.
 
 ### Changed
 
--   **UI/UX Enhancement: Badge Color Integration**
-    -   `templates/Cars/index.php`: Added colored "brand indicator" dot and dynamic category badges.
-    -   `templates/Cars/my_cars.php`: Added `--car-theme` CSS variable for themed top border and buttons.
-    -   `webroot/css/datatables-custom.css`: Added `.brand-indicator` CSS class.
+- **UI/UX Enhancement: Badge Color Integration**
+    - `templates/Cars/index.php`: Added colored "brand indicator" dot and dynamic category badges.
+    - `templates/Cars/my_cars.php`: Added `--car-theme` CSS variable for themed top border and buttons.
+    - `webroot/css/datatables-custom.css`: Added `.brand-indicator` CSS class.
 
 ### Removed
 
--   **Simplified Badge Color Architecture** (`config/Migrations/20260103173526_DropBadgeColorFromCars.php`)
-    -   Removed `badge_color` column from `cars` table (was redundant).
-    -   Cars now inherit their theme color from their category (single source of truth).
-    -   Removed badge color pickers from `Cars/add.php` and `Cars/edit.php`.
-    -   Updated `Car` entity to remove `badge_color` from accessible fields.
--   **The Garage UI Updates** (`templates/Cars/my_cars.php`)
-    -   "Book Now" button now uses black gradient instead of theme color.
-    -   Reviews/stars on car cards now display actual average rating from database.
-    -   Modal popup reviews/stars also display actual rating from database.
-    -   `CarsController::myCars()` updated to include Reviews in query.
+- **Simplified Badge Color Architecture** (`config/Migrations/20260103173526_DropBadgeColorFromCars.php`)
+    - Removed `badge_color` column from `cars` table (was redundant).
+    - Cars now inherit their theme color from their category (single source of truth).
+    - Removed badge color pickers from `Cars/add.php` and `Cars/edit.php`.
+    - Updated `Car` entity to remove `badge_color` from accessible fields.
+- **The Garage UI Updates** (`templates/Cars/my_cars.php`)
+    - "Book Now" button now uses black gradient instead of theme color.
+    - Reviews/stars on car cards now display actual average rating from database.
+    - Modal popup reviews/stars also display actual rating from database.
+    - `CarsController::myCars()` updated to include Reviews in query.
 
 ### Fixed
 
--   **Dashboard Filter Not Working** (`src/Service/AdminDashboardService.php`)
-    -   Fixed period filter (Today/Week/Month/Quarter) now correctly filters KPI cards.
-    -   Changed booking filter from `created` date to `start_date` (booking date).
-    -   Performance Overview chart now respects filter: shows daily data for week/month, monthly for quarter.
-    -   Top Performing Cars widget now respects filter period.
-    -   Revenue KPI card now consistent with chart (uses bookings.total_price for filtered periods).
--   **Insurance Tier Badge Colors** (`templates/CarCategories/index.php`)
-    -   Insurance tier badges now use tier-specific colors matching the view page (Basic=gray, Standard=blue, Premium=gold).
--   **Booking Management UI** (`templates/Bookings/index.php`)
-    -   Enabled "New Booking" button for all users (previously hidden for admins).
-    -   Aligned button styling with other index pages.
--   **Edit Booking Page Fix** (`templates/Bookings/edit.php`)
-    -   Fixed `FormProtectionException` (URL mismatch/Security Component error) by moving delete button's hidden form outside the main edit form using `block => true`.
-    -   (Note: Reverted Flatpickr implementation due to compatibility issues).
+- **Dashboard Filter Not Working** (`src/Service/AdminDashboardService.php`)
+    - Fixed period filter (Today/Week/Month/Quarter) now correctly filters KPI cards.
+    - Changed booking filter from `created` date to `start_date` (booking date).
+    - Performance Overview chart now respects filter: shows daily data for week/month, monthly for quarter.
+    - Top Performing Cars widget now respects filter period.
+    - Revenue KPI card now consistent with chart (uses bookings.total_price for filtered periods).
+- **Insurance Tier Badge Colors** (`templates/CarCategories/index.php`)
+    - Insurance tier badges now use tier-specific colors matching the view page (Basic=gray, Standard=blue, Premium=gold).
+- **Booking Management UI** (`templates/Bookings/index.php`)
+    - Enabled "New Booking" button for all users (previously hidden for admins).
+    - Aligned button styling with other index pages.
+- **Edit Booking Page Fix** (`templates/Bookings/edit.php`)
+    - Fixed `FormProtectionException` (URL mismatch/Security Component error) by moving delete button's hidden form outside the main edit form using `block => true`.
+    - (Note: Reverted Flatpickr implementation due to compatibility issues).
 
 ## [2026-01-03]
 
 ### Added
 
--   **User Payment View Page** (`templates/Payments/view_payment.php`)
-    -   Created read-only payment confirmation page for users (separate from admin view).
-    -   Shows car thumbnail, payment details, and links to related invoice/booking.
-    -   No Edit/Delete buttons - user can only view their own payments.
-    -   Security check in controller prevents users from viewing other users' payments.
--   **viewPayment Controller Action** (`src/Controller/PaymentsController.php`)
-    -   Added `viewPayment()` action with ownership security check.
-    -   Fetches payment with booking, car, and invoice data for display.
--   **About Us Team Section** (`templates/Pages/about_us.php`)
-    -   Integrated team founders photo into mission statement section.
-    -   Added team members: Haziq, Zulfadli, Rasyid, Safa.
-    -   Red underline accent on "experiences" with team philosophy paragraph.
-    -   Drop shadow effect and responsive two-column layout.
+- **User Payment View Page** (`templates/Payments/view_payment.php`)
+    - Created read-only payment confirmation page for users (separate from admin view).
+    - Shows car thumbnail, payment details, and links to related invoice/booking.
+    - No Edit/Delete buttons - user can only view their own payments.
+    - Security check in controller prevents users from viewing other users' payments.
+- **viewPayment Controller Action** (`src/Controller/PaymentsController.php`)
+    - Added `viewPayment()` action with ownership security check.
+    - Fetches payment with booking, car, and invoice data for display.
+- **About Us Team Section** (`templates/Pages/about_us.php`)
+    - Integrated team founders photo into mission statement section.
+    - Added team members: Haziq, Zulfadli, Rasyid, Safa.
+    - Red underline accent on "experiences" with team philosophy paragraph.
+    - Drop shadow effect and responsive two-column layout.
 
 ### Changed
 
--   **My Payments View Button** (`templates/Payments/my_payments.php`)
-    -   Changed View button link from `view` (admin) to `viewPayment` (user).
--   **PaymentsController beforeFilter** - Added `viewPayment` to user-accessible actions.
--   **My Account Page Redesign** (`templates/Users/my_account.php`)
-    -   Replaced purple gradient header with clean white profile card.
-    -   Applied unified design system: Montserrat (headings), Inter (body).
-    -   Stats row moved inside profile card with vertical dividers.
-    -   Navy card headers (#1e293b) for Personal Information, Address, My Bookings, My Reviews sections.
-    -   Updated buttons to pill style with hover effects.
-    -   Removed icons from buttons for cleaner look.
--   **Edit Profile Page Redesign** (`templates/Users/edit_profile.php`)
-    -   Replaced purple gradient header with clean white profile card.
-    -   Navy card headers for Personal Information and Security sections.
-    -   Modernized form inputs with Montserrat/Inter fonts.
-    -   Pill-style Save/Cancel buttons matching my_account.
-    -   Removed icons from buttons for cleaner look.
+- **My Payments View Button** (`templates/Payments/my_payments.php`)
+    - Changed View button link from `view` (admin) to `viewPayment` (user).
+- **PaymentsController beforeFilter** - Added `viewPayment` to user-accessible actions.
+- **My Account Page Redesign** (`templates/Users/my_account.php`)
+    - Replaced purple gradient header with clean white profile card.
+    - Applied unified design system: Montserrat (headings), Inter (body).
+    - Stats row moved inside profile card with vertical dividers.
+    - Navy card headers (#1e293b) for Personal Information, Address, My Bookings, My Reviews sections.
+    - Updated buttons to pill style with hover effects.
+    - Removed icons from buttons for cleaner look.
+- **Edit Profile Page Redesign** (`templates/Users/edit_profile.php`)
+    - Replaced purple gradient header with clean white profile card.
+    - Navy card headers for Personal Information and Security sections.
+    - Modernized form inputs with Montserrat/Inter fonts.
+    - Pill-style Save/Cancel buttons matching my_account.
+    - Removed icons from buttons for cleaner look.
 
 ### Fixed
 
--   Fixed invisible payment receipt details in `view_invoices.php` by changing layout to block/margin-auto and adding `!important` color overrides.
--   Optimized invoice PDF layout by compacting "Receipt" box width and reducing vertical margins to prevent page splitting.
+- Fixed invisible payment receipt details in `view_invoices.php` by changing layout to block/margin-auto and adding `!important` color overrides.
+- Optimized invoice PDF layout by compacting "Receipt" box width and reducing vertical margins to prevent page splitting.
 
 ### Removed
 
--   Deleted `view_payments.php` (incorrect plural naming) - replaced with `view_payment.php`.
+- Deleted `view_payments.php` (incorrect plural naming) - replaced with `view_payment.php`.
 
 ## [2026-01-02]
 
 ### Changed
 
--   **Dashboard Optimization**: Refactored `AdminsController::dashboard` logic into `src/Service/AdminDashboardService.php` to reduce controller complexity and improve maintainability.
--   **Bookings Refactoring**: Extracted all business logic (Booking creation, cancellation, approval, and auto-completion) from `BookingsController` and `AdminsController` into `BookingService`.
--   **API Documentation (PHPDoc)**: Added comprehensive PHPDoc blocks to `BookingService`, `AdminDashboardService`, `BookingsController`, and `AdminsController` for improved code clarity and IDE support.
--   **Dashboard Interactivity**: Added Date Range Filter, Quick Actions, and Inline Approvals (Backend implementation).
-    -   **Date Range Filter**: Filter dropdown (Today, This Week, This Month, Last 3 Months) with live filtering of Bookings, Revenue, and Users stats.
-    -   **Quick Actions Dropdown**: One-click access to New Booking, Add Car, Add User, Schedule Maintenance, and View Issues.
-    -   **Inline Booking Approvals**: Pending bookings mini-list in Action Center with inline ✓ Approve and 👁 View buttons.
--   **Security Hardening**: Enabled `FormProtection` component in `AppController` to prevent form tampering and request forgery.
--   **Dashboard Stat Cards Redesign** (`templates/Admins/dashboard.php`)
-    -   Replaced large faded icons with rounded square icon boxes (16px radius, 60x60px).
-    -   Percentages now calculate from real data: bookings and revenue compare this month vs last month.
-    -   New users count shows actual registrations in the last 7 days.
-    -   Changed currency from `$` to `RM` for consistency.
--   **Dashboard Widgets**:
-    -   replaced "Hourly Pulse" chart with "Fleet Status" donut chart for better utility in the mini-widget area.
-    -   Consolidated layout by moving Fleet Status from bottom row to the main grid.
--   **Action Center "Returns Due Today"**: Button now links to `Bookings/index` instead of being non-functional.
--   **Reviews Management Maintenance Integration** (`templates/Reviews/index.php`)
-    -   Added dedicated "Maintenance" column.
-    -   Displays "Mark Done" button for cars currently in maintenance (triggers `Maintenances::completeActive`).
-    -   Displays "Schedule" button for low-rated cars needing maintenance.
-    -   Added `completeActive()` method to `MaintenancesController` to simplified maintenance completion from external views.
-    -   Fixed matching logic for "maintenance" status to be case-insensitive.
-    -   Implemented smart "Resolved" status: Checks if a maintenance was completed _after_ the review date to prevent re-scheduling resolved issues.
--   **Top Performing Cars**: Fixed image path - now correctly displays car thumbnails instead of placeholder icons.
--   **Month-over-Month Calculations** (`src/Controller/AdminsController.php`)
-    -   Added `$bookingsChange`, `$revenueChange`, `$newUsersThisWeek` variables with real database queries.
+- **Dashboard Optimization**: Refactored `AdminsController::dashboard` logic into `src/Service/AdminDashboardService.php` to reduce controller complexity and improve maintainability.
+- **Bookings Refactoring**: Extracted all business logic (Booking creation, cancellation, approval, and auto-completion) from `BookingsController` and `AdminsController` into `BookingService`.
+- **API Documentation (PHPDoc)**: Added comprehensive PHPDoc blocks to `BookingService`, `AdminDashboardService`, `BookingsController`, and `AdminsController` for improved code clarity and IDE support.
+- **Dashboard Interactivity**: Added Date Range Filter, Quick Actions, and Inline Approvals (Backend implementation).
+    - **Date Range Filter**: Filter dropdown (Today, This Week, This Month, Last 3 Months) with live filtering of Bookings, Revenue, and Users stats.
+    - **Quick Actions Dropdown**: One-click access to New Booking, Add Car, Add User, Schedule Maintenance, and View Issues.
+    - **Inline Booking Approvals**: Pending bookings mini-list in Action Center with inline ✓ Approve and 👁 View buttons.
+- **Security Hardening**: Enabled `FormProtection` component in `AppController` to prevent form tampering and request forgery.
+- **Dashboard Stat Cards Redesign** (`templates/Admins/dashboard.php`)
+    - Replaced large faded icons with rounded square icon boxes (16px radius, 60x60px).
+    - Percentages now calculate from real data: bookings and revenue compare this month vs last month.
+    - New users count shows actual registrations in the last 7 days.
+    - Changed currency from `$` to `RM` for consistency.
+- **Dashboard Widgets**:
+    - replaced "Hourly Pulse" chart with "Fleet Status" donut chart for better utility in the mini-widget area.
+    - Consolidated layout by moving Fleet Status from bottom row to the main grid.
+- **Action Center "Returns Due Today"**: Button now links to `Bookings/index` instead of being non-functional.
+- **Reviews Management Maintenance Integration** (`templates/Reviews/index.php`)
+    - Added dedicated "Maintenance" column.
+    - Displays "Mark Done" button for cars currently in maintenance (triggers `Maintenances::completeActive`).
+    - Displays "Schedule" button for low-rated cars needing maintenance.
+    - Added `completeActive()` method to `MaintenancesController` to simplified maintenance completion from external views.
+    - Fixed matching logic for "maintenance" status to be case-insensitive.
+    - Implemented smart "Resolved" status: Checks if a maintenance was completed _after_ the review date to prevent re-scheduling resolved issues.
+- **Top Performing Cars**: Fixed image path - now correctly displays car thumbnails instead of placeholder icons.
+- **Month-over-Month Calculations** (`src/Controller/AdminsController.php`)
+    - Added `$bookingsChange`, `$revenueChange`, `$newUsersThisWeek` variables with real database queries.
 
 ### Changed
 
--   **View Page CSS Standardization & Font Upgrade** (`webroot/css/custom.css`)
-    -   Created unified `.view-container` component system with ~500 lines of CSS.
-    -   **Typography Upgrade**: Switched primary heading and data font to **Poppins** (bold) for a cleaner, more professional look.
-    -   Card headers: Premium black gradient with subtle texture overlay.
-    -   Includes shared styles for `.page-header`, `.view-grid`, `.form-card`, `.view-table`, `.specs-grid`, `.related-sections`, status badges, and more.
--   **Header Overlay Adjustment**: Updated car info overlay gradient in `custom.css` to use a refined dark gray (`#434343`) for better contrast.
+- **View Page CSS Standardization & Font Upgrade** (`webroot/css/custom.css`)
+    - Created unified `.view-container` component system with ~500 lines of CSS.
+    - **Typography Upgrade**: Switched primary heading and data font to **Poppins** (bold) for a cleaner, more professional look.
+    - Card headers: Premium black gradient with subtle texture overlay.
+    - Includes shared styles for `.page-header`, `.view-grid`, `.form-card`, `.view-table`, `.specs-grid`, `.related-sections`, status badges, and more.
+- **Header Overlay Adjustment**: Updated car info overlay gradient in `custom.css` to use a refined dark gray (`#434343`) for better contrast.
 
 ### Refactored
 
--   **Standardized All View Templates**
-    -   `Users/view.php`: Completely refactored to the standardized system. Replaced the unique hero-header with a clean grid-based profile structure matching the rest of the application.
-    -   `Bookings/view.php`: Removed ~335 lines of internal CSS, now uses `.view-container`.
-    -   `Cars/view.php`: Removed ~310 lines of internal CSS, now uses `.view-container`.
-    -   `Payments/view.php`: Removed ~137 lines of internal CSS, now uses `.view-container`.
-    -   `Reviews/view.php`: Removed ~140 lines of internal CSS, now uses `.view-container`.
-    -   `Maintenances/view.php`: Completely redesigned from CakePHP baked template to modern `.view-container` layout.
-    -   `CarCategories/view.php`: Reduced inline CSS significantly, kept page-specific styles only.
--   Standardized container class naming across all view pages.
+- **Standardized All View Templates**
+    - `Users/view.php`: Completely refactored to the standardized system. Replaced the unique hero-header with a clean grid-based profile structure matching the rest of the application.
+    - `Bookings/view.php`: Removed ~335 lines of internal CSS, now uses `.view-container`.
+    - `Cars/view.php`: Removed ~310 lines of internal CSS, now uses `.view-container`.
+    - `Payments/view.php`: Removed ~137 lines of internal CSS, now uses `.view-container`.
+    - `Reviews/view.php`: Removed ~140 lines of internal CSS, now uses `.view-container`.
+    - `Maintenances/view.php`: Completely redesigned from CakePHP baked template to modern `.view-container` layout.
+    - `CarCategories/view.php`: Reduced inline CSS significantly, kept page-specific styles only.
+- Standardized container class naming across all view pages.
 
 ### Backend Refactoring
 
--   **Created `ImageUploadService`** (`src/Service/ImageUploadService.php`)
-    -   Centralized image upload logic with validation (MIME type, file size).
-    -   Convenience methods: `uploadAvatar()` for users, `uploadCarImage()` for cars.
-    -   Automatic old file cleanup when uploading replacements.
--   **Refactored `UsersController`**: Removed `_uploadAvatar()` helper, now uses `ImageUploadService`.
--   **Refactored `CarsController`**: Removed duplicated upload logic in `add()` and `edit()`, now uses `ImageUploadService`.
--   **Created Authorization Helper Methods** (`src/Controller/AppController.php`)
-    -   `isAdmin()`: Check if current user is admin.
-    -   `isAuthenticated()`: Check if user is logged in.
-    -   `requireAdmin()`: Redirect non-admins with error message.
-    -   `setAdminLayoutIfAdmin()`: Apply admin layout for admin users.
--   **Standardized Authorization** across all controllers:
-    -   `AdminsController`, `CarCategoriesController`, `MaintenancesController`: Use `requireAdmin()`.
-    -   `UsersController`, `CarsController`, `PaymentsController`, `ReviewsController`, `InvoicesController`, `BookingsController`: Use `isAdmin()` and `setAdminLayoutIfAdmin()`.
+- **Created `ImageUploadService`** (`src/Service/ImageUploadService.php`)
+    - Centralized image upload logic with validation (MIME type, file size).
+    - Convenience methods: `uploadAvatar()` for users, `uploadCarImage()` for cars.
+    - Automatic old file cleanup when uploading replacements.
+- **Refactored `UsersController`**: Removed `_uploadAvatar()` helper, now uses `ImageUploadService`.
+- **Refactored `CarsController`**: Removed duplicated upload logic in `add()` and `edit()`, now uses `ImageUploadService`.
+- **Created Authorization Helper Methods** (`src/Controller/AppController.php`)
+    - `isAdmin()`: Check if current user is admin.
+    - `isAuthenticated()`: Check if user is logged in.
+    - `requireAdmin()`: Redirect non-admins with error message.
+    - `setAdminLayoutIfAdmin()`: Apply admin layout for admin users.
+- **Standardized Authorization** across all controllers:
+    - `AdminsController`, `CarCategoriesController`, `MaintenancesController`: Use `requireAdmin()`.
+    - `UsersController`, `CarsController`, `PaymentsController`, `ReviewsController`, `InvoicesController`, `BookingsController`: Use `isAdmin()` and `setAdminLayoutIfAdmin()`.
 
 ### JavaScript Separation
 
--   **Extracted Inline JS to External Files** (`webroot/js/`)
-    -   `webroot/js/components/sidebar.js`: Sidebar toggle logic (~75 lines).
-    -   `webroot/js/components/flash.js`: Toast auto-dismiss logic (~24 lines).
-    -   `webroot/js/views/Invoices/view.js`: PDF download logic (~32 lines).
-    -   `webroot/js/views/Admins/dashboard.js`: FullCalendar, ApexCharts initialization (~280 lines).
-    -   `webroot/js/views/Bookings/add.js`: Booking form with Flatpickr, dynamic pricing, add-ons (~265 lines).
-    -   `webroot/js/views/Users/auth.js`: Login/register slider toggle (~21 lines).
-    -   `webroot/js/components/delete-confirm.js`: Reusable generic delete confirmation with **Capture Phase** event handling (~80 lines).
-    -   `webroot/js/views/Cars/form.js`: Image preview and color picker for car forms (~40 lines).
--   Implemented `window.RentifyData` pattern for passing PHP data to external JS files.
--   Created directory structure: `webroot/js/views/Bookings/`, `views/Admins/`, `views/Invoices/`, `components/`.
--   **Consolidated** duplicating inline scripts in `Cars/add.php`, `Cars/edit.php` and `Invoices/view_invoices.php`.
--   **Standardized** Delete Confirmation across `Users`, `Cars`, `Bookings`, `Payments`, and `Invoices` index/edit pages using SweetAlert2.
+- **Extracted Inline JS to External Files** (`webroot/js/`)
+    - `webroot/js/components/sidebar.js`: Sidebar toggle logic (~75 lines).
+    - `webroot/js/components/flash.js`: Toast auto-dismiss logic (~24 lines).
+    - `webroot/js/views/Invoices/view.js`: PDF download logic (~32 lines).
+    - `webroot/js/views/Admins/dashboard.js`: FullCalendar, ApexCharts initialization (~280 lines).
+    - `webroot/js/views/Bookings/add.js`: Booking form with Flatpickr, dynamic pricing, add-ons (~265 lines).
+    - `webroot/js/views/Users/auth.js`: Login/register slider toggle (~21 lines).
+    - `webroot/js/components/delete-confirm.js`: Reusable generic delete confirmation with **Capture Phase** event handling (~80 lines).
+    - `webroot/js/views/Cars/form.js`: Image preview and color picker for car forms (~40 lines).
+- Implemented `window.RentifyData` pattern for passing PHP data to external JS files.
+- Created directory structure: `webroot/js/views/Bookings/`, `views/Admins/`, `views/Invoices/`, `components/`.
+- **Consolidated** duplicating inline scripts in `Cars/add.php`, `Cars/edit.php` and `Invoices/view_invoices.php`.
+- **Standardized** Delete Confirmation across `Users`, `Cars`, `Bookings`, `Payments`, and `Invoices` index/edit pages using SweetAlert2.
 
--   `Users/view.php`: Unique profile card layout, kept as-is.
--   `Invoices/view.php`: Special printable document layout, kept as-is.
--   `Maintenances/view.php`: CakePHP default baked layout, kept as-is.
+- `Users/view.php`: Unique profile card layout, kept as-is.
+- `Invoices/view.php`: Special printable document layout, kept as-is.
+- `Maintenances/view.php`: CakePHP default baked layout, kept as-is.
 
 ## [2026-01-01]
 
 ### Fixed
 
--   **Dashboard Chart Booking Count Fix** (`src/Controller/AdminsController.php`)
-    -   Changed booking count query to use `start_date` instead of `created` date.
-    -   Both metrics now align with the rental activity month.
--   **Premium Design System & Badge Overhaul**
-    -   Added **soft-color utilities** (`bg-success-soft`, etc.) to the shared design system for a modern, glassmorphism-inspired look.
-    -   Enhanced `StatusHelper` to automatically include **FontAwesome icons** in all status badges (Check-circle, Clock, hourglass, etc.).
-    -   Strengthened badge rules in `datatables-custom.css` with **1px borders** and `!important` flags to ensure colors are visible even when overridden by table-cell styles.
-    -   Standardized status rendering across `Bookings/view.php` and `index.php` to ensure 100% visual consistency.
-    -   Fixed missing badge colors on single-view pages (e.g., `Bookings/view.php`) by implementing internal CSS fallbacks for non-DataTable views.
-    -   Removed redundant internal CSS from view templates to lean on the centralized design system.
--   **Enhanced Booking Approval Workflow**
-    -   Separated financial confirmation (Payments page) from operational approval (Bookings page).
-    -   Added a **Payment** column to `Bookings/index.php` showing real-time invoice status.
-    -   Redesigned the "Approve" button to dynamically switch to "Override" (warning style) if payment is pending.
-    -   Modified `PaymentsController` to strictly handle financial status, preventing premature booking confirmation.
--   **Styling Standardization & Design System Alignment**
-    -   Standardized **action buttons** and **status badges** across Car Categories, Invoices, and Payments.
-    -   Refactored `CarCategories/index.php`, `Invoices/index.php`, and `Payments/index.php` to use the shared `datatables-custom.css`.
-    -   Updated `StatusHelper` to use high-end `.status-badge` design for all billing statuses.
-    -   Centrally managed professional colors for Paid, Unpaid, and Cancelled statuses.
--   **Performance Overview Chart Redesign** (`templates/Admins/dashboard.php`)
-    -   Redesigned the main trend chart with a professional "Report" style header.
-    -   Added summary stats (Total Revenue, Total Bookings) directly into the chart card.
-    -   Enhanced visuals with **12px rounded bars**, gradients, and glowing trend lines.
--   **Professional SweetAlert2 Modals** (`templates/Admins/dashboard.php`)
-    -   Replaced native `alert()` browser dialogs with high-end SweetAlert2 modals.
-    -   Implemented custom **Glassmorphism** styling for modals to match site theme.
-    -   Added colored icons and badges for booking status (Confirmed, Pending, etc.).
-    -   Enabled direct navigation to booking details from the calendar modal.
--   **Cash Payment Approval Workflow** (`src/Controller/PaymentsController.php`, `templates/Payments/index.php`)
-    -   Implemented a business logic change where **Cash payments** stay `pending` until verified.
-    -   Prevented automatic booking confirmation for cash users to ensure financial security.
-    -   Added a dedicated **"Confirm Payment"** admin button to manually verify cash receipts.
-    -   Manual payment confirmation automatically triggers booking approval and invoice updates.
--   **Footer Updates**
-    -   Updated social media links to point to valid URLs (Twitter, Facebook, Instagram).
-    -   Updated Twitter icon/label to new "X" branding.
-    -   Added GitHub repository link to footer.
+- **Dashboard Chart Booking Count Fix** (`src/Controller/AdminsController.php`)
+    - Changed booking count query to use `start_date` instead of `created` date.
+    - Both metrics now align with the rental activity month.
+- **Premium Design System & Badge Overhaul**
+    - Added **soft-color utilities** (`bg-success-soft`, etc.) to the shared design system for a modern, glassmorphism-inspired look.
+    - Enhanced `StatusHelper` to automatically include **FontAwesome icons** in all status badges (Check-circle, Clock, hourglass, etc.).
+    - Strengthened badge rules in `datatables-custom.css` with **1px borders** and `!important` flags to ensure colors are visible even when overridden by table-cell styles.
+    - Standardized status rendering across `Bookings/view.php` and `index.php` to ensure 100% visual consistency.
+    - Fixed missing badge colors on single-view pages (e.g., `Bookings/view.php`) by implementing internal CSS fallbacks for non-DataTable views.
+    - Removed redundant internal CSS from view templates to lean on the centralized design system.
+- **Enhanced Booking Approval Workflow**
+    - Separated financial confirmation (Payments page) from operational approval (Bookings page).
+    - Added a **Payment** column to `Bookings/index.php` showing real-time invoice status.
+    - Redesigned the "Approve" button to dynamically switch to "Override" (warning style) if payment is pending.
+    - Modified `PaymentsController` to strictly handle financial status, preventing premature booking confirmation.
+- **Styling Standardization & Design System Alignment**
+    - Standardized **action buttons** and **status badges** across Car Categories, Invoices, and Payments.
+    - Refactored `CarCategories/index.php`, `Invoices/index.php`, and `Payments/index.php` to use the shared `datatables-custom.css`.
+    - Updated `StatusHelper` to use high-end `.status-badge` design for all billing statuses.
+    - Centrally managed professional colors for Paid, Unpaid, and Cancelled statuses.
+- **Performance Overview Chart Redesign** (`templates/Admins/dashboard.php`)
+    - Redesigned the main trend chart with a professional "Report" style header.
+    - Added summary stats (Total Revenue, Total Bookings) directly into the chart card.
+    - Enhanced visuals with **12px rounded bars**, gradients, and glowing trend lines.
+- **Professional SweetAlert2 Modals** (`templates/Admins/dashboard.php`)
+    - Replaced native `alert()` browser dialogs with high-end SweetAlert2 modals.
+    - Implemented custom **Glassmorphism** styling for modals to match site theme.
+    - Added colored icons and badges for booking status (Confirmed, Pending, etc.).
+    - Enabled direct navigation to booking details from the calendar modal.
+- **Cash Payment Approval Workflow** (`src/Controller/PaymentsController.php`, `templates/Payments/index.php`)
+    - Implemented a business logic change where **Cash payments** stay `pending` until verified.
+    - Prevented automatic booking confirmation for cash users to ensure financial security.
+    - Added a dedicated **"Confirm Payment"** admin button to manually verify cash receipts.
+    - Manual payment confirmation automatically triggers booking approval and invoice updates.
+- **Footer Updates**
+    - Updated social media links to point to valid URLs (Twitter, Facebook, Instagram).
+    - Updated Twitter icon/label to new "X" branding.
+    - Added GitHub repository link to footer.
 
 ### Added
 
--   **Live Activity Widget** (`templates/Admins/dashboard.php`)
-    -   Replaced static "Earnings" sparkline with real-time "Live Activity" chart.
-    -   Chart updates every 2 seconds with smooth scrolling animation.
-    -   Added pulsing green "LIVE" indicator with CSS animation.
-    -   Gives dashboard a premium, dynamic feel.
--   **Hourly Booking Pulse Widget** (`src/Controller/AdminsController.php`, `templates/Admins/dashboard.php`)
-    -   Replaced static "Orders" bar chart with a real-time "Hourly Pulse" of the last 24 hours.
-    -   Fetches actual database records group by hour to show booking activity peaks.
-    -   Enhanced tooltips to show specific hour (e.g., "14:00") and booking count.
+- **Live Activity Widget** (`templates/Admins/dashboard.php`)
+    - Replaced static "Earnings" sparkline with real-time "Live Activity" chart.
+    - Chart updates every 2 seconds with smooth scrolling animation.
+    - Added pulsing green "LIVE" indicator with CSS animation.
+    - Gives dashboard a premium, dynamic feel.
+- **Hourly Booking Pulse Widget** (`src/Controller/AdminsController.php`, `templates/Admins/dashboard.php`)
+    - Replaced static "Orders" bar chart with a real-time "Hourly Pulse" of the last 24 hours.
+    - Fetches actual database records group by hour to show booking activity peaks.
+    - Enhanced tooltips to show specific hour (e.g., "14:00") and booking count.
 
 ## [2025-12-31]
 
 ### Changed
 
--   **Redesign Car Reviews Page**
-    -   Implemented modern two-column layout with sticky summary sidebar (`templates/Reviews/car_reviews.php`).
-    -   Cleaned up `add_review.php` by removing car image preview.
--   **Flash Message Refinement**
-    -   Standardized Bootstrap Toast positioning to top-right across all layouts.
-    -   Ensured auto-dismiss functionality (3 seconds) and working close buttons.
+- **Redesign Car Reviews Page**
+    - Implemented modern two-column layout with sticky summary sidebar (`templates/Reviews/car_reviews.php`).
+    - Cleaned up `add_review.php` by removing car image preview.
+- **Flash Message Refinement**
+    - Standardized Bootstrap Toast positioning to top-right across all layouts.
+    - Ensured auto-dismiss functionality (3 seconds) and working close buttons.
 
 ## [2025-12-30]
 
 ### Added
 
--   **Structural & Quality Improvements**
-    -   Created `BookingService` to handle complex business logic (pricing, tax, invoices) (`src/Service/BookingService.php`)
-    -   Created `StatusHelper` for consistent UI badges across templates (`src/View/Helper/StatusHelper.php`)
--   **Policy Engine & Service Integration**
+- **Structural & Quality Improvements**
+    - Created `BookingService` to handle complex business logic (pricing, tax, invoices) (`src/Service/BookingService.php`)
+    - Created `StatusHelper` for consistent UI badges across templates (`src/View/Helper/StatusHelper.php`)
+- **Policy Engine & Service Integration**
 
--   **Policy Engine & Service Integration**
-    -   Added 7 policy fields to `car_categories`: security_deposit, insurance_tier, insurance_daily_rate, chauffeur_available, chauffeur_daily_rate, gps_available, gps_daily_rate
-    -   Added 4 service selection fields to `bookings`: has_chauffeur, has_gps, has_full_insurance, security_deposit_amount
-    -   Created virtual properties in Booking entity: `total_calculated_price`, `rental_days`, `price_breakdown`
-    -   Added custom validation rules for chauffeur/GPS service availability
-    -   Updated CarCategories add/edit forms with policy settings UI
--   Added "Categories" menu item to admin sidebar under Fleet (`fa-layer-group` icon)
--   **Enhanced CarCategories view/edit pages**
-    -   View page shows policy settings card (deposit, insurance, chauffeur, GPS availability)
-    -   Both pages display cars belonging to the category with status badges
--   **CarCategories Template Refresh**
-    -   `index.php`: DataTables with purple theme, column filters for Name/Insurance/Chauffeur/GPS
-    -   `view.php`: Card-based layout with Financial Policy and Services cards
-    -   `add.php` / `edit.php`: Modern card-based forms grouped by section
--   **Service Add-ons Integration**
-    -   Dynamic add-ons in booking form based on category availability/rates
-    -   `BookingsController::add()` calculates add-on costs (chauffeur, GPS, insurance)
-    -   Invoice displays itemized add-on breakdown with individual costs
+- **Policy Engine & Service Integration**
+    - Added 7 policy fields to `car_categories`: security_deposit, insurance_tier, insurance_daily_rate, chauffeur_available, chauffeur_daily_rate, gps_available, gps_daily_rate
+    - Added 4 service selection fields to `bookings`: has_chauffeur, has_gps, has_full_insurance, security_deposit_amount
+    - Created virtual properties in Booking entity: `total_calculated_price`, `rental_days`, `price_breakdown`
+    - Added custom validation rules for chauffeur/GPS service availability
+    - Updated CarCategories add/edit forms with policy settings UI
+- Added "Categories" menu item to admin sidebar under Fleet (`fa-layer-group` icon)
+- **Enhanced CarCategories view/edit pages**
+    - View page shows policy settings card (deposit, insurance, chauffeur, GPS availability)
+    - Both pages display cars belonging to the category with status badges
+- **CarCategories Template Refresh**
+    - `index.php`: DataTables with purple theme, column filters for Name/Insurance/Chauffeur/GPS
+    - `view.php`: Card-based layout with Financial Policy and Services cards
+    - `add.php` / `edit.php`: Modern card-based forms grouped by section
+- **Service Add-ons Integration**
+    - Dynamic add-ons in booking form based on category availability/rates
+    - `BookingsController::add()` calculates add-on costs (chauffeur, GPS, insurance)
+    - Invoice displays itemized add-on breakdown with individual costs
 
 ### Changed
 
--   **Architectural Refactoring**
-    -   Consolidated `sidebar.php` and `public_sidebar.php` into a single unified element
-    -   Refactored `BookingsController` to use `BookingService` for cleaner action logic
-    -   Replaced inline status badge logic in templates with `StatusHelper`
--   Updated `CarCategory` entity with new policy fields and `hasMany('Cars')` relationship
+- **Architectural Refactoring**
+    - Consolidated `sidebar.php` and `public_sidebar.php` into a single unified element
+    - Refactored `BookingsController` to use `BookingService` for cleaner action logic
+    - Replaced inline status badge logic in templates with `StatusHelper`
+- Updated `CarCategory` entity with new policy fields and `hasMany('Cars')` relationship
 
--   Updated `CarCategory` entity with new policy fields and `hasMany('Cars')` relationship
--   Updated `CarCategoriesTable` with validation rules for all policy fields
--   Updated `BookingsTable` with service selection validation and application rules
+- Updated `CarCategory` entity with new policy fields and `hasMany('Cars')` relationship
+- Updated `CarCategoriesTable` with validation rules for all policy fields
+- Updated `BookingsTable` with service selection validation and application rules
 
 ### Removed
 
--   Deleted redundant `public_sidebar.php` element
+- Deleted redundant `public_sidebar.php` element
 
 ## [2025-12-29]
 
 ### Changed
 
--   Refactored sidebar to use data-driven menu structure with `$menuItems` array (`templates/element/sidebar.php`)
--   Updated sidebar layout to use flexbox - menu scrolls independently, footer stays fixed
--   Hidden scrollbar for minimalist design while maintaining scroll functionality
--   Fixed Users menu activeMatch to `Users:index` to prevent conflict with My Account
--   **Extracted inline CSS/JS from template files into shared external files (major cleanup)**
-    -   `Cars/index.php`: 539 → 139 lines (74% reduction)
-    -   `Bookings/index.php`: 511 → 140 lines (73% reduction)
-    -   `Reviews/index.php`: 423 → 128 lines (70% reduction)
-    -   `Maintenances/index.php`: 394 → 100 lines (75% reduction)
-    -   `Users/index.php`: 445 → 111 lines (75% reduction)
-    -   `Payments/index.php`: 417 → 119 lines (71% reduction)
+- Refactored sidebar to use data-driven menu structure with `$menuItems` array (`templates/element/sidebar.php`)
+- Updated sidebar layout to use flexbox - menu scrolls independently, footer stays fixed
+- Hidden scrollbar for minimalist design while maintaining scroll functionality
+- Fixed Users menu activeMatch to `Users:index` to prevent conflict with My Account
+- **Extracted inline CSS/JS from template files into shared external files (major cleanup)**
+    - `Cars/index.php`: 539 → 139 lines (74% reduction)
+    - `Bookings/index.php`: 511 → 140 lines (73% reduction)
+    - `Reviews/index.php`: 423 → 128 lines (70% reduction)
+    - `Maintenances/index.php`: 394 → 100 lines (75% reduction)
+    - `Users/index.php`: 445 → 111 lines (75% reduction)
+    - `Payments/index.php`: 417 → 119 lines (71% reduction)
 
 ### Added
 
--   Created Antigravity workflow file with project rules and conventions (`.agent/workflows/antigravity.md`)
--   Added DataTables to Maintenances index with car/status filters and amber theme (`templates/Maintenances/index.php`)
--   Added DataTables to Users index with name/role/month filters and purple theme (`templates/Users/index.php`)
--   Redesigned Maintenances/edit.php with modern card-based layout matching Cars/edit.php
--   Added auto car status sync - scheduled maintenance sets car to "maintenance", completed sets to "available"
--   Added dynamic dashboard alerts for scheduled maintenances and low-rating issue reviews
--   Added "Show Issues Only" filter to Reviews index for low-rating reviews (≤2 stars)
--   Added "Schedule Maintenance" button on low-rating reviews linking to pre-filled maintenance form
--   **Created shared DataTables CSS file** (`webroot/css/datatables-custom.css`) - centralized table styling
--   **Created shared DataTables JS file** (`webroot/js/datatables-init.js`) - reusable auto-initialization
--   Added CSS/JS includes to admin layout (`templates/layout/admin.php`)
+- Created Antigravity workflow file with project rules and conventions (`.agent/workflows/antigravity.md`)
+- Added DataTables to Maintenances index with car/status filters and amber theme (`templates/Maintenances/index.php`)
+- Added DataTables to Users index with name/role/month filters and purple theme (`templates/Users/index.php`)
+- Redesigned Maintenances/edit.php with modern card-based layout matching Cars/edit.php
+- Added auto car status sync - scheduled maintenance sets car to "maintenance", completed sets to "available"
+- Added dynamic dashboard alerts for scheduled maintenances and low-rating issue reviews
+- Added "Show Issues Only" filter to Reviews index for low-rating reviews (≤2 stars)
+- Added "Schedule Maintenance" button on low-rating reviews linking to pre-filled maintenance form
+- **Created shared DataTables CSS file** (`webroot/css/datatables-custom.css`) - centralized table styling
+- **Created shared DataTables JS file** (`webroot/js/datatables-init.js`) - reusable auto-initialization
+- Added CSS/JS includes to admin layout (`templates/layout/admin.php`)
 
 ### Fixed
 
--   Fixed missing `<?php` opening tag in sidebar configuration block
--   Fixed variable naming inconsistency (`$isAdmin` vs `$sidebarIsAdmin`)
--   Fixed PHP syntax errors with if/endif blocks in sidebar
--   Fixed InvoicesController missing admin layout causing DataTables not to load
+- Fixed missing `<?php` opening tag in sidebar configuration block
+- Fixed variable naming inconsistency (`$isAdmin` vs `$sidebarIsAdmin`)
+- Fixed PHP syntax errors with if/endif blocks in sidebar
+- Fixed InvoicesController missing admin layout causing DataTables not to load
 
 ### Removed
 
--   Deleted unused `webroot/css/sidebar.css` (138 lines) - sidebar uses inline styles in `element/sidebar.php`
+- Deleted unused `webroot/css/sidebar.css` (138 lines) - sidebar uses inline styles in `element/sidebar.php`
 
 ## [2025-12-28]
 
 ### Changed
 
--   Updated booking redirect to `view_invoices.php` instead of `view.php`
--   Refined invoice PDF print functionality
--   Fixed dashboard chart to show actual booking counts
+- Updated booking redirect to `view_invoices.php` instead of `view.php`
+- Refined invoice PDF print functionality
+- Fixed dashboard chart to show actual booking counts

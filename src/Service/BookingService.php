@@ -305,4 +305,69 @@ class BookingService
 
         return (bool)$invoicesTable->save($invoice);
     }
+
+    /**
+     * Auto-expire (cancel) bookings whose start date has passed and are still unpaid.
+     *
+     * This prevents users from seeing "Pay Now" for bookings they can no longer use.
+     * Affects bookings with status 'pending' or 'confirmed' where the invoice is unpaid
+     * and the booking start_date is in the past.
+     *
+     * @param int|null $userId Optional user ID to filter bookings. If null, processes all users.
+     * @return int The number of bookings that were auto-expired.
+     */
+    public function autoExpireUnpaidBookings(?int $userId = null): int
+    {
+        $invoicesTable = \Cake\ORM\TableRegistry::getTableLocator()->get('Invoices');
+
+        // Build conditions for bookings that should be expired
+        $conditions = [
+            'booking_status IN' => ['pending', 'confirmed'],
+            'start_date <' => FrozenDate::now()
+        ];
+
+        if ($userId) {
+            $conditions['user_id'] = $userId;
+        }
+
+        // Find bookings with their invoices
+        $expiredBookings = $this->Bookings->find()
+            ->where($conditions)
+            ->contain(['Invoices'])
+            ->all();
+
+        $count = 0;
+
+        foreach ($expiredBookings as $booking) {
+            // Check if the booking has any unpaid invoice
+            $hasUnpaidInvoice = false;
+            if (!empty($booking->invoices)) {
+                foreach ($booking->invoices as $invoice) {
+                    if (strtolower($invoice->status) === 'unpaid') {
+                        $hasUnpaidInvoice = true;
+                        break;
+                    }
+                }
+            }
+
+            // Only expire if there's an unpaid invoice
+            if ($hasUnpaidInvoice) {
+                // Cancel the booking
+                $booking->booking_status = 'cancelled';
+                $this->Bookings->save($booking);
+
+                // Cancel all unpaid invoices for this booking
+                foreach ($booking->invoices as $invoice) {
+                    if (strtolower($invoice->status) === 'unpaid') {
+                        $invoice->status = 'Cancelled';
+                        $invoicesTable->save($invoice);
+                    }
+                }
+
+                $count++;
+            }
+        }
+
+        return $count;
+    }
 }

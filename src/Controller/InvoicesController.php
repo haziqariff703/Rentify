@@ -52,6 +52,10 @@ class InvoicesController extends AppController
     {
         $user = $this->Authentication->getIdentity();
 
+        // Auto-expire any unpaid invoices for past bookings
+        $bookingService = new \App\Service\BookingService();
+        $bookingService->autoExpireUnpaidBookings($user->getIdentifier());
+
         // Fetch invoices belonging to this user
         $query = $this->Invoices->find()
             ->contain(['Bookings' => ['Cars']]) // Get Car details
