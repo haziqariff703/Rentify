@@ -17,6 +17,10 @@ _Built with the tools and technologies:_
 ![FontAwesome](https://img.shields.io/badge/FontAwesome-337ab7?style=for-the-badge&logo=fontawesome&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 ![DataTables](https://img.shields.io/badge/DataTables-000000?style=for-the-badge&logo=datatable&logoColor=white)
+![FakerPHP](https://img.shields.io/badge/FakerPHP-D33C43?style=for-the-badge&logo=php&logoColor=white)
+![FullCalendar](https://img.shields.io/badge/FullCalendar-3788D8?style=for-the-badge&logo=fullcalendar&logoColor=white)
+![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chart.js&logoColor=white)
+![SweetAlert2](https://img.shields.io/badge/SweetAlert2-B9372F?style=for-the-badge&logo=sweetalert2&logoColor=white)
 
 </div>
 
