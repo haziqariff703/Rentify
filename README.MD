@@ -1,154 +1,140 @@
-# 🚗 Rentify: Car Rental Management System
+<div align="center">
 
-**Program:** Bachelor of Information Science (Hons.) Information System Management (CDIM262)  
-**Course:** Advanced Web Design Development and Content Management (IMS566)  
-**Student Name:** Haziq Ariff, Amirul Rasyid, Zulfadli, Safa Raziq
+# RENTIFY
 
-**Framework:** CakePHP 4.x / 5.x
+**Drive Your Rental Experience Forward, Effortlessly**
 
----
+[![Status](https://img.shields.io/badge/Status-Active-brightgreen)]()
+[![PHP Version](https://img.shields.io/badge/PHP-8.1%2B-blue)]()
+[![Framework](https://img.shields.io/badge/Framework-CakePHP%205.x-red)]()
+[![License](https://img.shields.io/badge/License-MIT-orange)]()
 
-## 📖 Project Description
+_Built with the tools and technologies:_
 
-**Rentify** is a web-based Car Rental Management System designed to digitalize and automate the manual vehicle booking process. The system addresses common operational inefficiencies such as double-booking, manual invoicing errors, and unorganized fleet management.
+![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
+![CakePHP](https://img.shields.io/badge/CakePHP-D33C43?style=for-the-badge&logo=cakephp&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)
+![FontAwesome](https://img.shields.io/badge/FontAwesome-337ab7?style=for-the-badge&logo=fontawesome&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![DataTables](https://img.shields.io/badge/DataTables-000000?style=for-the-badge&logo=datatable&logoColor=white)
 
-Targeting two distinct user groups—**Customers** and **Administrators**—Rentify provides a seamless platform for checking vehicle real-time availability, processing automated reservations, and managing financial records (Invoices/Payments) dynamically. The core objective is to demonstrate a robust **System Development Life Cycle (SDLC)** with a focus on data integrity, relational database design, and user experience (UX).
-
----
-
-## ⚙️ System Logic & Workflow (The "Business Rules")
-
-The system operates on strict logic controls to ensure data accuracy. The following workflows are hard-coded into the `BookingsController` and `PaymentsController`:
-
-### 1. The Booking Engine Logic
-
--   **Date Validation:** The system prevents logical errors by enforcing `End_Date > Start_Date`. If a user selects an invalid return date, the booking is blocked.
--   **Overlap Prevention:** Before saving a booking, the system queries the `bookings` table for the selected `car_id`. If an existing _Confirmed_ booking overlaps with the requested dates, the system returns an "Unavailable" error.
--   **Price Automation:** The system automatically calculates the Total Price: `(End Date - Start Date) * Price Per Day`.
-
-### 2. The Auto-Invoice Logic
-
--   **Trigger:** Immediately upon a successful booking (Status: _Pending_).
--   **Action:** The system generates a unique record in the `invoices` table linked to the Booking ID.
--   **Status:** The invoice defaults to **'Unpaid'**. This ensures that a financial debt record exists even if the user abandons the payment process.
-
-### 3. The Payment Logic (Simulated)
-
--   **Process:** The user inputs dummy credit card details via the Payment Simulation module.
--   **Success Scenario:**
-    1.  **Creates** a new record in the `payments` table.
-    2.  **Updates** the linked `invoices` status to **'PAID'**.
-    3.  **Updates** the linked `bookings` status to **'CONFIRMED'**.
-    4.  **Unlocks** the "Download PDF Receipt" feature for the user.
--   **Failure Scenario:**
-    -   No data is changed. The Invoice remains 'Unpaid', and the Booking remains 'Pending'.
+</div>
 
 ---
 
-## 🗄️ Database Architecture (ERD)
+## 📋 Table of Contents
 
-The system utilizes a **8-Table Relational Structure** optimized for data normalization (3NF).
-
-### Core Entities
-
--   **`users`**: Stores **BOTH** Customer and Admin data.
-    -   _Logic:_ Role-Based Access Control (RBAC) is handled via a `role` column ('admin' or 'customer').
-    -   _Identity:_ Uses `ic_number` (12-digit) as a unique identifier for Malaysian context.
--   **`cars`**: The main inventory table containing vehicle specs, status, and image paths.
--   **`car_categories`**: Categorizes vehicles (e.g., SUV, Economy).
-    -   _Relationship:_ **One-to-Many** (One Category has Many Cars).
-
-### Transaction Entities
-
--   **`bookings`**: The central hub linking Users and Cars.
-    -   _Relationship:_ **One-to-Many** (One User can have multiple Bookings).
--   **`invoices`**: The official billing document.
-    -   _Relationship:_ **One-to-One** (Structurally linked to one specific Booking ID).
--   **`payments`**: Records of financial transactions.
-    -   _Relationship:_ **One-to-Many** (One Booking can technically have multiple partial payments).
-
-### Support Entities
-
--   **`maintenances`**: Tracks vehicle repairs.
-    -   _Logic:_ Cars listed here with 'Scheduled' status are excluded from search results.
--   **`reviews`**: Stores user feedback.
-    -   _Relationship:_ Links User ID + Car ID to ensure only actual customers can review.
+- [Overview](#-overview)
+- [Getting Started](#-getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+    - [Usage](#usage)
+- [Features & System Logic](#-features--system-logic)
+    - [Auto-Expire Invoices (New)](#auto-expire-invoices-new)
+    - [Booking Engine](#booking-engine)
+- [Database & Seeders](#-database--seeders)
+    - [Squashed Migrations](#squashed-migrations)
+    - [Faker Seeding System](#faker-seeding-system)
+- [Testing](#-testing)
+    - [Stress Testing](#stress-testing)
 
 ---
 
-## 🛠️ Tech Stack & Libraries
+## 🌟 Overview
 
-To achieve "Excellent" functionality and UX marks, the following libraries are integrated:
+**Rentify** is a premium web-based Car Rental Management System designed to modernize vehicle booking operations. It eliminates manual errors, prevents double-bookings, and provides a glassmorphism-inspired administrative interface for high-efficiency fleet management.
 
-| Library         | Purpose                                                   | Rubric Requirement Met                     |
-| :-------------- | :-------------------------------------------------------- | :----------------------------------------- |
-| **CakePdf**     | Converts Invoice Views to downloadable PDF files.         | _Export to PDF (for at least one dataset)_ |
-| **Bootstrap 5** | Provides a responsive, mobile-ready Grid layout.          | _User Interface Design / Responsive_       |
-| **SweetAlert2** | Replaces default browser alerts with professional popups. | _User Interface... Clear, intuitive_       |
-| **Chart.js**    | Visualizes sales data on the admin dashboard.             | _Advanced Features_                        |
-| **FakerPHP**    | Generates realistic test data for presentation.           | _System Functionality_                     |
-| **Toastr**      | Non-blocking "Success/Error" notifications.               | _User Experience (UX)_                     |
+Developed as part of the **IMS566** course, it demonstrates a complete implementation of the SDLC, featuring robust relational data integrity and modern UX practices.
 
 ---
 
-## 🚀 Installation & Setup
+## 🚀 Getting Started
 
-1.  **Database Configuration:**
+### Prerequisites
 
-    -   Create a database named `rentify`.
-    -   Import the `rentify.sql` script (Final Version).
-    -   Update `config/app_local.php` with your DB credentials.
+- **PHP 8.1+** (8.2/8.3 recommended)
+- **Composer** (PHP dependency manager)
+- **Laragon/XAMPP** (Local server environment with MySQL)
 
-2.  **Installation:**
+### Installation
 
+Build Rentify from source and install dependencies:
+
+1. **Clone the repository:**
+    ```bash
+    git clone https://github.com/haziqariff703/rentify
+    ```
+2. **Setup Environment:**
+    - Copy `config/app_local.example.php` to `config/app_local.php`.
+    - Update the `Datasources` array with your database host, username, and password.
+3. **Install Dependencies:**
     ```bash
     composer install
     ```
 
-3.  **Generating Code (Bake):**
-    _Run these commands in order:_
+### Usage
 
-    ```bash
-    bin/cake bake all users
-    bin/cake bake all car_categories
-    bin/cake bake all cars
-    bin/cake bake all bookings
-    bin/cake bake all invoices
-    bin/cake bake all payments
-    bin/cake bake all reviews
-    bin/cake bake all maintenances
-    ```
+Run the project using CakePHP's built-in server:
 
-    _(Note: No need to bake 'admins' as they are now part of the 'users' table)_
+```bash
+bin/cake server
+```
 
-4.  **Running the Server:**
-    ```bash
-    bin/cake server
-    ```
-    Access the system at: `http://localhost:8765`
+Access the application at: `http://localhost:8765`
 
 ---
 
-## 👥 User Roles & Features
+## 💡 Features & System Logic
 
-### Customer (User)
+### ⚡ Auto-Expire Invoices (New)
 
--   **Sign Up/Login:** Secure account creation using Email & Password.
--   **Identity Verification:** Registration requires a valid Malaysian IC Number.
--   **Search & Filter:** Find cars by Category (SUV, Sedan) or Price range.
--   **Book Vehicle:** Select dates and view automated total price.
--   **My Dashboard:** View booking history and payment status.
--   **Payment Simulation:** Process dummy payments to confirm bookings.
--   **Download Invoice:** Export official receipts as PDF.
+The system now includes an automated lifecycle manager for unpaid bookings. Whenever a user views their invoices:
 
-### Administrator (Admin)
+- The system checks for "Unpaid" invoices where the `booking.start_date` has already passed.
+- It automatically marks these items as **Cancelled**, preventing users from seeing "Pay Now" for expired rental periods.
 
--   **Admin Dashboard:** View total sales, active bookings, and fleet status charts.
--   **Fleet Management:** Add/Edit/Delete cars and manage Categories.
--   **Booking Approval:** Approve pending bookings or mark cars as returned.
--   **Maintenance Tracking:** Schedule repairs for cars (automatically hides them from customers).
--   **User Oversight:** Manage customer accounts and view IC details.
+### 🚗 Booking Engine
+
+- **Overlap Prevention**: Real-time checking against confirmed/pending bookings to prevent double-booking a car for the same period.
+- **Price Automation**: Dynamic calculation including base rates, tax (6% SST), and optional add-ons (GPS, Chauffeur, Insurance).
 
 ---
 
-_This project is submitted in partial fulfillment of the requirements for the course IMS566._
+## 🗄️ Database & Seeders
+
+### Squashed Migrations
+
+The project uses a **Clean Baseline** migration strategy. All previous incremental migrations have been consolidated into a single "Initial Schema".
+
+- **Location**: `config/Migrations/20260111030154_InitialSchema.php`
+- **To Setup**: `bin/cake migrations migrate`
+
+### Faker Seeding System
+
+We utilize a sophisticated seeding system based on **FakerPHP** to generate realistic Malaysian data (IC numbers, phone numbers, state-specific addresses).
+
+- **Production Setup** (Admin Only):
+    ```bash
+    bin/cake migrations seed --seed AdminsSeed
+    ```
+- **Demo Setup** (Full Data):
+    ```bash
+    bin/cake migrations seed --seed DatabaseSeeder
+    ```
+
+---
+
+## 🧪 Testing
+
+### Stress Testing
+
+Manual and semi-automated stress tests are conducted using the **"Human Swarm"** method and **Postman Collection Runner**.
+
+- **Human Swarm**: Simulating concurrent logins and bookings across multiple browser tabs.
+- **Postman Runner**: Iterative GET requests to critical endpoints (`/cars/my-cars`, `/bookings`) to test retrieval speeds under load.
+
+---
+
+<div align="center">
+  <sub>Submitted as partial fulfillment of IMS566 requirements. Created by: Haziq, Rasyid, Zulfadli, Safa.</sub>
+</div>
