@@ -86,17 +86,42 @@ Access the application at: `http://localhost:8765`
 
 ## 💡 Features & System Logic
 
+### 📊 Intelligence Admin Dashboard
+
+A high-density "Command Center" for administrators:
+
+- **Financial KPIs**: Real-time tracking of Total Revenue, Revenue Growth (MoM), and Booking Volume.
+- **Fleet Analytics**: Donut charts visualizing car availability and maintenance distribution.
+- **Performance Pulse**: Hourly booking trends over the last 24 hours to identify peak rental times.
+- **Action Center**: Inline approval system for pending bookings and maintenance alerts.
+
+### 🛡️ Smart Fleet Protection
+
+- **Maintenance Integration**: Automatically hides cars from the booking engine when "Scheduled Maintenance" is active.
+- **Health Sync**: Completing maintenance automatically restores a car to "Available" status across the platform.
+
 ### ⚡ Auto-Expire Invoices (New)
 
-The system now includes an automated lifecycle manager for unpaid bookings. Whenever a user views their invoices:
+The system now includes an automated lifecycle manager for unpaid bookings:
 
-- The system checks for "Unpaid" invoices where the `booking.start_date` has already passed.
-- It automatically marks these items as **Cancelled**, preventing users from seeing "Pay Now" for expired rental periods.
+- **Past-Due Logic**: Whenever a user views their invoices, the system checks for "Unpaid" invoices where the `booking.start_date` has passed.
+- **Automatic Voiding**: Marks expired items as **Cancelled**, preventing users from seeing "Pay Now" for rental periods that have already started.
 
-### 🚗 Booking Engine
+### 🚗 Professional Booking Engine
 
-- **Overlap Prevention**: Real-time checking against confirmed/pending bookings to prevent double-booking a car for the same period.
-- **Price Automation**: Dynamic calculation including base rates, tax (6% SST), and optional add-ons (GPS, Chauffeur, Insurance).
+- **Overlap Prevention**: Multi-check ORM logic ensures no car can be double-booked for the same time span.
+- **Service Add-ons**: Toggleable options for GPS, Chauffeur, and Full Insurance, with costs calculated dynamically based on car category policies.
+- **Automatic Invoicing**: One-to-one invoice generation immediately upon booking creation.
+
+### 📄 Document Export System
+
+- **Tax-Compliant Invoices**: Generates professional PDF receipts with itemized breakdowns of rental cost, add-ons, and 6% SST.
+- **Digital Receipting**: Powered by **CakePdf**, allowing users to download official documentation for their records.
+
+### 🔐 Multi-Tier Authorization
+
+- **RBAC (Role-Based Access Control)**: Strictly separated portals for Admins and Customers.
+- **Ownership Verification**: Customers are locked to viewing only their own bookings, invoices, and payments through high-level authorization policy checks.
 
 ---
 
