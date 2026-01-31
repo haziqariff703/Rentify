@@ -13,13 +13,18 @@ $car = $booking->car;
 $paymentInfo = null;
 $methodDisplay = '-';
 
+// Check invoice status first - this is the source of truth after admin confirmation
+$invoiceIsPaid = strtolower($invoice->status ?? 'unpaid') === 'paid';
+
 if (!empty($booking->payments)) {
     foreach ($booking->payments as $p) {
-        if ($p->payment_status === 'paid' || $p->payment_status === 'refunded') {
+        // Show receipt if: payment is paid/refunded, OR invoice is marked paid (for admin-confirmed cash)
+        if ($p->payment_status === 'paid' || $p->payment_status === 'refunded' || $invoiceIsPaid) {
             $paymentInfo = $p;
 
             // Format the raw database string into human text
-            $raw = $p->payment_method;
+            $raw = $p->payment_method ?? '';
+
             if ($raw === 'card') {
                 $methodDisplay = 'Credit/Debit Card';
             } elseif (str_contains($raw, 'online_transfer')) {
@@ -28,7 +33,7 @@ if (!empty($booking->payments)) {
                 $methodDisplay = 'FPX Online (' . $bank . ')';
             } elseif ($raw === 'cash') {
                 $methodDisplay = 'Cash at Counter';
-            } else {
+            } elseif (!empty($raw)) {
                 $methodDisplay = ucfirst(str_replace('_', ' ', $raw));
             }
             break;
@@ -36,7 +41,15 @@ if (!empty($booking->payments)) {
     }
 }
 
-// 2. REVERSE CALCULATOR (Smart Breakdown)
+// 2. BASE64 ENCODE LOGO FOR PDF PRINTING
+$logoPath = WWW_ROOT . 'img' . DS . 'rentify_logo_black.png';
+$logoBase64 = '';
+if (file_exists($logoPath)) {
+    $logoData = file_get_contents($logoPath);
+    $logoBase64 = 'data:image/png;base64,' . base64_encode($logoData);
+}
+
+// 3. REVERSE CALCULATOR (Smart Breakdown)
 $subtotal = 0;
 $tax = 0;
 $addons = 0;
@@ -172,7 +185,7 @@ if ($booking && $booking->car) {
 
         <div class="row mb-5">
             <div class="col-6">
-                <img src="<?= $this->Url->webroot('img/rentify_logo_black.png') ?>" alt="Rentify" class="brand-logo-img"
+                <img src="<?= $logoBase64 ?: $this->Url->webroot('img/rentify_logo_black.png') ?>" alt="Rentify" class="brand-logo-img"
                     style="height: 150px; width: auto;">
                 <div class="text-muted small mt-2">
                     <strong>Rentify Sdn Bhd</strong> (12345-X)<br>
@@ -210,23 +223,20 @@ if ($booking && $booking->car) {
 
                 <?php if ($paymentInfo): ?>
                     <div class="receipt-box">
-                        <label class="receipt-header">
-                            <i class="fas fa-check-circle me-1"></i> Payment Receipt
-                        </label>
-
-                        <div class="d-flex justify-content-between mb-1">
-                            <span class="text-muted small">Paid Via:</span>
-                            <span class="fw-bold text-dark small">
-                                <?= h($methodDisplay) ?>
-                            </span>
+                        <div class="receipt-header">
+                            ✓ Payment Receipt
                         </div>
 
-                        <div class="d-flex justify-content-between">
-                            <span class="text-muted small">Date:</span>
-                            <span class="fw-bold text-dark small">
-                                <?= h($paymentInfo->created->format('d M Y, h:i A')) ?>
-                            </span>
-                        </div>
+                        <table class="w-100" style="border-collapse: collapse;">
+                            <tr>
+                                <td class="receipt-label-td">Paid Via:</td>
+                                <td class="receipt-value-td"><?= h($methodDisplay) ?></td>
+                            </tr>
+                            <tr>
+                                <td class="receipt-label-td">Date:</td>
+                                <td class="receipt-value-td"><?= h($paymentInfo->created->format('d M Y, h:i A')) ?></td>
+                            </tr>
+                        </table>
                     </div>
                 <?php else: ?>
                     <div class="mt-2">
@@ -358,7 +368,7 @@ if ($booking && $booking->car) {
                     </p>
                 </div>
                 <div class="col-4 text-end">
-                    <img src="<?= $this->Url->webroot('img/rentify_logo_black.png') ?>" alt="Rentify"
+                    <img src="<?= $logoBase64 ?: $this->Url->webroot('img/rentify_logo_black.png') ?>" alt="Rentify"
                         class="brand-logo-img opacity-50" style="height: 150px; width: auto;">
                 </div>
             </div>
@@ -398,25 +408,43 @@ if ($booking && $booking->car) {
 
         /* Receipt Box Styling */
         .receipt-box {
-            background-color: #f0fdf4;
-            border: 1px solid #bbf7d0;
+            background-color: #f0fdf4 !important;
+            border: 1px solid #bbf7d0 !important;
             border-radius: 8px;
-            padding: 15px;
-            display: inline-block;
+            padding: 10px;
+            width: 250px;
+            margin-left: auto;
             text-align: left;
-            min-width: 240px;
-            border-left: 4px solid #059669;
+            border-left: 4px solid #059669 !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
         }
 
         .receipt-header {
             display: block;
             font-size: 0.75rem;
             font-weight: 700;
-            color: #166534;
+            color: #166534 !important;
             text-transform: uppercase;
             margin-bottom: 8px;
             border-bottom: 1px solid #bbf7d0;
             padding-bottom: 4px;
+        }
+
+        .receipt-label-td {
+            color: #6b7280 !important;
+            font-size: 0.85rem;
+            padding: 4px 0;
+            vertical-align: top;
+        }
+
+        .receipt-value-td {
+            color: #1f2937 !important;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-align: right;
+            padding: 4px 0;
+            vertical-align: top;
         }
 
         /* Table */
